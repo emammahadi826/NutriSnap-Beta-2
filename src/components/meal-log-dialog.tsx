@@ -218,7 +218,7 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
           <Camera className="mr-2 h-5 w-5" /> Log a Meal
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[480px] bg-card">
+      <DialogContent className="max-w-[95vw] sm:max-w-md bg-card">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl">Log a New Meal</DialogTitle>
           <DialogDescription>
