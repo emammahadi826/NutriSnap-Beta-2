@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, ChangeEvent } from 'react';
+import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import Image from 'next/image';
-import { Camera, Loader2, Plus, Minus, X, Info } from 'lucide-react';
+import { Camera, Loader2, Plus, Minus, X, Info, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -29,13 +29,46 @@ type FoodResult = LoggedItem & { originalName: string; confidence: number };
 
 export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState<'upload' | 'result' | 'loading' | 'error'>('upload');
+  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error'>('upload');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [results, setResults] = useState<FoodResult[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    let stream: MediaStream | null = null;
+    const getCameraPermission = async () => {
+      if (view !== 'camera') return;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        setHasCameraPermission(false);
+        toast({
+          variant: 'destructive',
+          title: 'Camera Access Denied',
+          description: 'Please enable camera permissions in your browser settings to use this app.',
+        });
+        setView('upload');
+      }
+    };
+
+    getCameraPermission();
+
+    return () => {
+        stream?.getTracks().forEach(track => track.stop());
+    }
+  }, [view, toast]);
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -56,6 +89,12 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
     setImageData(null);
     setResults([]);
     setError(null);
+    setHasCameraPermission(null);
+     if (videoRef.current) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream?.getTracks().forEach(track => track.stop());
+      videoRef.current.srcObject = null;
+    }
     if (fileInputRef.current) {
         fileInputRef.current.value = "";
     }
@@ -131,6 +170,23 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
   const handleRemoveItem = (id: string) => {
     setResults(currentResults => currentResults.filter(r => r.id !== id));
   };
+  
+  const handleTakePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext('2d');
+        context?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        
+        const dataUri = canvas.toDataURL('image/jpeg');
+        setImagePreview(dataUri);
+        setImageData(dataUri);
+        setView('upload');
+    }
+  }
+
 
   const handleLogMeal = () => {
     if (results.length === 0) {
@@ -199,17 +255,48 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
                 <Image src={imagePreview} alt="Meal preview" fill className="object-cover rounded-md" />
               ) : (
                 <div className="text-center text-muted-foreground">
-                  <Camera className="mx-auto h-12 w-12 mb-2" />
+                  <Upload className="mx-auto h-12 w-12 mb-2" />
                   <p>Click to upload a photo</p>
                   <p className="text-xs">or drag and drop</p>
                 </div>
               )}
             </div>
             <Input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageChange} className="hidden" />
+             <div className="flex gap-2 items-center">
+                <div className="flex-grow border-t border-border"></div>
+                <span className="text-xs text-muted-foreground">OR</span>
+                <div className="flex-grow border-t border-border"></div>
+            </div>
+             <Button variant="outline" onClick={() => setView('camera')} className="w-full">
+                <Camera className="mr-2 h-5 w-5" /> Take Photo
+             </Button>
              <Button onClick={handleAnalyze} disabled={!imagePreview} className="w-full font-bold text-base py-6">
               Analyze Meal
             </Button>
           </div>
+        )}
+
+        {view === 'camera' && (
+            <div className="space-y-4">
+                <div className="relative w-full aspect-video bg-background rounded-md overflow-hidden">
+                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                    <canvas ref={canvasRef} className="hidden" />
+                </div>
+                 {hasCameraPermission === false && (
+                    <Alert variant="destructive">
+                      <AlertTitle>Camera Access Required</AlertTitle>
+                      <AlertDescription>
+                        Please allow camera access to use this feature. You may need to change permissions in your browser settings.
+                      </AlertDescription>
+                    </Alert>
+                )}
+                <DialogFooter className="gap-2 sm:gap-0">
+                    <Button variant="outline" onClick={() => setView('upload')}>Back to Upload</Button>
+                    <Button onClick={handleTakePhoto} disabled={!hasCameraPermission}>
+                        <Camera className="mr-2 h-5 w-5" /> Take Photo
+                    </Button>
+                </DialogFooter>
+            </div>
         )}
         
         {view === 'result' && (
