@@ -132,7 +132,6 @@ export function NutriSnapApp() {
   return (
     <SidebarProvider>
         <Sidebar>
-            <SheetTitle className="sr-only">Menu</SheetTitle>
             <SidebarHeader>
                 <UserInfo />
             </SidebarHeader>
