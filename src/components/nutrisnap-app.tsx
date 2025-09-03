@@ -106,8 +106,8 @@ export function NutriSnapApp() {
     const sidebarContent = (
       <>
         <SidebarHeader className="flex items-center justify-between">
-          <UserInfo />
-          <SidebarTrigger />
+            <UserInfo />
+            <SidebarTrigger className="group-[[data-state=collapsed]]:flex" />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -146,7 +146,7 @@ export function NutriSnapApp() {
                 </DropdownMenuContent>
               </DropdownMenu>
           ) : (
-            <Button asChild variant="outline" className="w-full justify-center text-base h-12 group-[[data-state=collapsed]]:w-12">
+            <Button asChild variant="outline" className="w-full justify-center text-base h-12">
               <Link href="/login" className="group-[[data-state=collapsed]]:justify-center">
                 <LogIn className="mr-2 h-5 w-5" />
                 <span className="truncate group-[[data-state=collapsed]]:hidden">Login / Sign Up</span>
