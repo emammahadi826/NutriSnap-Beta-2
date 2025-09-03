@@ -123,16 +123,16 @@ export function NutriSnapApp() {
           {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton>
-                     <Avatar className="h-8 w-8">
-                      {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
-                      <AvatarFallback>
-                          {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="truncate group-[[data-state=collapsed]]:hidden">{user.email}</span>
-                    <ChevronUp className="ml-auto group-[[data-state=collapsed]]:hidden" />
-                  </SidebarMenuButton>
+                    <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2 group-[[data-state=collapsed]]:justify-center group-[[data-state=collapsed]]:w-12">
+                         <Avatar className="h-8 w-8">
+                          {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
+                          <AvatarFallback>
+                              {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="truncate group-[[data-state=collapsed]]:hidden">{user.email}</span>
+                        <ChevronUp className="ml-auto group-[[data-state=collapsed]]:hidden" />
+                    </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   side="top"
@@ -233,3 +233,4 @@ export function NutriSnapApp() {
     </SidebarProvider>
   );
 }
+
