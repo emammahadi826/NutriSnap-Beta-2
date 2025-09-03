@@ -22,6 +22,7 @@ import {
   SidebarInset,
   SidebarTrigger,
   useSidebar,
+  SheetTitle,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -41,7 +42,7 @@ export function NutriSnapApp() {
           guestMealCount={guestMealCount}
           trigger={
               <Button size="lg" variant="outline" className="font-bold text-base w-full py-8 text-lg">
-                  <Upload className="mr-3 h-7 w-7" />
+                  <Upload className="mr-3 h-6 w-6" />
                   Upload Meal
               </Button>
           }
@@ -53,7 +54,7 @@ export function NutriSnapApp() {
           startWithCamera={true}
           trigger={
               <Button size="lg" variant="outline" className="font-bold text-base w-full py-8 text-lg">
-                  <Camera className="mr-3 h-7 w-7" />
+                  <Camera className="mr-3 h-6 w-6" />
                   Take Photo
               </Button>
           }
@@ -73,11 +74,6 @@ export function NutriSnapApp() {
             <p className="font-semibold text-sm truncate">
                 {user ? user.email : "Guest User"}
             </p>
-             {!user && 
-                <p className="text-xs text-muted-foreground">
-                    Log in or sign up
-                </p>
-            }
         </div>
     </div>
   );
@@ -106,6 +102,7 @@ export function NutriSnapApp() {
     
     return (
         <Sidebar>
+          <SheetTitle className="sr-only">Menu</SheetTitle>
             <SidebarHeader className="flex items-center justify-between">
                 <UserInfo />
                 <Button variant="ghost" size="icon" className="md:hidden h-8 w-8" onClick={() => setOpenMobile(false)}>
@@ -178,7 +175,7 @@ export function NutriSnapApp() {
                 <header className="flex justify-between items-center mb-8 gap-4">
                     <div className="flex items-center gap-2">
                          <SidebarTrigger className="md:hidden h-12 w-12">
-                            <PanelLeft className="h-7 w-7"/>
+                            <PanelLeft className="h-6 w-6"/>
                         </SidebarTrigger>
                         <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                     </div>
