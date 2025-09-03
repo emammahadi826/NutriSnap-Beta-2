@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, X, ChevronUp } from 'lucide-react';
+import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, X, ChevronUp, PanelLeft } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
@@ -20,7 +20,8 @@ import {
   SidebarMenuButton,
   SidebarInset,
   useSidebar,
-  SheetTitle
+  SheetTitle,
+  SidebarTrigger
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -209,6 +210,7 @@ export function NutriSnapApp() {
               <header className="flex justify-between items-center mb-8 gap-4">
                   <div className="flex items-center gap-2">
                       <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
+                      <SidebarTrigger><PanelLeft /></SidebarTrigger>
                   </div>
                   { !isMobile && <MealLogButtons /> }
               </header>
