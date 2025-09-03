@@ -113,9 +113,9 @@ export function NutriSnapApp() {
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12 group-data-[[data-state=collapsed]]:p-0 group-data-[[data-state=collapsed]]:justify-center">
+              <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
                 <Home className="h-6 w-6"/>
-                <span className="text-base truncate group-[[data-state=collapsed]]:hidden">Home</span>
+                <span className="truncate group-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
