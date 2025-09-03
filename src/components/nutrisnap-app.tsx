@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, ChevronUp, MessageCircle } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -59,10 +59,16 @@ export function NutriSnapApp() {
   };
 
   const AppSidebar = () => {
-    const { openMobile, setOpenMobile } = useSidebar();
+    const { openMobile, setOpenMobile, state } = useSidebar();
   
     const sidebarContent = (
       <>
+        <SidebarHeader className="p-4 flex items-center justify-between">
+           <div className="flex items-center gap-2">
+            <div className="bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center rounded-full font-bold text-lg">N</div>
+            <h1 className="text-primary font-headline text-2xl group-[[data-state=collapsed]]:hidden">NutriSnap</h1>
+           </div>
+        </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -120,8 +126,9 @@ export function NutriSnapApp() {
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
-          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
-            <SidebarHeader className="p-4">
+          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
+             <SidebarHeader className="p-4 flex items-center gap-2">
+                <div className="bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center rounded-full font-bold text-lg">N</div>
                 <SheetTitle className="text-primary font-headline text-2xl">NutriSnap</SheetTitle>
             </SidebarHeader>
             {sidebarContent}
@@ -132,9 +139,6 @@ export function NutriSnapApp() {
   
     return (
       <Sidebar>
-        <SidebarHeader className="p-4 group-[[data-state=collapsed]]:hidden">
-            <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
-        </SidebarHeader>
         {sidebarContent}
       </Sidebar>
     );
@@ -177,22 +181,22 @@ export function NutriSnapApp() {
   return (
     <SidebarProvider>
       <AppSidebar />
-        <SidebarInset>
-           <header className="p-4 flex justify-between items-center h-[69px]">
-               <div className="flex items-center gap-2">
-                    <SidebarTrigger />
-                </div>
-           </header>
-           <div className={activePage === 'home' ? "container mx-auto p-4 md:p-8" : "h-[calc(100vh-69px)]"}>
-              {activePage === 'home' ? (
-                <Dashboard 
-                    meals={getTodaysMeals()} 
-                    summary={getTodaysSummary()}
-                />
-              ) : (
-                <ChatPage />
-              )}
+      <SidebarInset>
+        <header className="p-4 flex items-center h-[69px] border-b">
+          <div className="flex items-center gap-2">
+            <SidebarTrigger />
           </div>
+        </header>
+        <div className={activePage === 'home' ? "container mx-auto p-4 md:p-8" : "h-[calc(100vh-69px)]"}>
+          {activePage === 'home' ? (
+            <Dashboard 
+                meals={getTodaysMeals()} 
+                summary={getTodaysSummary()}
+            />
+          ) : (
+            <ChatPage />
+          )}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );
