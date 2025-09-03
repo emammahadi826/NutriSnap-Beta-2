@@ -51,7 +51,7 @@ export function NutriSnapApp() {
           isGuest={isGuest} 
           guestMealCount={guestMealCount}
           trigger={
-              <Button>
+              <Button size="lg" variant="outline" className="text-base font-bold">
                   <Upload className="mr-2 h-5 w-5" />
                   Upload Meal
               </Button>
@@ -63,7 +63,7 @@ export function NutriSnapApp() {
           guestMealCount={guestMealCount}
           startWithCamera={true}
           trigger={
-              <Button variant="outline">
+              <Button size="lg" variant="outline" className="text-base font-bold">
                   <Camera className="mr-2 h-5 w-5" />
                   Take Photo
               </Button>
@@ -81,7 +81,8 @@ export function NutriSnapApp() {
             <h1 className="text-4xl font-bold text-primary opacity-50">NutriSnap</h1>
           </div>
           <div className="flex gap-4 items-center">
-             <Skeleton className="h-10 w-32 rounded-md" />
+             <Skeleton className="h-12 w-36 rounded-md" />
+             <Skeleton className="h-12 w-36 rounded-md" />
              <Skeleton className="h-10 w-32 rounded-md" />
           </div>
         </header>
