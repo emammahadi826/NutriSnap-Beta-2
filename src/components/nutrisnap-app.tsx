@@ -45,7 +45,7 @@ export function NutriSnapApp() {
   );
 
   const MealLogButtons = () => (
-    <>
+    <div className="flex gap-2">
       <MealLogDialog 
           onMealLog={addMeal} 
           isGuest={isGuest} 
@@ -69,21 +69,7 @@ export function NutriSnapApp() {
               </Button>
           }
       />
-    </>
-  );
-
-  const MobileMealLogButton = () => (
-     <MealLogDialog 
-        onMealLog={addMeal} 
-        isGuest={isGuest} 
-        guestMealCount={guestMealCount} 
-        startWithCamera={true}
-        trigger={
-            <Button size="lg" className="font-bold text-base w-full">
-                <Camera className="mr-2 h-5 w-5" /> Log a Meal
-            </Button>
-        }
-    />
+    </div>
   );
 
 
@@ -155,7 +141,7 @@ export function NutriSnapApp() {
         meals={getTodaysMeals()} 
         summary={getTodaysSummary()}
         showLogMealButton={isMobile}
-        mealLogButton={<MobileMealLogButton />}
+        mealLogButton={<MealLogButtons />}
        />
     </div>
   );
