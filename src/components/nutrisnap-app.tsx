@@ -215,15 +215,14 @@ export function NutriSnapApp() {
     <SidebarProvider>
       <AppSidebar />
         <SidebarInset>
-           <header className="border-b p-4"></header>
+           <header className="border-b p-4 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                    <SidebarTrigger className="md:hidden"/>
+                    <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
+                </div>
+                { !isMobile && <MealLogButtons /> }
+           </header>
            <div className="container mx-auto p-4 md:p-8">
-              <header className="flex justify-between items-center mb-8 gap-4">
-                  <div className="flex items-center gap-2">
-                      <SidebarTrigger className="md:hidden"/>
-                      <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
-                  </div>
-                  { !isMobile && <MealLogButtons /> }
-              </header>
               <Dashboard 
                   meals={getTodaysMeals()} 
                   summary={getTodaysSummary()}
