@@ -59,26 +59,20 @@ export function NutriSnapApp() {
   };
 
   const AppSidebar = () => {
-    const { openMobile, setOpenMobile, state } = useSidebar();
+    const { openMobile, setOpenMobile } = useSidebar();
   
     const sidebarContent = (
       <>
-        <SidebarHeader className="p-4 flex items-center justify-between">
-           <div className="flex items-center gap-2">
-            <div className="bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center rounded-full font-bold text-lg">N</div>
-            <h1 className="text-primary font-headline text-2xl group-[[data-state=collapsed]]:hidden">NutriSnap</h1>
-           </div>
-        </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => setActivePage('home')} isActive={activePage === 'home'} variant={activePage === 'home' ? 'outline' : 'ghost'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
+              <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={activePage === 'home' ? 'outline' : 'ghost'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
                 <Home className="h-6 w-6"/>
                 <span className="truncate group-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => setActivePage('chat')} isActive={activePage === 'chat'} variant={activePage === 'chat' ? 'outline' : 'ghost'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
+                <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={activePage === 'chat' ? 'outline' : 'ghost'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
                     <MessageCircle className="h-6 w-6"/>
                     <span className="truncate group-[[data-state=collapsed]]:hidden">Chat</span>
                 </SidebarMenuButton>
@@ -139,6 +133,12 @@ export function NutriSnapApp() {
   
     return (
       <Sidebar>
+         <SidebarHeader className="p-4 flex items-center justify-between">
+           <div className="flex items-center gap-2">
+            <div className="bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center rounded-full font-bold text-lg">N</div>
+            <h1 className="text-primary font-headline text-2xl group-[[data-state=collapsed]]:hidden">NutriSnap</h1>
+           </div>
+        </SidebarHeader>
         {sidebarContent}
       </Sidebar>
     );
@@ -147,32 +147,36 @@ export function NutriSnapApp() {
 
   if (!isLoaded) {
     return (
-      <div className="flex p-4">
-         <div className="hidden md:flex flex-col gap-4 w-[16rem]">
-            <Skeleton className="h-10" />
-            <Skeleton className="h-12" />
+      <div className="flex h-screen bg-background">
+         <div className="hidden md:flex flex-col gap-4 w-[16rem] p-4 border-r">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-8 w-32" />
+            </div>
+            <div className="flex flex-col gap-2 mt-4">
+              <Skeleton className="h-12" />
+              <Skeleton className="h-12" />
+            </div>
             <div className="flex-grow" />
             <Skeleton className="h-20" />
             <Skeleton className="h-12" />
          </div>
-         <div className="flex-1 pl-4">
-            <header className="flex justify-between items-center mb-8">
-                <Skeleton className="h-10 w-48" />
-                <div className="hidden md:flex gap-4 items-center">
-                    <Skeleton className="h-12 w-32 rounded-md" />
-                    <Skeleton className="h-12 w-32 rounded-md" />
+         <div className="flex-1 flex flex-col">
+             <header className="flex h-[69px] items-center px-4 border-b">
+                 <Skeleton className="h-8 w-8" />
+             </header>
+            <main className="flex-1 p-4 md:p-8 overflow-auto">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+                    <Skeleton className="h-32 rounded-lg" />
+                    <Skeleton className="h-32 rounded-lg" />
+                    <Skeleton className="h-32 rounded-lg" />
+                    <Skeleton className="h-32 rounded-lg" />
                 </div>
-            </header>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-                <Skeleton className="h-32 rounded-lg" />
-                <Skeleton className="h-32 rounded-lg" />
-                <Skeleton className="h-32 rounded-lg" />
-                <Skeleton className="h-32 rounded-lg" />
-            </div>
-            <div className="grid gap-8 md:grid-cols-5">
-                <Skeleton className="h-80 rounded-lg md:col-span-3" />
-                <Skeleton className="h-80 rounded-lg md:col-span-2" />
-            </div>
+                <div className="grid gap-8 md:grid-cols-5">
+                    <Skeleton className="h-80 rounded-lg md:col-span-3" />
+                    <Skeleton className="h-80 rounded-lg md:col-span-2" />
+                </div>
+            </main>
          </div>
       </div>
     );
@@ -180,24 +184,24 @@ export function NutriSnapApp() {
 
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <header className="p-4 flex items-center h-[69px] border-b">
-          <div className="flex items-center gap-2">
+      <div className="flex h-screen bg-background">
+        <AppSidebar />
+        <main className="flex-1 flex flex-col">
+          <header className="h-[69px] flex items-center px-4 border-b shrink-0">
             <SidebarTrigger />
+          </header>
+          <div className={activePage === 'home' ? "flex-1 overflow-auto p-4 md:p-8" : "flex-1 overflow-hidden"}>
+            {activePage === 'home' ? (
+              <Dashboard 
+                  meals={getTodaysMeals()} 
+                  summary={getTodaysSummary()}
+              />
+            ) : (
+              <ChatPage />
+            )}
           </div>
-        </header>
-        <div className={activePage === 'home' ? "container mx-auto p-4 md:p-8" : "h-[calc(100vh-69px)]"}>
-          {activePage === 'home' ? (
-            <Dashboard 
-                meals={getTodaysMeals()} 
-                summary={getTodaysSummary()}
-            />
-          ) : (
-            <ChatPage />
-          )}
-        </div>
-      </SidebarInset>
+        </main>
+      </div>
     </SidebarProvider>
   );
 }
