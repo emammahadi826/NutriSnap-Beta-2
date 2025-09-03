@@ -112,7 +112,7 @@ export function NutriSnapApp() {
                <UserInfo />
              </div>
            </div>
-            <SidebarTrigger className="hidden md:flex" />
+           <SidebarTrigger className="hidden md:flex" />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
