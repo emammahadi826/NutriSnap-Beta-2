@@ -73,8 +73,8 @@ export function NutriSnapApp() {
                 {isGuest ? <UserIcon /> : user?.email?.charAt(0).toUpperCase()}
             </AvatarFallback>
         </Avatar>
-        <div className="flex flex-col group-[[data-state=collapsed]]:hidden">
-            <p className="font-semibold text-sm truncate">
+        <div className="flex flex-col">
+            <p className="font-semibold text-sm truncate group-[[data-state=collapsed]]:hidden">
                 {user ? user.email : "Guest User"}
             </p>
         </div>
@@ -108,9 +108,11 @@ export function NutriSnapApp() {
       <>
         <SidebarHeader className="flex items-center justify-between">
            <div className="flex items-center gap-3">
-             <UserInfo />
+             <div className="flex items-center gap-3 group-[[data-state=collapsed]]:hidden">
+               <UserInfo />
+             </div>
+             <SidebarTrigger className="hidden md:flex" />
            </div>
-           <SidebarTrigger className="group-data-[[data-state=expanded]]:flex hidden md:flex" />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
