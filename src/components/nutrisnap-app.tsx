@@ -199,12 +199,12 @@ export function NutriSnapApp() {
     <SidebarProvider>
       <AppSidebar />
         <SidebarInset>
-           <header className="border-b p-4 flex justify-between items-center h-[69px]">
+           <header className="border-b p-4 flex justify-between items-center">
                <div className="flex items-center gap-2">
                     <SidebarTrigger className="md:hidden"/>
                 </div>
            </header>
-           <div className="container mx-auto p-4 md:p-8">
+           <div className={activePage === 'home' ? "container mx-auto p-4 md:p-8" : ""}>
               {activePage === 'home' ? (
                 <Dashboard 
                     meals={getTodaysMeals()} 

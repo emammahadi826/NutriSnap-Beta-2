@@ -76,7 +76,7 @@ export function ChatPage() {
     }, [messages]);
     
     return (
-        <div className="flex flex-col h-[calc(100vh-8rem)]">
+        <div className="flex flex-col h-full">
             <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
                  <div className="space-y-6">
                     {messages.length === 0 && (
