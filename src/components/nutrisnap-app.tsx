@@ -118,8 +118,8 @@ export function NutriSnapApp() {
             { isMobile && (
                 <Sheet>
                   <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <Menu className="h-6 w-6" />
+                    <Button variant="ghost" size="icon" className="h-12 w-12">
+                      <Menu className="h-8 w-8" />
                       <span className="sr-only">Open menu</span>
                     </Button>
                   </SheetTrigger>
