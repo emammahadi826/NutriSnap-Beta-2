@@ -1,9 +1,8 @@
 
 "use client";
 
-import { useMealLogger } from '@/hooks/use-meal-logger';
+import { useMealLogger, type MealLogger } from '@/hooks/use-meal-logger';
 import { Dashboard } from '@/components/dashboard';
-import { MealLogDialog } from '@/components/meal-log-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
@@ -29,12 +28,12 @@ export function NutriSnapApp() {
   const AuthButtons = ({ inSheet = false }: { inSheet?: boolean }) => (
      <>
       {user ? (
-        <Button variant={inSheet ? "ghost" : "outline"} className={inSheet ? "justify-start" : ""} onClick={logOut}>
+        <Button variant={inSheet ? "ghost" : "outline"} className={inSheet ? "justify-start w-full text-left" : ""} onClick={logOut}>
             <LogOut className="mr-2 h-5 w-5" />
             Logout
         </Button>
       ) : (
-        <Button asChild variant={inSheet ? "ghost" : "outline"} className={inSheet ? "justify-start" : ""}>
+        <Button asChild variant={inSheet ? "ghost" : "outline"} className={inSheet ? "justify-start w-full text-left" : ""}>
             <Link href="/login">
                 <LogIn className="mr-2 h-5 w-5" />
                 Login or Sign Up
@@ -50,10 +49,13 @@ export function NutriSnapApp() {
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-primary opacity-50">NutriSnap</h1>
           <div className="flex gap-4 items-center">
-            <Skeleton className="h-12 w-36 rounded-md" />
-            <Skeleton className="h-10 w-10 rounded-full" />
+             <Skeleton className="h-10 w-10 rounded-full" />
           </div>
         </header>
+        <div className="space-y-4 text-center mb-8">
+            <Skeleton className="h-12 w-48 rounded-md mx-auto" />
+        </div>
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <Skeleton className="h-32 rounded-lg" />
           <Skeleton className="h-32 rounded-lg" />
@@ -73,7 +75,10 @@ export function NutriSnapApp() {
       <header className="flex justify-between items-center mb-8 gap-4">
         <div className="flex items-center gap-4">
             <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
-            { isMobile && (
+        </div>
+
+        <div className="flex gap-2 items-center">
+          { isMobile ? (
                  <Sheet>
                   <SheetTrigger asChild>
                     <Button variant="outline" size="icon">
@@ -96,15 +101,16 @@ export function NutriSnapApp() {
                     </div>
                   </SheetContent>
                 </Sheet>
-            )}
-        </div>
-
-        <div className="flex gap-2 items-center">
-          <MealLogDialog onMealLog={addMeal} isGuest={isGuest} guestMealCount={guestMealCount} />
-          { !isMobile && <AuthButtons /> }
+            ) : <AuthButtons /> }
         </div>
       </header>
-      <Dashboard meals={getTodaysMeals()} summary={getTodaysSummary()} />
+      <Dashboard 
+        meals={getTodaysMeals()} 
+        summary={getTodaysSummary()}
+        onMealLog={addMeal}
+        isGuest={isGuest}
+        guestMealCount={guestMealCount}
+       />
     </div>
   );
 }

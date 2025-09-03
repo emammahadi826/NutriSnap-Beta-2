@@ -9,7 +9,17 @@ import { collection, doc, getDocs, writeBatch, query, orderBy, getDoc, setDoc } 
 
 const GUEST_MEALS_STORAGE_KEY = 'nutrisnap_guest_meals';
 
-export function useMealLogger() {
+export interface MealLogger {
+    isLoaded: boolean;
+    meals: Meal[];
+    addMeal: (newMeal: Omit<Meal, 'id' | 'timestamp'>) => Promise<void>;
+    getTodaysMeals: () => Meal[];
+    getTodaysSummary: () => DailySummary;
+    guestMealCount: number;
+}
+
+
+export function useMealLogger(): MealLogger {
   const { user } = useAuth();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
