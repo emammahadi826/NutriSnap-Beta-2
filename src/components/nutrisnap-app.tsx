@@ -27,6 +27,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 
 
 export function NutriSnapApp() {
@@ -106,15 +107,15 @@ export function NutriSnapApp() {
     const sidebarContent = (
       <>
         <SidebarHeader className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <UserInfo />
-          </div>
-          <SidebarTrigger className={cn("group-[[data-state=collapsed]]:hidden", state === "collapsed" ? "block" : "hidden")} />
+            <div className={cn("flex items-center gap-2", state === 'collapsed' && 'invisible')}>
+                <UserInfo />
+            </div>
+            <SidebarTrigger />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12 group-data-[[data-state=collapsed]]:p-0">
+              <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12 group-data-[[data-state=collapsed]]:p-0 group-data-[[data-state=collapsed]]:justify-center">
                 <Home className="h-6 w-6"/>
                 <span className="text-base truncate group-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
