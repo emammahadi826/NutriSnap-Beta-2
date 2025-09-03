@@ -16,7 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu, User, LogOut, LogIn } from 'lucide-react';
+import { Menu, LogOut, LogIn } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 
@@ -29,19 +29,17 @@ export function NutriSnapApp() {
   const AuthButtons = ({ inSheet = false }: { inSheet?: boolean }) => (
      <>
       {user ? (
-        <Button variant={inSheet ? "ghost" : "default"} className="justify-start" onClick={logOut}>
+        <Button variant={inSheet ? "ghost" : "outline"} className={inSheet ? "justify-start" : ""} onClick={logOut}>
             <LogOut className="mr-2 h-5 w-5" />
             Logout
         </Button>
       ) : (
-        <>
-        <Button asChild variant={inSheet ? "ghost" : "default"} className="justify-start">
+        <Button asChild variant={inSheet ? "ghost" : "outline"} className={inSheet ? "justify-start" : ""}>
             <Link href="/login">
                 <LogIn className="mr-2 h-5 w-5" />
                 Login or Sign Up
             </Link>
         </Button>
-        </>
       )}
      </>
   );
