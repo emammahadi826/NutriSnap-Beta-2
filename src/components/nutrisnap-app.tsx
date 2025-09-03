@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMealLogger } from '@/hooks/use-meal-logger';
@@ -38,11 +39,6 @@ export function NutriSnapApp() {
             <Link href="/login">
                 <LogIn className="mr-2 h-5 w-5" />
                 Login or Sign Up
-            </Link>
-        </Button>
-         <Button asChild>
-            <Link href="/login">
-               Get Started
             </Link>
         </Button>
         </>
