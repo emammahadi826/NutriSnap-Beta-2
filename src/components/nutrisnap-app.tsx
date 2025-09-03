@@ -99,7 +99,6 @@ export function NutriSnapApp() {
   };
 
   const AppSidebar = () => {
-    const { setOpenMobile } = useSidebar();
 
     const SidebarItems = () => (
       <>
@@ -119,29 +118,33 @@ export function NutriSnapApp() {
         <SidebarFooter className="gap-4">
           <GuestCreditInfo />
           {user ? (
-             <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton>
-                    <Avatar className="h-8 w-8">
-                      {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
-                      <AvatarFallback>
-                          {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="truncate">{user.email}</span>
-                    <ChevronUp className="ml-auto" />
-                  </SidebarMenuButton>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  className="w-[--radix-popper-anchor-width]"
-                >
-                  <DropdownMenuItem onClick={logOut}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Sign out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuButton>
+                       <Avatar className="h-8 w-8">
+                        {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
+                        <AvatarFallback>
+                            {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="truncate">{user.email}</span>
+                      <ChevronUp className="ml-auto" />
+                    </SidebarMenuButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side="top"
+                    className="w-[--radix-popper-anchor-width]"
+                  >
+                    <DropdownMenuItem onClick={logOut}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Sign out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SidebarMenuItem>
+            </SidebarMenu>
           ) : (
             <Button asChild variant="outline" className="w-full justify-center text-base h-12">
               <Link href="/login">
