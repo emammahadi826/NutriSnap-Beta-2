@@ -19,7 +19,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   useSidebar,
-  SheetTitle,
   SidebarTrigger,
   SidebarProvider,
   SidebarInset
@@ -27,7 +26,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 
 
 export function NutriSnapApp() {
@@ -70,10 +69,10 @@ export function NutriSnapApp() {
         <Avatar className="h-10 w-10">
             {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
             <AvatarFallback>
-                {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+                {isGuest ? <UserIcon /> : user?.email?.charAt(0).toUpperCase()}
             </AvatarFallback>
         </Avatar>
-        <div className="flex flex-col">
+        <div className="flex flex-col group-[[data-state=collapsed]]:hidden">
             <p className="font-semibold text-sm truncate">
                 {user ? user.email : "Guest User"}
             </p>
@@ -88,7 +87,7 @@ export function NutriSnapApp() {
   
     if (isGuest) {
       return (
-        <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
+        <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border group-[[data-state=collapsed]]:hidden">
             <div className="text-center text-sm mb-2">
                 <p className="font-bold">{creditsLeft} credits left</p>
                 <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
@@ -114,7 +113,7 @@ export function NutriSnapApp() {
             <SidebarMenuItem>
               <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12">
                 <Home className="h-5 w-5"/>
-                <span className="text-base">Home</span>
+                <span className="text-base truncate">Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -132,7 +131,7 @@ export function NutriSnapApp() {
                       </AvatarFallback>
                     </Avatar>
                     <span className="truncate">{user.email}</span>
-                    <ChevronUp className="ml-auto" />
+                    <ChevronUp className="ml-auto group-[[data-state=collapsed]]:hidden" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -149,7 +148,7 @@ export function NutriSnapApp() {
             <Button asChild variant="outline" className="w-full justify-center text-base h-12">
               <Link href="/login">
                 <LogIn className="mr-2 h-5 w-5" />
-                <span>Login / Sign Up</span>
+                <span className="truncate group-[[data-state=collapsed]]:hidden">Login / Sign Up</span>
               </Link>
             </Button>
           )}
@@ -216,10 +215,10 @@ export function NutriSnapApp() {
            <div className="container mx-auto p-4 md:p-8">
               <header className="flex justify-between items-center mb-8 gap-4">
                   <div className="flex items-center gap-2">
-                      <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                       <SidebarTrigger>
                         <PanelLeft />
                       </SidebarTrigger>
+                      <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                   </div>
                   { !isMobile && <MealLogButtons /> }
               </header>
