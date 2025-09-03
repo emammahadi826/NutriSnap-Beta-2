@@ -71,7 +71,7 @@ export function NutriSnapApp() {
             <AvatarImage src={'https://github.com/shadcn.png'} alt={user?.displayName || 'User'} />
             <AvatarFallback>
                 {isGuest ? <UserIcon /> : user?.email?.charAt(0).toUpperCase()}
-            </AvatarFallback>
+            </Fallback>
         </Avatar>
         <div className="flex flex-col group-[[data-state=collapsed]]:hidden">
             <p className="font-semibold text-sm truncate">
@@ -134,7 +134,7 @@ export function NutriSnapApp() {
                            <AvatarImage src={'https://github.com/shadcn.png'} alt={user.displayName || 'User'} />
                           <AvatarFallback>
                               {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
-                          </AvatarFallback>
+                          </Fallback>
                         </Avatar>
                         <span className="truncate group-[[data-state=collapsed]]:hidden">{user.email}</span>
                         <ChevronUp className="ml-auto h-4 w-4 group-[[data-state=collapsed]]:hidden" />
