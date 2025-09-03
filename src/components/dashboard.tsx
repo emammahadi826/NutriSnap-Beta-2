@@ -73,7 +73,7 @@ export function Dashboard({ meals, summary }: DashboardProps) {
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={macroData} layout="vertical" margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} allowDecimals={false} tickMargin={5} />
                 <YAxis type="category" dataKey="name" hide />
                 <Tooltip
                   cursor={{ fill: 'hsla(var(--muted), 0.5)' }}
