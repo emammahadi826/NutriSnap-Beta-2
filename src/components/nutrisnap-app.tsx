@@ -101,19 +101,16 @@ export function NutriSnapApp() {
   };
 
   const AppSidebar = () => {
-
     const { isMobile, openMobile, setOpenMobile } = useSidebar();
-
+  
     const sidebarContent = (
       <>
-        <SidebarHeader className="flex items-center justify-between p-0">
-           {user && (
-            <div className="flex items-center justify-between w-full p-2">
-              <UserInfo />
-              <SidebarTrigger className="hidden md:flex" />
-            </div>
-           )}
-        </SidebarHeader>
+        {user && (
+          <SidebarHeader className="flex items-center justify-between p-2">
+            <UserInfo />
+            <SidebarTrigger className="hidden md:flex" />
+          </SidebarHeader>
+        )}
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -127,29 +124,29 @@ export function NutriSnapApp() {
         <SidebarFooter className="gap-4">
           <GuestCreditInfo />
           {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2 group-[[data-state=collapsed]]:hidden">
-                         <Avatar className="h-7 w-7">
-                           <AvatarImage src={'https://github.com/shadcn.png'} alt={user.displayName || 'User'} />
-                          <AvatarFallback>
-                              {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
-                          </Fallback>
-                        </Avatar>
-                        <span className="truncate group-[[data-state=collapsed]]:hidden">{user.email}</span>
-                        <ChevronUp className="ml-auto h-4 w-4 group-[[data-state=collapsed]]:hidden" />
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  className="w-[--radix-popper-anchor-width]"
-                >
-                  <DropdownMenuItem onClick={logOut}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Sign out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2 group-[[data-state=collapsed]]:hidden">
+                  <Avatar className="h-7 w-7">
+                    <AvatarImage src={'https://github.com/shadcn.png'} alt={user.displayName || 'User'} />
+                    <AvatarFallback>
+                      {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="truncate group-[[data-state=collapsed]]:hidden">{user.email}</span>
+                  <ChevronUp className="ml-auto h-4 w-4 group-[[data-state=collapsed]]:hidden" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                side="top"
+                className="w-[--radix-popper-anchor-width]"
+              >
+                <DropdownMenuItem onClick={logOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <Button asChild variant="outline" className="w-full justify-center text-base h-12 group-[[data-state=collapsed]]:hidden">
               <Link href="/login">
@@ -161,24 +158,24 @@ export function NutriSnapApp() {
         </SidebarFooter>
       </>
     );
-
+  
     if (isMobile) {
       return (
-         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
-            <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
-                 <SheetTitle className="sr-only">Menu</SheetTitle>
-                 {sidebarContent}
-            </SheetContent>
+        <Sheet open={openMobile} onOpenChange={setOpenMobile}>
+          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
+            <SheetTitle className="sr-only">Menu</SheetTitle>
+            {sidebarContent}
+          </SheetContent>
         </Sheet>
       );
     }
-
+  
     return (
       <Sidebar>
-       {sidebarContent}
+        {sidebarContent}
       </Sidebar>
     );
-  }
+  };
   
 
   if (!isLoaded) {
