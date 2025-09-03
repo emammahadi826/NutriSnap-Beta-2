@@ -102,39 +102,39 @@ export function NutriSnapApp() {
     
     return (
         <Sidebar>
-          <SheetTitle className="sr-only">Menu</SheetTitle>
-            <SidebarHeader className="flex items-center justify-between">
-                <UserInfo />
-                <Button variant="ghost" size="icon" className="md:hidden h-8 w-8" onClick={() => setOpenMobile(false)}>
-                    <X />
-                </Button>
-            </SidebarHeader>
-            <SidebarContent>
-                 <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12">
-                            <Home className="h-5 w-5"/>
-                            <span className="text-base">Home</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarContent>
-            <SidebarFooter className="gap-4">
-                <GuestCreditInfo />
-                {user ? (
-                    <Button variant="ghost" onClick={logOut} className="w-full justify-start text-base h-12">
-                        <LogOut />
-                        <span>Logout</span>
-                    </Button>
-                ) : (
-                    <Button asChild variant="ghost" className="w-full justify-start text-base h-12">
-                        <Link href="/login">
-                            <LogIn />
-                            <span>Login / Sign Up</span>
-                        </Link>
-                    </Button>
-                )}
-            </SidebarFooter>
+          <SidebarHeader className="flex items-center justify-between">
+              <UserInfo />
+              <Button variant="ghost" size="icon" className="md:hidden h-8 w-8" onClick={() => setOpenMobile(false)}>
+                  <X />
+                  <span className="sr-only">Close</span>
+              </Button>
+          </SidebarHeader>
+          <SidebarContent>
+               <SidebarMenu>
+                  <SidebarMenuItem>
+                      <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12">
+                          <Home className="h-5 w-5"/>
+                          <span className="text-base">Home</span>
+                      </SidebarMenuButton>
+                  </SidebarMenuItem>
+              </SidebarMenu>
+          </SidebarContent>
+          <SidebarFooter className="gap-4">
+              <GuestCreditInfo />
+              {user ? (
+                  <Button variant="ghost" onClick={logOut} className="w-full justify-start text-base h-12">
+                      <LogOut />
+                      <span>Logout</span>
+                  </Button>
+              ) : (
+                  <Button asChild variant="ghost" className="w-full justify-start text-base h-12">
+                      <Link href="/login">
+                          <LogIn />
+                          <span>Login / Sign Up</span>
+                      </Link>
+                  </Button>
+              )}
+          </SidebarFooter>
         </Sidebar>
     );
   }
