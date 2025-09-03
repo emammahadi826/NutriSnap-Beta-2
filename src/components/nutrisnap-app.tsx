@@ -105,9 +105,6 @@ export function NutriSnapApp() {
   
     const sidebarContent = (
       <>
-        <SidebarHeader className="p-4 border-b group-[[data-state=collapsed]]:hidden">
-            <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
-        </SidebarHeader>
         {user && !isMobile && (
           <SidebarHeader className="flex items-center justify-between p-2">
             <div className="flex items-center gap-2">
@@ -119,7 +116,7 @@ export function NutriSnapApp() {
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/" isActive={true} size="lg" variant="outline" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
+              <SidebarMenuButton href="/" isActive={true} variant="outline" size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
                 <Home className="h-6 w-6"/>
                 <span className="truncate group-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
@@ -179,6 +176,9 @@ export function NutriSnapApp() {
   
     return (
       <Sidebar>
+        <SidebarHeader className="p-4 border-b group-[[data-state=collapsed]]:hidden">
+            <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
+        </SidebarHeader>
         {sidebarContent}
       </Sidebar>
     );
