@@ -209,6 +209,7 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
+            <SheetTitle className="sr-only">Menu</SheetTitle>
             {children}
           </SheetContent>
         </Sheet>

@@ -22,7 +22,6 @@ import {
   SidebarInset,
   SidebarTrigger,
   useSidebar,
-  SheetTitle,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -76,7 +75,7 @@ export function NutriSnapApp() {
             </p>
              {!user && 
                 <p className="text-xs text-muted-foreground">
-                    You are currently browsing as a guest.
+                    Log in or sign up
                 </p>
             }
         </div>
@@ -107,7 +106,6 @@ export function NutriSnapApp() {
     
     return (
         <Sidebar>
-            <SheetTitle className="sr-only">Menu</SheetTitle>
             <SidebarHeader className="flex items-center justify-between">
                 <UserInfo />
                 <Button variant="ghost" size="icon" className="md:hidden h-8 w-8" onClick={() => setOpenMobile(false)}>
@@ -180,7 +178,7 @@ export function NutriSnapApp() {
                 <header className="flex justify-between items-center mb-8 gap-4">
                     <div className="flex items-center gap-2">
                          <SidebarTrigger className="md:hidden h-12 w-12">
-                            <PanelLeft className="h-6 w-6"/>
+                            <PanelLeft className="h-7 w-7"/>
                         </SidebarTrigger>
                         <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                     </div>
