@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, ChangeEvent, useEffect } from 'react';
@@ -34,7 +35,7 @@ type FoodResult = LoggedItem & { originalName: string; confidence: number };
 
 export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, startWithCamera = false }: MealLogDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error' | 'limit'>(startWithCamera ? 'camera' : 'upload');
+  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error' | 'limit'>('upload');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [results, setResults] = useState<FoodResult[]>([]);
@@ -53,6 +54,8 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
             setView('limit');
         } else if(startWithCamera) {
             setView('camera');
+        } else {
+            setView('upload');
         }
     }
     setIsOpen(open);
@@ -255,12 +258,6 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
                  )}
                  <DialogTitle className="font-headline text-2xl">Log a New Meal</DialogTitle>
               </div>
-              {view === 'upload' && !startWithCamera && (
-                <Button variant="ghost" size="icon" onClick={() => setView('camera')}>
-                    <Camera />
-                    <span className="sr-only">Take Photo</span>
-                </Button>
-              )}
           </div>
           {view !== 'limit' && <DialogDescription>
             Snap a photo of your meal and let our AI do the heavy lifting.
@@ -380,5 +377,3 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
     </Dialog>
   );
 }
-
-    
