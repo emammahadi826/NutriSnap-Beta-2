@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home as HomeIcon, User as UserIcon, HelpCircle } from 'lucide-react';
+import { LogOut, LogIn, Camera, Upload, Home as HomeIcon, User as UserIcon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
@@ -21,7 +21,7 @@ import {
   SidebarMenuButton,
   SidebarInset,
   SidebarTrigger,
-  SidebarSeparator,
+  SheetTitle,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -34,14 +34,14 @@ export function NutriSnapApp() {
   const GUEST_LIMIT = 3;
 
   const MealLogButtons = ({ inSheet = false }: { inSheet?: boolean }) => (
-    <div className={`flex gap-2 ${inSheet ? 'flex-col' : ''}`}>
+    <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${inSheet ? 'flex-col' : ''}`}>
       <MealLogDialog 
           onMealLog={addMeal} 
           isGuest={isGuest} 
           guestMealCount={guestMealCount}
           trigger={
-              <Button size="lg" variant="outline" className={`font-bold text-base ${inSheet ? 'justify-start' : ''}`}>
-                  <Upload className="mr-2 h-6 w-6" />
+              <Button size="lg" variant="outline" className="font-bold text-base w-full py-8 text-lg">
+                  <Upload className="mr-3 h-7 w-7" />
                   Upload Meal
               </Button>
           }
@@ -52,8 +52,8 @@ export function NutriSnapApp() {
           guestMealCount={guestMealCount}
           startWithCamera={true}
           trigger={
-              <Button size="lg" variant="outline" className={`font-bold text-base ${inSheet ? 'justify-start' : ''}`}>
-                  <Camera className="mr-2 h-6 w-6" />
+              <Button size="lg" variant="outline" className="font-bold text-base w-full py-8 text-lg">
+                  <Camera className="mr-3 h-7 w-7" />
                   Take Photo
               </Button>
           }
@@ -132,6 +132,7 @@ export function NutriSnapApp() {
   return (
     <SidebarProvider>
         <Sidebar>
+             <SheetTitle className="sr-only">Menu</SheetTitle>
             <SidebarHeader>
                 <UserInfo />
             </SidebarHeader>
@@ -142,33 +143,6 @@ export function NutriSnapApp() {
                             <HomeIcon />
                             <span>Home</span>
                         </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <MealLogDialog 
-                          onMealLog={addMeal} 
-                          isGuest={isGuest} 
-                          guestMealCount={guestMealCount}
-                          trigger={
-                              <button className="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 h-8 text-sm">
-                                  <Upload />
-                                  <span>Upload Meal</span>
-                              </button>
-                          }
-                      />
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <MealLogDialog 
-                          onMealLog={addMeal} 
-                          isGuest={isGuest} 
-                          guestMealCount={guestMealCount}
-                          startWithCamera={true}
-                          trigger={
-                               <button className="peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0 h-8 text-sm">
-                                  <Camera />
-                                  <span>Take Photo</span>
-                              </button>
-                          }
-                      />
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarContent>
@@ -194,14 +168,16 @@ export function NutriSnapApp() {
              <div className="container mx-auto p-4 md:p-8">
                 <header className="flex justify-between items-center mb-8 gap-4">
                     <div className="flex items-center gap-2">
-                        <SidebarTrigger className="md:hidden" />
+                         <SidebarTrigger className="md:hidden h-12 w-12">
+                            <PanelLeft className="h-6 w-6"/>
+                        </SidebarTrigger>
                         <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                     </div>
                 </header>
                 <Dashboard 
                     meals={getTodaysMeals()} 
                     summary={getTodaysSummary()}
-                    showLogMealButton={false}
+                    showLogMealButton={true}
                     mealLogButton={<MealLogButtons />}
                 />
             </div>
