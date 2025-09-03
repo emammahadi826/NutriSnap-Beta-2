@@ -84,28 +84,6 @@ export function NutriSnapApp() {
       <header className="flex justify-between items-center mb-8 gap-4">
         <div className="flex items-center gap-2">
             <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
-             { isMobile && (
-                 <Sheet>
-                  <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <Menu className="h-6 w-6" />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent className="flex flex-col">
-                    <SheetHeader className="mb-4 text-left">
-                      <SheetTitle className="text-2xl font-headline">Menu</SheetTitle>
-                      <SheetDescription>
-                        {user ? `Logged in as ${user.email}` : "You are currently browsing as a guest."}
-                      </SheetDescription>
-                    </SheetHeader>
-                    <div className="flex-grow">
-                      {/* Content for the middle of the sheet can go here */}
-                    </div>
-                    <AuthButtons inSheet={true} />
-                  </SheetContent>
-                </Sheet>
-            ) }
         </div>
 
         { !isMobile && (
@@ -114,6 +92,29 @@ export function NutriSnapApp() {
             <AuthButtons />
           </div>
         )}
+        
+        { isMobile && (
+             <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Open menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="flex flex-col">
+                <SheetHeader className="mb-4 text-left">
+                  <SheetTitle className="text-2xl font-headline">Menu</SheetTitle>
+                  <SheetDescription>
+                    {user ? `Logged in as ${user.email}` : "You are currently browsing as a guest."}
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="flex-grow">
+                  {/* Content for the middle of the sheet can go here */}
+                </div>
+                <AuthButtons inSheet={true} />
+              </SheetContent>
+            </Sheet>
+        ) }
       </header>
       <Dashboard 
         meals={getTodaysMeals()} 
