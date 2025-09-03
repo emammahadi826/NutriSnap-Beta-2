@@ -18,7 +18,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarInset,
   useSidebar,
   SheetTitle,
   SidebarTrigger
@@ -205,12 +204,14 @@ export function NutriSnapApp() {
   return (
     <>
       <AppSidebar />
-      <SidebarInset>
+        <main className="min-h-screen w-full">
            <div className="container mx-auto p-4 md:p-8">
               <header className="flex justify-between items-center mb-8 gap-4">
                   <div className="flex items-center gap-2">
                       <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
-                      <SidebarTrigger><PanelLeft /></SidebarTrigger>
+                      <SidebarTrigger>
+                        <PanelLeft />
+                      </SidebarTrigger>
                   </div>
                   { !isMobile && <MealLogButtons /> }
               </header>
@@ -221,7 +222,7 @@ export function NutriSnapApp() {
                   mealLogButton={<MealLogButtons />}
               />
           </div>
-      </SidebarInset>
+      </main>
     </>
   );
 }
