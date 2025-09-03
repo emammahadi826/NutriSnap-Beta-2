@@ -2,7 +2,7 @@
 
 import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import Image from 'next/image';
-import { Camera, Loader2, Plus, Minus, X, Info, Upload } from 'lucide-react';
+import { Camera, Loader2, Plus, Minus, X, Info, Upload, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -26,13 +26,15 @@ interface MealLogDialogProps {
   onMealLog: (meal: Omit<Meal, 'id' | 'timestamp'>) => void;
   isGuest: boolean;
   guestMealCount: number;
+  trigger?: React.ReactNode;
+  startWithCamera?: boolean;
 }
 
 type FoodResult = LoggedItem & { originalName: string; confidence: number };
 
-export function MealLogDialog({ onMealLog, isGuest, guestMealCount }: MealLogDialogProps) {
+export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, startWithCamera = false }: MealLogDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error' | 'limit'>('upload');
+  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error' | 'limit'>(startWithCamera ? 'camera' : 'upload');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [results, setResults] = useState<FoodResult[]>([]);
@@ -45,17 +47,21 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount }: MealLogDia
   
   const GUEST_LIMIT = 3;
 
-  const handleDialogOpen = () => {
-    if (isGuest && guestMealCount >= GUEST_LIMIT) {
-      setView('limit');
+  const handleDialogOpen = (open: boolean) => {
+    if (open) {
+        if (isGuest && guestMealCount >= GUEST_LIMIT) {
+            setView('limit');
+        } else if(startWithCamera) {
+            setView('camera');
+        }
     }
-    setIsOpen(true);
+    setIsOpen(open);
   }
 
   useEffect(() => {
     let stream: MediaStream | null = null;
     const getCameraPermission = async () => {
-      if (view !== 'camera') return;
+      if (view !== 'camera' || !isOpen) return;
       try {
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
         setHasCameraPermission(true);
@@ -79,7 +85,7 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount }: MealLogDia
     return () => {
         stream?.getTracks().forEach(track => track.stop());
     }
-  }, [view, toast]);
+  }, [view, toast, isOpen]);
 
   const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -95,7 +101,7 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount }: MealLogDia
   };
 
   const resetState = () => {
-    setView('upload');
+    setView(startWithCamera ? 'camera' : 'upload');
     setImagePreview(null);
     setImageData(null);
     setResults([]);
@@ -112,7 +118,7 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount }: MealLogDia
   };
   
   const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
+    handleDialogOpen(open);
     if (!open) {
       setTimeout(resetState, 300);
     }
@@ -226,17 +232,36 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount }: MealLogDia
     });
     handleOpenChange(false);
   };
+  
+  const defaultTrigger = (
+      <Button size="lg" className="font-bold text-base">
+          <Camera className="mr-2 h-5 w-5" /> Log a Meal
+      </Button>
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button size="lg" className="font-bold text-base" onClick={handleDialogOpen}>
-          <Camera className="mr-2 h-5 w-5" /> Log a Meal
-        </Button>
+      <DialogTrigger asChild onClick={() => handleDialogOpen(true)}>
+        {trigger || defaultTrigger}
       </DialogTrigger>
       <DialogContent className="max-w-[95vw] sm:max-w-md bg-card">
         <DialogHeader>
-          <DialogTitle className="font-headline text-2xl">Log a New Meal</DialogTitle>
+          <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                 {(view === 'camera' && !startWithCamera) && (
+                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setView('upload')}>
+                         <ArrowLeft className="h-5 w-5" />
+                     </Button>
+                 )}
+                 <DialogTitle className="font-headline text-2xl">Log a New Meal</DialogTitle>
+              </div>
+              {view === 'upload' && !startWithCamera && (
+                <Button variant="ghost" size="icon" onClick={() => setView('camera')}>
+                    <Camera />
+                    <span className="sr-only">Take Photo</span>
+                </Button>
+              )}
+          </div>
           {view !== 'limit' && <DialogDescription>
             Snap a photo of your meal and let our AI do the heavy lifting.
           </DialogDescription>}
@@ -291,14 +316,6 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount }: MealLogDia
               )}
             </div>
             <Input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageChange} className="hidden" />
-             <div className="flex gap-2 items-center">
-                <div className="flex-grow border-t border-border"></div>
-                <span className="text-xs text-muted-foreground">OR</span>
-                <div className="flex-grow border-t border-border"></div>
-            </div>
-             <Button variant="outline" onClick={() => setView('camera')} size="lg" className="w-full">
-                <Camera className="mr-2 h-5 w-5" /> Take Photo
-             </Button>
              <Button onClick={handleAnalyze} disabled={!imagePreview} className="w-full font-bold text-base py-6">
               Analyze Meal
             </Button>
@@ -319,9 +336,8 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount }: MealLogDia
                       </AlertDescription>
                     </Alert>
                 )}
-                <DialogFooter className="gap-2 sm:gap-0">
-                    <Button variant="outline" onClick={() => setView('upload')}>Back to Upload</Button>
-                    <Button onClick={handleTakePhoto} disabled={hasCameraPermission === false}>
+                <DialogFooter>
+                    <Button onClick={handleTakePhoto} disabled={hasCameraPermission === false} className="w-full">
                         <Camera className="mr-2 h-5 w-5" /> Take Photo
                     </Button>
                 </DialogFooter>
@@ -364,3 +380,5 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount }: MealLogDia
     </Dialog>
   );
 }
+
+    
