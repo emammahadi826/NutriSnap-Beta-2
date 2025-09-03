@@ -105,6 +105,9 @@ export function NutriSnapApp() {
   
     const sidebarContent = (
       <>
+        <SidebarHeader className="p-4 border-b group-[[data-state=collapsed]]:hidden">
+            <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
+        </SidebarHeader>
         {user && !isMobile && (
           <SidebarHeader className="flex items-center justify-between p-2">
             <div className="flex items-center gap-2">
@@ -222,7 +225,6 @@ export function NutriSnapApp() {
            <header className="border-b p-4 flex justify-between items-center">
                <div className="flex items-center gap-2">
                     <SidebarTrigger className="md:hidden"/>
-                    <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                 </div>
                 { !isMobile && <MealLogButtons /> }
            </header>
