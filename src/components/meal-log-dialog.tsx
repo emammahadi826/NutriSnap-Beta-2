@@ -267,7 +267,7 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
                 <span className="text-xs text-muted-foreground">OR</span>
                 <div className="flex-grow border-t border-border"></div>
             </div>
-             <Button variant="outline" onClick={() => setView('camera')} className="w-full">
+             <Button variant="outline" onClick={() => setView('camera')} size="lg" className="w-full">
                 <Camera className="mr-2 h-5 w-5" /> Take Photo
              </Button>
              <Button onClick={handleAnalyze} disabled={!imagePreview} className="w-full font-bold text-base py-6">
