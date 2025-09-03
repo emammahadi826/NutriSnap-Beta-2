@@ -76,11 +76,21 @@ export function Dashboard({ meals, summary }: DashboardProps) {
                 <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} allowDecimals={false} tickMargin={5} />
                 <YAxis type="category" dataKey="name" hide />
                 <Tooltip
-                  cursor={{ fill: 'hsla(var(--muted), 0.5)' }}
+                  cursor={false}
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--background))',
+                    backgroundColor: 'hsl(var(--popover))',
                     borderColor: 'hsl(var(--border))',
                     borderRadius: 'var(--radius)',
+                    color: 'hsl(var(--popover-foreground))',
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                  }}
+                  itemStyle={{
+                    color: 'hsl(var(--popover-foreground))',
+                  }}
+                  labelStyle={{
+                     color: 'hsl(var(--muted-foreground))',
+                     marginBottom: '0.5rem',
+                     fontWeight: 'bold',
                   }}
                 />
                 <Legend />
