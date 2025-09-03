@@ -59,14 +59,12 @@ export function NutriSnapApp() {
   };
 
   const AppSidebar = () => {
-    const { openMobile, setOpenMobile } = useSidebar();
+    const { openMobile, setOpenMobile, state } = useSidebar();
   
     const sidebarContent = (
       <>
-        <SidebarHeader className="p-4 flex items-center justify-between">
-           <div className="flex items-center gap-2">
-            <h1 className="text-primary font-headline text-2xl group-[[data-state=collapsed]]:hidden">NutriSnap</h1>
-           </div>
+        <SidebarHeader className="p-4 flex items-center gap-2">
+            <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -179,24 +177,22 @@ export function NutriSnapApp() {
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
-          <AppSidebar />
-          <div className="flex-1">
-              <header className="p-4 border-b">
-                  <SidebarTrigger/>
-              </header>
-              <div className={activePage === 'home' ? "flex-1 overflow-auto p-4 md:p-8" : "flex-1 overflow-hidden h-[calc(100vh-69px)]"}>
-                {activePage === 'home' ? (
-                  <Dashboard 
-                      meals={getTodaysMeals()} 
-                      summary={getTodaysSummary()}
-                  />
-                ) : (
-                  <ChatPage />
-                )}
-              </div>
-          </div>
-      </div>
+        <AppSidebar />
+        <SidebarInset>
+            <header className="flex items-center p-4">
+              <SidebarTrigger className="md:hidden" />
+            </header>
+            <main className={activePage === 'home' ? "overflow-auto p-4 md:p-8" : "overflow-hidden h-[calc(100vh-69px)]"}>
+              {activePage === 'home' ? (
+                <Dashboard 
+                    meals={getTodaysMeals()} 
+                    summary={getTodaysSummary()}
+                />
+              ) : (
+                <ChatPage />
+              )}
+            </main>
+        </SidebarInset>
     </SidebarProvider>
   );
 }
