@@ -123,7 +123,7 @@ export function NutriSnapApp() {
           {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2 group-[[data-state=collapsed]]:justify-center group-[[data-state=collapsed]]:w-12">
+                    <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2 group-[[data-state=collapsed]]:justify-center group-[[data-state=collapsed]]:w-12 group-[[data-state=collapsed]]:p-0">
                          <Avatar className="h-8 w-8">
                           {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
                           <AvatarFallback>
@@ -145,7 +145,7 @@ export function NutriSnapApp() {
                 </DropdownMenuContent>
               </DropdownMenu>
           ) : (
-            <Button asChild variant="outline" className="w-full justify-center text-base h-12">
+            <Button asChild variant="outline" className="w-full justify-center text-base h-12 group-[[data-state=collapsed]]:justify-center group-[[data-state=collapsed]]:w-12">
               <Link href="/login">
                 <LogIn className="mr-2 h-5 w-5" />
                 <span className="truncate group-[[data-state=collapsed]]:hidden">Login / Sign Up</span>
@@ -233,4 +233,3 @@ export function NutriSnapApp() {
     </SidebarProvider>
   );
 }
-
