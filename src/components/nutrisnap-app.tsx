@@ -4,16 +4,22 @@ import { useMealLogger } from '@/hooks/use-meal-logger';
 import { Dashboard } from '@/components/dashboard';
 import { MealLogDialog } from '@/components/meal-log-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/hooks/use-auth';
+import { Button } from './ui/button';
 
 export function NutriSnapApp() {
   const { isLoaded, addMeal, getTodaysMeals, getTodaysSummary } = useMealLogger();
+  const { logOut } = useAuth();
 
   if (!isLoaded) {
     return (
       <div className="container mx-auto p-4 md:p-8">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-primary opacity-50">NutriSnap</h1>
-          <Skeleton className="h-12 w-36 rounded-md" />
+          <div className="flex gap-4 items-center">
+            <Skeleton className="h-12 w-36 rounded-md" />
+            <Skeleton className="h-10 w-24 rounded-md" />
+          </div>
         </header>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
           <Skeleton className="h-32 rounded-lg" />
@@ -33,7 +39,10 @@ export function NutriSnapApp() {
     <div className="container mx-auto p-4 md:p-8">
       <header className="flex flex-col sm:flex-row justify-between sm:items-center mb-8 gap-4">
         <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
-        <MealLogDialog onMealLog={addMeal} />
+        <div className="flex gap-4 items-center">
+          <MealLogDialog onMealLog={addMeal} />
+          <Button variant="outline" onClick={logOut}>Logout</Button>
+        </div>
       </header>
       <Dashboard meals={getTodaysMeals()} summary={getTodaysSummary()} />
     </div>

@@ -3,43 +3,66 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Meal, DailySummary } from '@/lib/types';
 import { isToday } from 'date-fns';
+import { useAuth } from './use-auth';
+import { db } from '@/lib/firebase';
+import { collection, doc, getDocs, writeBatch, query, orderBy } from 'firebase/firestore';
 
-const MEALS_STORAGE_KEY = 'nutrisnap_meals';
 
 export function useMealLogger() {
+  const { user } = useAuth();
   const [meals, setMeals] = useState<Meal[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    try {
-      const storedMeals = localStorage.getItem(MEALS_STORAGE_KEY);
-      if (storedMeals) {
-        setMeals(JSON.parse(storedMeals));
-      }
-    } catch (error) {
-      console.error("Failed to load meals from localStorage", error);
-    }
-    setIsLoaded(true);
-  }, []);
+  const getMealsCollection = useCallback(() => {
+    if (!user) throw new Error("User not authenticated");
+    return collection(db, 'users', user.uid, 'meals');
+  }, [user]);
 
   useEffect(() => {
-    if (isLoaded) {
+    const fetchMeals = async () => {
+      if (!user) {
+        setIsLoaded(true);
+        return;
+      };
       try {
-        localStorage.setItem(MEALS_STORAGE_KEY, JSON.stringify(meals));
+        const mealsCollection = getMealsCollection();
+        const q = query(mealsCollection, orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(q);
+        const mealsData = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Meal));
+        setMeals(mealsData);
       } catch (error) {
-        console.error("Failed to save meals to localStorage", error);
+        console.error("Failed to load meals from Firestore", error);
+      } finally {
+        setIsLoaded(true);
       }
-    }
-  }, [meals, isLoaded]);
+    };
 
-  const addMeal = useCallback((newMeal: Omit<Meal, 'id' | 'timestamp'>) => {
+    fetchMeals();
+  }, [user, getMealsCollection]);
+
+
+  const addMeal = useCallback(async (newMeal: Omit<Meal, 'id' | 'timestamp'>) => {
+    if (!user) return;
     const mealWithId: Meal = {
       ...newMeal,
       id: new Date().toISOString(),
       timestamp: Date.now(),
     };
+    
     setMeals(prevMeals => [mealWithId, ...prevMeals]);
-  }, []);
+
+    try {
+        const mealsCollection = getMealsCollection();
+        const batch = writeBatch(db);
+        const newDocRef = doc(mealsCollection, mealWithId.id);
+        batch.set(newDocRef, mealWithId);
+        await batch.commit();
+    } catch (error) {
+        console.error("Failed to save meal to Firestore", error);
+        // Optionally, revert local state update
+        setMeals(prevMeals => prevMeals.filter(m => m.id !== mealWithId.id));
+    }
+  }, [user, getMealsCollection]);
 
   const getTodaysMeals = useCallback((): Meal[] => {
     if (!isLoaded) return [];
