@@ -59,7 +59,6 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
           title: 'Camera Access Denied',
           description: 'Please enable camera permissions in your browser settings to use this app.',
         });
-        setView('upload');
       }
     };
 
@@ -292,7 +291,7 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
                 )}
                 <DialogFooter className="gap-2 sm:gap-0">
                     <Button variant="outline" onClick={() => setView('upload')}>Back to Upload</Button>
-                    <Button onClick={handleTakePhoto} disabled={!hasCameraPermission}>
+                    <Button onClick={handleTakePhoto} disabled={hasCameraPermission === false}>
                         <Camera className="mr-2 h-5 w-5" /> Take Photo
                     </Button>
                 </DialogFooter>
