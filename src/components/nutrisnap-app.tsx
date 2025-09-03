@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, X, PanelLeft } from 'lucide-react';
+import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, X, PanelLeft, ChevronUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
@@ -22,10 +22,11 @@ import {
   SidebarInset,
   SidebarTrigger,
   useSidebar,
-  SheetTitle,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 
 export function NutriSnapApp() {
   const { isLoaded, addMeal, getTodaysMeals, getTodaysSummary, guestMealCount } = useMealLogger();
@@ -99,43 +100,77 @@ export function NutriSnapApp() {
 
   const AppSidebar = () => {
     const { setOpenMobile } = useSidebar();
-    
+
+    const SidebarItems = () => (
+      <>
+        <SidebarHeader>
+          <UserInfo />
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12">
+                <Home className="h-5 w-5"/>
+                <span className="text-base">Home</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+        <SidebarFooter className="gap-4">
+          <GuestCreditInfo />
+          {user ? (
+             <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                    <Avatar className="h-8 w-8">
+                      {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
+                      <AvatarFallback>
+                          {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="truncate">{user.email}</span>
+                    <ChevronUp className="ml-auto" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-popper-anchor-width]"
+                >
+                  <DropdownMenuItem onClick={logOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sign out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+          ) : (
+            <Button asChild variant="outline" className="w-full justify-center text-base h-12">
+              <Link href="/login">
+                <LogIn className="mr-2 h-5 w-5" />
+                <span>Login / Sign Up</span>
+              </Link>
+            </Button>
+          )}
+        </SidebarFooter>
+      </>
+    );
+
+    const { isMobile, openMobile, setOpenMobile: setOpen } = useSidebar()
+
+    if (isMobile) {
+      return (
+        <Sheet open={openMobile} onOpenChange={setOpen}>
+          <SheetContent side="left" className="bg-sidebar text-sidebar-foreground flex flex-col p-0 w-[18rem]">
+              <SheetTitle className="sr-only">Menu</SheetTitle>
+              <SidebarItems />
+          </SheetContent>
+        </Sheet>
+      )
+    }
+
     return (
-        <Sidebar>
-          <SidebarHeader className="flex items-center justify-between">
-              <UserInfo />
-              <Button variant="ghost" size="icon" className="md:hidden h-8 w-8" onClick={() => setOpenMobile(false)}>
-                  <X />
-                  <span className="sr-only">Close</span>
-              </Button>
-          </SidebarHeader>
-          <SidebarContent>
-               <SidebarMenu>
-                  <SidebarMenuItem>
-                      <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12">
-                          <Home className="h-5 w-5"/>
-                          <span className="text-base">Home</span>
-                      </SidebarMenuButton>
-                  </SidebarMenuItem>
-              </SidebarMenu>
-          </SidebarContent>
-          <SidebarFooter className="gap-4">
-              <GuestCreditInfo />
-              {user ? (
-                  <Button variant="ghost" onClick={logOut} className="w-full justify-start text-base h-12">
-                      <LogOut />
-                      <span>Logout</span>
-                  </Button>
-              ) : (
-                  <Button asChild variant="ghost" className="w-full justify-start text-base h-12">
-                      <Link href="/login">
-                          <LogIn />
-                          <span>Login / Sign Up</span>
-                      </Link>
-                  </Button>
-              )}
-          </SidebarFooter>
-        </Sidebar>
+      <Sidebar>
+        <SidebarItems />
+      </Sidebar>
     );
   }
   
