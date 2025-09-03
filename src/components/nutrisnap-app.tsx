@@ -70,36 +70,38 @@ export function NutriSnapApp() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <header className="flex flex-col sm:flex-row justify-between sm:items-center mb-8 gap-4">
-        <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
+      <header className="flex justify-between items-center mb-8 gap-4">
+        <div className="flex items-center gap-4">
+            <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
+            { isMobile && (
+                 <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <Menu className="h-6 w-6" />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent className="flex flex-col">
+                    <SheetHeader className="mb-4 text-left">
+                      <SheetTitle className="text-2xl font-headline">Menu</SheetTitle>
+                      <SheetDescription>
+                        {user ? `Logged in as ${user.email}` : "You are currently browsing as a guest."}
+                      </SheetDescription>
+                    </SheetHeader>
+                    <div className="flex-grow">
+                      {/* Content for the middle of the sheet can go here */}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <AuthButtons inSheet={true} />
+                    </div>
+                  </SheetContent>
+                </Sheet>
+            )}
+        </div>
+
         <div className="flex gap-2 items-center">
           <MealLogDialog onMealLog={addMeal} isGuest={isGuest} guestMealCount={guestMealCount} />
-          { isMobile ? (
-             <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Menu className="h-6 w-6" />
-                  <span className="sr-only">Open menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="flex flex-col">
-                <SheetHeader className="mb-4 text-left">
-                  <SheetTitle className="text-2xl font-headline">Menu</SheetTitle>
-                  <SheetDescription>
-                    {user ? `Logged in as ${user.email}` : "You are currently browsing as a guest."}
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="flex-grow">
-                  {/* Content for the middle of the sheet can go here */}
-                </div>
-                <div className="flex flex-col gap-2">
-                  <AuthButtons inSheet={true} />
-                </div>
-              </SheetContent>
-            </Sheet>
-           ) : (
-             <AuthButtons />
-           )}
+          { !isMobile && <AuthButtons /> }
         </div>
       </header>
       <Dashboard meals={getTodaysMeals()} summary={getTodaysSummary()} />
