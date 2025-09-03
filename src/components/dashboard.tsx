@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { Meal, DailySummary } from '@/lib/types';
@@ -5,27 +6,28 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Flame, Wheat, Drumstick, Droplets, Utensils } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MealLogDialog } from '@/components/meal-log-dialog';
-import type { MealLogger } from '@/hooks/use-meal-logger';
+import type { ReactNode } from 'react';
+
 
 interface DashboardProps {
   meals: Meal[];
   summary: DailySummary;
-  onMealLog: (meal: Omit<Meal, 'id' | 'timestamp'>) => void;
-  isGuest: boolean;
-  guestMealCount: number;
+  showLogMealButton: boolean;
+  mealLogButton: ReactNode;
 }
 
-export function Dashboard({ meals, summary, onMealLog, isGuest, guestMealCount }: DashboardProps) {
+export function Dashboard({ meals, summary, showLogMealButton, mealLogButton }: DashboardProps) {
   const macroData = [
     { name: 'Macros', carbs: Math.round(summary.carbs), protein: Math.round(summary.protein), fat: Math.round(summary.fat) },
   ];
 
   return (
     <div className="space-y-8">
-       <section className="text-center">
-         <MealLogDialog onMealLog={onMealLog} isGuest={isGuest} guestMealCount={guestMealCount} />
-       </section>
+       {showLogMealButton && (
+        <section className="text-center">
+          {mealLogButton}
+        </section>
+       )}
 
       <section>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
