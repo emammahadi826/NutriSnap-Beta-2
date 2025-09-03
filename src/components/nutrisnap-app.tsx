@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, ChevronUp, PanelLeft } from 'lucide-react';
+import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, ChevronUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
@@ -65,14 +65,14 @@ export function NutriSnapApp() {
   );
 
   const UserInfo = () => (
-    <div className="flex items-center gap-3 group-[[data-state=collapsed]]:hidden">
+    <div className="flex items-center gap-3">
         <Avatar className="h-10 w-10">
             {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
             <AvatarFallback>
                 {isGuest ? <UserIcon /> : user?.email?.charAt(0).toUpperCase()}
             </AvatarFallback>
         </Avatar>
-        <div className="flex flex-col">
+        <div className="flex flex-col group-[[data-state=collapsed]]:hidden">
             <p className="font-semibold text-sm truncate">
                 {user ? user.email : "Guest User"}
             </p>
@@ -107,19 +107,19 @@ export function NutriSnapApp() {
       <>
         <SidebarHeader className="flex items-center justify-between">
             <UserInfo />
-            <SidebarTrigger className="group-[[data-state=collapsed]]:flex" />
+            <SidebarTrigger className="group-[[data-state=expanded]]:flex" />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12 group-data-[[data-state=collapsed]]:p-0">
-                <Home className="h-7 w-7"/>
+                <Home className="h-6 w-6"/>
                 <span className="text-base truncate group-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter className="gap-4 group-[[data-state=collapsed]]:hidden">
+        <SidebarFooter className="gap-4">
           <GuestCreditInfo />
           {user ? (
               <DropdownMenu>
@@ -147,8 +147,8 @@ export function NutriSnapApp() {
               </DropdownMenu>
           ) : (
             <Button asChild variant="outline" className="w-full justify-center text-base h-12">
-              <Link href="/login" className="group-[[data-state=collapsed]]:justify-center">
-                <LogIn className="mr-2 h-5 w-5" />
+              <Link href="/login" className="group-[[data-state=collapsed]]:justify-center group-[[data-state=collapsed]]:p-0">
+                <LogIn className="h-5 w-5 group-[[data-state=expanded]]:mr-2" />
                 <span className="truncate group-[[data-state=collapsed]]:hidden">Login / Sign Up</span>
               </Link>
             </Button>

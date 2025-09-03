@@ -276,6 +276,7 @@ const SidebarTrigger = React.forwardRef<
       variant="ghost"
       size="icon"
       className={cn("h-7 w-7",
+      "group-data-[[data-state=collapsed]]:flex",
       className
       )}
       onClick={(event) => {
@@ -529,7 +530,7 @@ const sidebarMenuButtonVariants = cva(
       size: {
         default: "h-8 text-sm",
         sm: "h-7 text-xs",
-        lg: "h-12 text-sm group-data-[state=expanded]:w-full",
+        lg: "h-12 group-data-[state=expanded]:w-full",
       },
     },
     defaultVariants: {
@@ -772,6 +773,7 @@ export {
     
 
     
+
 
 
 
