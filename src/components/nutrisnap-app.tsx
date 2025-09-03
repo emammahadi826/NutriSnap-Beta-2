@@ -134,14 +134,13 @@ export function NutriSnapApp() {
 
                     <div className="flex flex-col gap-2">
                       <SheetClose asChild>
-                        <Button asChild variant="ghost" className="justify-start w-full text-left">
+                        <Button asChild variant="ghost" className="justify-start w-full text-left text-lg p-6">
                             <Link href="/">
-                                <HomeIcon className="mr-2 h-5 w-5" />
+                                <HomeIcon className="mr-3 h-7 w-7" />
                                 Home
                             </Link>
                         </Button>
                       </SheetClose>
-                      <MealLogButtons inSheet={true} />
                     </div>
                    
                     <AuthButtons inSheet={true} />
