@@ -26,16 +26,16 @@ export function NutriSnapApp() {
   const isGuest = !user;
   const isMobile = useIsMobile();
 
-  const AuthButtons = () => (
+  const AuthButtons = ({ inSheet = false }: { inSheet?: boolean }) => (
      <>
       {user ? (
-        <Button variant="ghost" className="justify-start" onClick={logOut}>
+        <Button variant={inSheet ? "ghost" : "default"} className="justify-start" onClick={logOut}>
             <LogOut className="mr-2 h-5 w-5" />
             Logout
         </Button>
       ) : (
         <>
-        <Button asChild variant="ghost" className="justify-start">
+        <Button asChild variant={inSheet ? "ghost" : "default"} className="justify-start">
             <Link href="/login">
                 <LogIn className="mr-2 h-5 w-5" />
                 Login or Sign Up
@@ -84,15 +84,18 @@ export function NutriSnapApp() {
                   <span className="sr-only">Open menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent>
-                <SheetHeader className="mb-8">
+              <SheetContent className="flex flex-col">
+                <SheetHeader className="mb-4 text-left">
                   <SheetTitle className="text-2xl font-headline">Menu</SheetTitle>
                   <SheetDescription>
                     {user ? `Logged in as ${user.email}` : "You are currently browsing as a guest."}
                   </SheetDescription>
                 </SheetHeader>
-                <div className="flex flex-col gap-4">
-                  <AuthButtons />
+                <div className="flex-grow">
+                  {/* Content for the middle of the sheet can go here */}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <AuthButtons inSheet={true} />
                 </div>
               </SheetContent>
             </Sheet>
