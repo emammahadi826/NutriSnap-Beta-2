@@ -113,7 +113,7 @@ export function NutriSnapApp() {
             <SidebarMenuItem>
               <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12">
                 <Home className="h-5 w-5"/>
-                <span className="text-base truncate">Home</span>
+                <span className="text-base truncate group-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -130,7 +130,7 @@ export function NutriSnapApp() {
                           {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="truncate">{user.email}</span>
+                    <span className="truncate group-[[data-state=collapsed]]:hidden">{user.email}</span>
                     <ChevronUp className="ml-auto group-[[data-state=collapsed]]:hidden" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
