@@ -122,7 +122,6 @@ export function NutriSnapApp() {
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
              <SidebarHeader className="p-4 flex items-center gap-2">
-                <div className="bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center rounded-full font-bold text-lg">N</div>
                 <SheetTitle className="text-primary font-headline text-2xl">NutriSnap</SheetTitle>
             </SidebarHeader>
             {sidebarContent}
@@ -135,8 +134,8 @@ export function NutriSnapApp() {
       <Sidebar>
          <SidebarHeader className="p-4 flex items-center justify-between">
            <div className="flex items-center gap-2">
-            <div className="bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center rounded-full font-bold text-lg">N</div>
             <h1 className="text-primary font-headline text-2xl group-[[data-state=collapsed]]:hidden">NutriSnap</h1>
+            <div className="bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center rounded-full font-bold text-lg group-[[data-state=expanded]]:hidden">N</div>
            </div>
         </SidebarHeader>
         {sidebarContent}
