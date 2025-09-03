@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home as HomeIcon, User as UserIcon } from 'lucide-react';
+import { LogOut, LogIn, Camera, Upload, Home as HomeIcon, User as UserIcon, PanelLeft } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
@@ -132,16 +132,16 @@ export function NutriSnapApp() {
   return (
     <SidebarProvider>
         <Sidebar>
-             <SheetTitle className="sr-only">Menu</SheetTitle>
+            <SheetTitle className="sr-only">Menu</SheetTitle>
             <SidebarHeader>
                 <UserInfo />
             </SidebarHeader>
             <SidebarContent>
-                <SidebarMenu>
+                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton href="/" isActive={true} tooltip="Dashboard">
-                            <HomeIcon />
-                            <span>Home</span>
+                        <SidebarMenuButton href="/" isActive={true} size="lg" tooltip="Dashboard" className="h-12">
+                            <HomeIcon className="h-6 w-6"/>
+                            <span className="text-lg">Home</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
@@ -169,15 +169,16 @@ export function NutriSnapApp() {
                 <header className="flex justify-between items-center mb-8 gap-4">
                     <div className="flex items-center gap-2">
                          <SidebarTrigger className="md:hidden h-12 w-12">
-                            <PanelLeft className="h-6 w-6"/>
+                            <PanelLeft className="h-7 w-7"/>
                         </SidebarTrigger>
                         <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                     </div>
+                    { !isMobile && <MealLogButtons /> }
                 </header>
                 <Dashboard 
                     meals={getTodaysMeals()} 
                     summary={getTodaysSummary()}
-                    showLogMealButton={true}
+                    showLogMealButton={isMobile}
                     mealLogButton={<MealLogButtons />}
                 />
             </div>
