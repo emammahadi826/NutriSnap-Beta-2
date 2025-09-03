@@ -64,7 +64,7 @@ export function NutriSnapApp() {
     const sidebarContent = (
       <>
         <SidebarHeader className="p-4 flex items-center gap-2">
-            <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
+           <h1 className="text-primary font-headline text-2xl group-data-[[data-state=collapsed]]:hidden">NutriSnap</h1>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -177,22 +177,24 @@ export function NutriSnapApp() {
 
   return (
     <SidebarProvider>
+      <div className="flex">
         <AppSidebar />
-        <SidebarInset>
-            <header className="flex items-center p-4">
-              <SidebarTrigger className="md:hidden" />
-            </header>
-            <main className={activePage === 'home' ? "overflow-auto p-4 md:p-8" : "overflow-hidden h-[calc(100vh-69px)]"}>
-              {activePage === 'home' ? (
-                <Dashboard 
-                    meals={getTodaysMeals()} 
-                    summary={getTodaysSummary()}
-                />
-              ) : (
-                <ChatPage />
-              )}
-            </main>
-        </SidebarInset>
+        <main className="flex-1 flex flex-col">
+          <header className="flex h-[69px] items-center px-4 border-b">
+            <SidebarTrigger />
+          </header>
+          <div className={activePage === 'home' ? "overflow-auto p-4 md:p-8" : "overflow-hidden h-[calc(100vh-69px)]"}>
+            {activePage === 'home' ? (
+              <Dashboard 
+                  meals={getTodaysMeals()} 
+                  summary={getTodaysSummary()}
+              />
+            ) : (
+              <ChatPage />
+            )}
+          </div>
+        </main>
+      </div>
     </SidebarProvider>
   );
 }

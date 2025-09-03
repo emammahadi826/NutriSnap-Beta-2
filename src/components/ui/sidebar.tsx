@@ -303,7 +303,7 @@ const SidebarInset = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("flex-1 flex flex-col", className)}
+      className={cn("flex-1", className)}
       {...props}
     />
   )
@@ -744,6 +744,7 @@ export {
     
 
     
+
 
 
 
