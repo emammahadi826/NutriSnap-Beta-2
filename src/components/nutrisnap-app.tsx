@@ -47,7 +47,7 @@ export function NutriSnapApp() {
             <Button variant="outline" onClick={logOut}>Logout</Button>
           ) : (
             <Button asChild variant="outline">
-                <Link href="/login">Login</Link>
+                <Link href="/login">Login / Sign Up</Link>
             </Button>
           )}
         </div>
