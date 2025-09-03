@@ -119,7 +119,7 @@ export function NutriSnapApp() {
                 <Sheet>
                   <SheetTrigger asChild>
                     <Button variant="ghost" size="icon" className="h-12 w-12">
-                      <Menu className="h-8 w-8" />
+                      <Menu className="h-10 w-10" />
                       <span className="sr-only">Open menu</span>
                     </Button>
                   </SheetTrigger>
