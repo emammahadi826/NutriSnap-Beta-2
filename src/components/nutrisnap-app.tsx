@@ -107,10 +107,10 @@ export function NutriSnapApp() {
     const sidebarContent = (
       <>
         <SidebarHeader className="flex items-center justify-between">
-            <div className={cn("flex items-center gap-2", state === 'collapsed' && 'invisible')}>
+            <div className={cn("flex items-center gap-2", state === 'collapsed' ? 'w-full' : '')}>
                 <UserInfo />
             </div>
-            <SidebarTrigger />
+            <SidebarTrigger className={cn(state === 'collapsed' ? 'absolute right-4' : '')} />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
