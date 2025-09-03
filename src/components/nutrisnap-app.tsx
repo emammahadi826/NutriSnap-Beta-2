@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home as HomeIcon, User as UserIcon, PanelLeft } from 'lucide-react';
+import { LogOut, LogIn, Camera, Upload, Home as HomeIcon, User as UserIcon, X, ShoppingCart, Contact, User, Heart, Package, Home } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
@@ -22,6 +22,8 @@ import {
   SidebarInset,
   SidebarTrigger,
   SheetTitle,
+  useSidebar,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -100,6 +102,54 @@ export function NutriSnapApp() {
     }
     return null;
   };
+
+  const AppSidebar = () => {
+    const { setOpenMobile } = useSidebar();
+    
+    return (
+        <Sidebar>
+            <SidebarHeader className="flex items-center justify-between">
+                <UserInfo />
+                <Button variant="ghost" size="icon" className="md:hidden h-8 w-8" onClick={() => setOpenMobile(false)}>
+                    <X />
+                </Button>
+            </SidebarHeader>
+            <SidebarContent>
+                 <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12">
+                            <Home className="h-5 w-5"/>
+                            <span className="text-base">Home</span>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    {isGuest && (
+                      <div className="md:hidden mt-4">
+                        <GuestCreditInfo />
+                      </div>
+                    )}
+                </SidebarMenu>
+            </SidebarContent>
+            <SidebarFooter className="gap-4">
+                <div className="hidden md:block">
+                  <GuestCreditInfo />
+                </div>
+                {user ? (
+                    <Button variant="ghost" onClick={logOut} className="w-full justify-start text-base h-12">
+                        <LogOut />
+                        <span>Logout</span>
+                    </Button>
+                ) : (
+                    <Button asChild variant="ghost" className="w-full justify-start text-base h-12">
+                        <Link href="/login">
+                            <LogIn />
+                            <span>Login / Sign Up</span>
+                        </Link>
+                    </Button>
+                )}
+            </SidebarFooter>
+        </Sidebar>
+    );
+  }
   
 
   if (!isLoaded) {
@@ -131,44 +181,13 @@ export function NutriSnapApp() {
 
   return (
     <SidebarProvider>
-        <Sidebar>
-            <SidebarHeader>
-                <UserInfo />
-            </SidebarHeader>
-            <SidebarContent>
-                 <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton href="/" isActive={true} size="lg" tooltip="Dashboard" className="h-12">
-                            <HomeIcon className="h-6 w-6"/>
-                            <span className="text-lg">Home</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarContent>
-            <SidebarFooter className="gap-4">
-                <GuestCreditInfo />
-                {user ? (
-                    <Button variant="ghost" onClick={logOut}>
-                        <LogOut />
-                        <span>Logout</span>
-                    </Button>
-                ) : (
-                    <Button asChild variant="ghost">
-                        <Link href="/login">
-                            <LogIn />
-                            <span>Login / Sign Up</span>
-                        </Link>
-                    </Button>
-                )}
-            </SidebarFooter>
-        </Sidebar>
-
+        <AppSidebar />
         <SidebarInset>
              <div className="container mx-auto p-4 md:p-8">
                 <header className="flex justify-between items-center mb-8 gap-4">
                     <div className="flex items-center gap-2">
                          <SidebarTrigger className="md:hidden h-12 w-12">
-                            <PanelLeft className="h-7 w-7"/>
+                            <HomeIcon className="h-7 w-7"/>
                         </SidebarTrigger>
                         <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                     </div>
