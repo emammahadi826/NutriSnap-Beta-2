@@ -67,7 +67,7 @@ export function NutriSnapApp() {
   const UserInfo = () => (
     <div className="flex items-center gap-3">
         <Avatar className="h-10 w-10">
-            <AvatarImage src={user?.photoURL || 'https://github.com/shadcn.png'} alt={user?.displayName || 'User'} />
+            <AvatarImage src={'https://github.com/shadcn.png'} alt={user?.displayName || 'User'} />
             <AvatarFallback>
                 {isGuest ? <UserIcon /> : user?.email?.charAt(0).toUpperCase()}
             </AvatarFallback>
@@ -101,7 +101,7 @@ export function NutriSnapApp() {
 
   const AppSidebar = () => {
 
-    const { isMobile, openMobile, setOpenMobile } = useSidebar();
+    const { isMobile, openMobile, setOpenMobile, state } = useSidebar();
 
     const sidebarContent = (
       <>
@@ -109,7 +109,7 @@ export function NutriSnapApp() {
           <div className="flex items-center gap-2">
             <UserInfo />
           </div>
-          <SidebarTrigger className="group-[[data-state=collapsed]]:hidden" />
+          <SidebarTrigger className={cn("group-[[data-state=collapsed]]:hidden", state === "collapsed" ? "block" : "hidden")} />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -128,7 +128,7 @@ export function NutriSnapApp() {
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2 group-[[data-state=collapsed]]:hidden">
                          <Avatar className="h-7 w-7">
-                           <AvatarImage src={user?.photoURL || 'https://github.com/shadcn.png'} alt={user.displayName || 'User'} />
+                           <AvatarImage src={'https://github.com/shadcn.png'} alt={user.displayName || 'User'} />
                           <AvatarFallback>
                               {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
                           </AvatarFallback>
