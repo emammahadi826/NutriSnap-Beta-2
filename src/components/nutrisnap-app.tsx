@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, ChevronUp, PanelLeft } from 'lucide-react';
+import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, ChevronUp, PanelLeft, MessageCircle } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
@@ -107,10 +107,8 @@ export function NutriSnapApp() {
       <>
         {user && !isMobile && (
           <SidebarHeader className="flex items-center justify-between p-2">
-            <div className="flex items-center gap-2">
               <UserInfo />
-            </div>
-            <SidebarTrigger className="hidden md:flex" />
+              <SidebarTrigger className="hidden md:flex" />
           </SidebarHeader>
         )}
         <SidebarContent>
@@ -119,6 +117,12 @@ export function NutriSnapApp() {
               <SidebarMenuButton href="/" isActive={true} variant="outline" size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
                 <Home className="h-6 w-6"/>
                 <span className="truncate group-[[data-state=collapsed]]:hidden">Home</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton href="#" isActive={false} variant="ghost" size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0" disabled>
+                <MessageCircle className="h-6 w-6"/>
+                <span className="truncate group-[[data-state=collapsed]]:hidden">Chat</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
