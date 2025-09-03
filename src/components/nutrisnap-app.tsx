@@ -11,7 +11,6 @@ import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, X, PanelLeft, Ch
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
-  SidebarProvider, 
   Sidebar,
   SidebarHeader,
   SidebarContent,
@@ -26,7 +25,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 
 export function NutriSnapApp() {
   const { isLoaded, addMeal, getTodaysMeals, getTodaysSummary, guestMealCount } = useMealLogger();
@@ -100,8 +98,14 @@ export function NutriSnapApp() {
 
   const AppSidebar = () => {
 
-    const SidebarItems = () => (
-      <>
+    const { isMobile } = useSidebar();
+
+    if (isMobile) {
+      return null;
+    }
+
+    return (
+      <Sidebar>
         <SidebarHeader>
           <UserInfo />
         </SidebarHeader>
@@ -118,33 +122,29 @@ export function NutriSnapApp() {
         <SidebarFooter className="gap-4">
           <GuestCreditInfo />
           {user ? (
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <SidebarMenuButton>
-                       <Avatar className="h-8 w-8">
-                        {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
-                        <AvatarFallback>
-                            {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="truncate">{user.email}</span>
-                      <ChevronUp className="ml-auto" />
-                    </SidebarMenuButton>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    side="top"
-                    className="w-[--radix-popper-anchor-width]"
-                  >
-                    <DropdownMenuItem onClick={logOut}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>Sign out</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </SidebarMenuItem>
-            </SidebarMenu>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton>
+                     <Avatar className="h-8 w-8">
+                      {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
+                      <AvatarFallback>
+                          {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="truncate">{user.email}</span>
+                    <ChevronUp className="ml-auto" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-popper-anchor-width]"
+                >
+                  <DropdownMenuItem onClick={logOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sign out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
           ) : (
             <Button asChild variant="outline" className="w-full justify-center text-base h-12">
               <Link href="/login">
@@ -154,25 +154,6 @@ export function NutriSnapApp() {
             </Button>
           )}
         </SidebarFooter>
-      </>
-    );
-
-    const { isMobile, openMobile, setOpenMobile: setOpen } = useSidebar()
-
-    if (isMobile) {
-      return (
-        <Sheet open={openMobile} onOpenChange={setOpen}>
-          <SheetContent side="left" className="bg-sidebar text-sidebar-foreground flex flex-col p-0 w-[18rem]">
-              <SheetTitle className="sr-only">Menu</SheetTitle>
-              <SidebarItems />
-          </SheetContent>
-        </Sheet>
-      )
-    }
-
-    return (
-      <Sidebar>
-        <SidebarItems />
       </Sidebar>
     );
   }
@@ -206,27 +187,27 @@ export function NutriSnapApp() {
   }
 
   return (
-    <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-             <div className="container mx-auto p-4 md:p-8">
-                <header className="flex justify-between items-center mb-8 gap-4">
-                    <div className="flex items-center gap-2">
-                         <SidebarTrigger className="md:hidden h-12 w-12">
-                            <PanelLeft className="h-6 w-6"/>
-                        </SidebarTrigger>
-                        <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
-                    </div>
-                    { !isMobile && <MealLogButtons /> }
-                </header>
-                <Dashboard 
-                    meals={getTodaysMeals()} 
-                    summary={getTodaysSummary()}
-                    showLogMealButton={isMobile}
-                    mealLogButton={<MealLogButtons />}
-                />
-            </div>
-        </SidebarInset>
-    </SidebarProvider>
+    <>
+      <AppSidebar />
+      <SidebarInset>
+           <div className="container mx-auto p-4 md:p-8">
+              <header className="flex justify-between items-center mb-8 gap-4">
+                  <div className="flex items-center gap-2">
+                       <SidebarTrigger className="md:hidden h-12 w-12">
+                          <PanelLeft className="h-6 w-6"/>
+                      </SidebarTrigger>
+                      <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
+                  </div>
+                  { !isMobile && <MealLogButtons /> }
+              </header>
+              <Dashboard 
+                  meals={getTodaysMeals()} 
+                  summary={getTodaysSummary()}
+                  showLogMealButton={isMobile}
+                  mealLogButton={<MealLogButtons />}
+              />
+          </div>
+      </SidebarInset>
+    </>
   );
 }
