@@ -20,12 +20,13 @@ import {
   useSidebar,
   SidebarTrigger,
   SidebarProvider,
-  SidebarInset
+  SidebarInset,
+  SheetTitle
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { ChatPage } from './chat-page';
 
@@ -177,7 +178,7 @@ export function NutriSnapApp() {
     <SidebarProvider>
       <AppSidebar />
         <SidebarInset>
-           <header className="p-4 flex justify-between items-center">
+           <header className="p-4 flex justify-between items-center h-[69px]">
                <div className="flex items-center gap-2">
                     <SidebarTrigger />
                 </div>
