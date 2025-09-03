@@ -9,7 +9,6 @@ import { Button } from './ui/button';
 import Link from 'next/link';
 import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, ChevronUp, MessageCircle } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { MealLogDialog } from './meal-log-dialog';
 import { 
   Sidebar,
   SidebarHeader,
@@ -38,34 +37,6 @@ export function NutriSnapApp() {
   const isMobile = useIsMobile();
   const [activePage, setActivePage] = useState<'home' | 'chat'>('home');
   const GUEST_LIMIT = 3;
-
-  const MealLogButtons = ({ inSheet = false }: { inSheet?: boolean }) => (
-    <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 ${inSheet ? 'flex-col' : ''}`}>
-      <MealLogDialog 
-          onMealLog={addMeal} 
-          isGuest={isGuest} 
-          guestMealCount={guestMealCount}
-          trigger={
-              <Button size="default" variant="outline" className="font-bold w-full h-10 px-4 py-2 text-sm">
-                  <Upload className="mr-2 h-5 w-5" />
-                  Upload Meal
-              </Button>
-          }
-      />
-      <MealLogDialog 
-          onMealLog={addMeal} 
-          isGuest={isGuest} 
-          guestMealCount={guestMealCount}
-          startWithCamera={true}
-          trigger={
-              <Button size="default" variant="outline" className="font-bold w-full h-10 px-4 py-2 text-sm">
-                  <Camera className="mr-2 h-5 w-5" />
-                  Take Photo
-              </Button>
-          }
-      />
-    </div>
-  );
 
   const UserInfo = () => (
     <div className="flex items-center gap-3">
@@ -103,7 +74,7 @@ export function NutriSnapApp() {
   };
 
   const AppSidebar = () => {
-    const { isMobile, openMobile, setOpenMobile } = useSidebar();
+    const { openMobile, setOpenMobile } = useSidebar();
   
     const sidebarContent = (
       <>
@@ -116,16 +87,16 @@ export function NutriSnapApp() {
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => setActivePage('home')} isActive={activePage === 'home'} variant="outline" size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
+              <SidebarMenuButton onClick={() => setActivePage('home')} isActive={activePage === 'home'} variant={activePage === 'home' ? 'outline' : 'ghost'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
                 <Home className="h-6 w-6"/>
                 <span className="truncate group-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => setActivePage('chat')} isActive={activePage === 'chat'} variant="ghost" size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
-                <MessageCircle className="h-6 w-6"/>
-                <span className="truncate group-[[data-state=collapsed]]:hidden">Chat</span>
-              </SidebarMenuButton>
+             <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => setActivePage('chat')} isActive={activePage === 'chat'} variant={activePage === 'chat' ? 'outline' : 'ghost'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
+                    <MessageCircle className="h-6 w-6"/>
+                    <span className="truncate group-[[data-state=collapsed]]:hidden">Chat</span>
+                </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
@@ -228,19 +199,16 @@ export function NutriSnapApp() {
     <SidebarProvider>
       <AppSidebar />
         <SidebarInset>
-           <header className="border-b p-4 flex justify-between items-center">
+           <header className="border-b p-4 flex justify-between items-center h-[69px]">
                <div className="flex items-center gap-2">
                     <SidebarTrigger className="md:hidden"/>
                 </div>
-                { !isMobile && <MealLogButtons /> }
            </header>
            <div className="container mx-auto p-4 md:p-8">
               {activePage === 'home' ? (
                 <Dashboard 
                     meals={getTodaysMeals()} 
                     summary={getTodaysSummary()}
-                    showLogMealButton={isMobile}
-                    mealLogButton={<MealLogButtons />}
                 />
               ) : (
                 <ChatPage />

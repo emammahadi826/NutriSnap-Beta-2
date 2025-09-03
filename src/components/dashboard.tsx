@@ -12,23 +12,15 @@ import type { ReactNode } from 'react';
 interface DashboardProps {
   meals: Meal[];
   summary: DailySummary;
-  showLogMealButton: boolean;
-  mealLogButton: ReactNode;
 }
 
-export function Dashboard({ meals, summary, showLogMealButton, mealLogButton }: DashboardProps) {
+export function Dashboard({ meals, summary }: DashboardProps) {
   const macroData = [
     { name: 'Macros', carbs: Math.round(summary.carbs), protein: Math.round(summary.protein), fat: Math.round(summary.fat) },
   ];
 
   return (
     <div className="space-y-8">
-       {showLogMealButton && (
-        <section className="text-center">
-          {mealLogButton}
-        </section>
-       )}
-
       <section>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
@@ -139,7 +131,7 @@ export function Dashboard({ meals, summary, showLogMealButton, mealLogButton }: 
               ) : (
                 <div className="flex flex-col items-center justify-center text-center h-[250px]">
                   <p className="text-lg text-muted-foreground">No meals logged yet</p>
-                  <p className="text-sm text-muted-foreground">Click "Log a Meal" to get started!</p>
+                  <p className="text-sm text-muted-foreground">Go to the chat to log a meal!</p>
                 </div>
               )}
             </ScrollArea>

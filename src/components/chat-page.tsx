@@ -5,12 +5,21 @@ import { useState, useRef, useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Bot, Send, User, Loader2 } from 'lucide-react';
+import { Bot, Send, User, Loader2, Plus, Upload, Camera } from 'lucide-react';
 import { nutrisnapChat } from '@/ai/flows/nutrisnap-chat';
 import type { NutrisnapChatInput } from '@/lib/chat-types';
 import { useAuth } from '@/hooks/use-auth';
 import { ScrollArea } from './ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { useMealLogger } from '@/hooks/use-meal-logger';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MealLogDialog } from './meal-log-dialog';
+
 
 type Message = {
     role: 'user' | 'model';
@@ -24,6 +33,8 @@ export function ChatPage() {
     const [isLoading, setIsLoading] = useState(false);
     const { user } = useAuth();
     const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const { addMeal, guestMealCount } = useMealLogger();
+    const isGuest = !user;
 
 
     const handleSendMessage = async (e: React.FormEvent) => {
@@ -110,13 +121,45 @@ export function ChatPage() {
                     )}
                 </div>
             </ScrollArea>
-            <div className="p-4 bg-background border-t">
-                <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+             <div className="p-4 bg-background border-t">
+                 <form onSubmit={handleSendMessage} className="flex items-center gap-2 bg-muted p-2 rounded-full">
+                     <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="rounded-full flex-shrink-0">
+                                <Plus className="w-5 h-5" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="top" align="start">
+                            <MealLogDialog 
+                                onMealLog={addMeal} 
+                                isGuest={isGuest} 
+                                guestMealCount={guestMealCount}
+                                trigger={
+                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                        <Upload className="mr-2 h-4 w-4" />
+                                        Upload Meal
+                                    </DropdownMenuItem>
+                                }
+                            />
+                            <MealLogDialog 
+                                onMealLog={addMeal} 
+                                isGuest={isGuest} 
+                                guestMealCount={guestMealCount}
+                                startWithCamera={true}
+                                trigger={
+                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                        <Camera className="mr-2 h-4 w-4" />
+                                        Take Photo
+                                    </DropdownMenuItem>
+                                }
+                            />
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                     <Textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="Ask anything..."
-                        className="flex-1 resize-none"
+                        className="flex-1 resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
                         rows={1}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && !e.shiftKey) {
@@ -125,7 +168,7 @@ export function ChatPage() {
                             }
                         }}
                     />
-                    <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
+                    <Button type="submit" size="icon" disabled={isLoading || !input.trim()} className="rounded-full flex-shrink-0">
                         <Send className="w-5 h-5" />
                     </Button>
                 </form>
