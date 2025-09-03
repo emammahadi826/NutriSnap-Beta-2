@@ -65,14 +65,14 @@ export function NutriSnapApp() {
   );
 
   const UserInfo = () => (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-3 group-[[data-state=collapsed]]:hidden">
         <Avatar className="h-10 w-10">
             {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
             <AvatarFallback>
                 {isGuest ? <UserIcon /> : user?.email?.charAt(0).toUpperCase()}
             </AvatarFallback>
         </Avatar>
-        <div className="flex flex-col group-[[data-state=collapsed]]:hidden">
+        <div className="flex flex-col">
             <p className="font-semibold text-sm truncate">
                 {user ? user.email : "Guest User"}
             </p>
@@ -105,26 +105,27 @@ export function NutriSnapApp() {
 
     const sidebarContent = (
       <>
-        <SidebarHeader>
+        <SidebarHeader className="flex items-center justify-between">
           <UserInfo />
+          <SidebarTrigger />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
-                <Home className="h-6 w-6"/>
+              <SidebarMenuButton href="/" isActive={true} size="lg" className="h-12 group-data-[[data-state=collapsed]]:p-0">
+                <Home className="h-7 w-7"/>
                 <span className="text-base truncate group-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter className="gap-4">
+        <SidebarFooter className="gap-4 group-[[data-state=collapsed]]:hidden">
           <GuestCreditInfo />
           {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2 group-[[data-state=collapsed]]:justify-center group-[[data-state=collapsed]]:w-12 group-[[data-state=collapsed]]:p-0">
-                         <Avatar className="h-8 w-8">
+                    <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2 group-[[data-state=collapsed]]:justify-center group-[[data-state=collapsed]]:w-10 group-[[data-state=collapsed]]:p-0">
+                         <Avatar className="h-7 w-7">
                           {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
                           <AvatarFallback>
                               {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
@@ -215,9 +216,7 @@ export function NutriSnapApp() {
            <div className="container mx-auto p-4 md:p-8">
               <header className="flex justify-between items-center mb-8 gap-4">
                   <div className="flex items-center gap-2">
-                      <SidebarTrigger>
-                        <PanelLeft />
-                      </SidebarTrigger>
+                      <SidebarTrigger className="md:hidden"/>
                       <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                   </div>
                   { !isMobile && <MealLogButtons /> }
