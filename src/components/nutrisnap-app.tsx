@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, X, PanelLeft, ChevronUp } from 'lucide-react';
+import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, X, ChevronUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
@@ -21,6 +21,7 @@ import {
   SidebarInset,
   SidebarTrigger,
   useSidebar,
+  SheetTitle
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -84,12 +85,12 @@ export function NutriSnapApp() {
   
     if (isGuest) {
       return (
-        <div className="p-3 rounded-lg bg-background/50 border border-border/50">
+        <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
             <div className="text-center text-sm mb-2">
                 <p className="font-bold">{creditsLeft} credits left</p>
                 <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
             </div>
-          <Progress value={progress} className="h-2" />
+          <Progress value={progress} className="h-2 bg-sidebar-accent/20" />
         </div>
       );
     }
@@ -98,14 +99,10 @@ export function NutriSnapApp() {
 
   const AppSidebar = () => {
 
-    const { isMobile } = useSidebar();
+    const { isMobile, openMobile, setOpenMobile } = useSidebar();
 
-    if (isMobile) {
-      return null;
-    }
-
-    return (
-      <Sidebar>
+    const sidebarContent = (
+      <>
         <SidebarHeader>
           <UserInfo />
         </SidebarHeader>
@@ -154,6 +151,23 @@ export function NutriSnapApp() {
             </Button>
           )}
         </SidebarFooter>
+      </>
+    );
+
+    if (isMobile) {
+      return (
+         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
+            <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
+                 <SheetTitle className="sr-only">Menu</SheetTitle>
+                 {sidebarContent}
+            </SheetContent>
+        </Sheet>
+      );
+    }
+
+    return (
+      <Sidebar>
+       {sidebarContent}
       </Sidebar>
     );
   }
@@ -193,9 +207,6 @@ export function NutriSnapApp() {
            <div className="container mx-auto p-4 md:p-8">
               <header className="flex justify-between items-center mb-8 gap-4">
                   <div className="flex items-center gap-2">
-                       <SidebarTrigger className="md:hidden h-12 w-12">
-                          <PanelLeft className="h-6 w-6"/>
-                      </SidebarTrigger>
                       <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                   </div>
                   { !isMobile && <MealLogButtons /> }
