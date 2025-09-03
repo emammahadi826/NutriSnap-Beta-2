@@ -31,28 +31,12 @@ import { ChatPage } from './chat-page';
 
 
 export function NutriSnapApp() {
-  const { isLoaded, addMeal, getTodaysMeals, getTodaysSummary, guestMealCount } = useMealLogger();
+  const { isLoaded, getTodaysMeals, getTodaysSummary, guestMealCount } = useMealLogger();
   const { user, logOut } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
   const [activePage, setActivePage] = useState<'home' | 'chat'>('home');
   const GUEST_LIMIT = 3;
-
-  const UserInfo = () => (
-    <div className="flex items-center gap-3">
-        <Avatar className="h-10 w-10">
-            <AvatarImage src={'https://github.com/shadcn.png'} alt={user?.displayName || 'User'} />
-            <AvatarFallback>
-                {isGuest ? <UserIcon /> : user?.email?.charAt(0).toUpperCase()}
-            </AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col group-[[data-state=collapsed]]:hidden">
-            <p className="font-semibold text-sm truncate">
-                {user ? user.email : "Guest User"}
-            </p>
-        </div>
-    </div>
-  );
 
   const GuestCreditInfo = () => {
     const creditsUsed = guestMealCount;
@@ -136,7 +120,7 @@ export function NutriSnapApp() {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
-            <SidebarHeader className="p-4 border-b">
+            <SidebarHeader className="p-4">
                 <SheetTitle className="text-primary font-headline text-2xl">NutriSnap</SheetTitle>
             </SidebarHeader>
             {sidebarContent}
@@ -147,7 +131,7 @@ export function NutriSnapApp() {
   
     return (
       <Sidebar>
-        <SidebarHeader className="p-4 border-b group-[[data-state=collapsed]]:hidden">
+        <SidebarHeader className="p-4 group-[[data-state=collapsed]]:hidden">
             <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
         </SidebarHeader>
         {sidebarContent}
@@ -193,12 +177,12 @@ export function NutriSnapApp() {
     <SidebarProvider>
       <AppSidebar />
         <SidebarInset>
-           <header className="border-b p-4 flex justify-between items-center">
+           <header className="p-4 flex justify-between items-center">
                <div className="flex items-center gap-2">
                     <SidebarTrigger />
                 </div>
            </header>
-           <div className={activePage === 'home' ? "container mx-auto p-4 md:p-8" : ""}>
+           <div className={activePage === 'home' ? "container mx-auto p-4 md:p-8" : "h-[calc(100vh-69px)]"}>
               {activePage === 'home' ? (
                 <Dashboard 
                     meals={getTodaysMeals()} 

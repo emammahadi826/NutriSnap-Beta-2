@@ -121,7 +121,7 @@ export function ChatPage() {
                     )}
                 </div>
             </ScrollArea>
-             <div className="p-4 bg-background border-t">
+             <div className="p-4 bg-background">
                  <form onSubmit={handleSendMessage} className="flex items-center gap-2 bg-muted p-2 rounded-full">
                      <DropdownMenu>
                         <DropdownMenuTrigger asChild>
