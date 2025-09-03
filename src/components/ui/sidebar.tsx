@@ -276,7 +276,7 @@ const SidebarTrigger = React.forwardRef<
       variant="ghost"
       size="icon"
       className={cn("h-7 w-7",
-      "group-data-[[data-state=collapsed]]:flex",
+      "group-data-[[data-state=collapsed]]:flex group-data-[[data-state=collapsed]]:size-10 group-data-[[data-state=collapsed]]:items-center group-data-[[data-state=collapsed]]:justify-center",
       className
       )}
       onClick={(event) => {
@@ -530,7 +530,7 @@ const sidebarMenuButtonVariants = cva(
       size: {
         default: "h-8 text-sm",
         sm: "h-7 text-xs",
-        lg: "h-12 group-data-[state=expanded]:w-full",
+        lg: "h-12",
       },
     },
     defaultVariants: {
@@ -569,7 +569,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        className={cn(sidebarMenuButtonVariants({ variant, size }), "group-data-[[data-state=collapsed]]:!flex group-data-[[data-state=collapsed]]:!size-10 group-data-[[data-state=collapsed]]:!items-center group-data-[[data-state=collapsed]]:!justify-center", className)}
+        className={cn(sidebarMenuButtonVariants({ variant, size }), "group-data-[[data-state=collapsed]]:!flex group-data-[[data-state=collapsed]]:!size-10 group-data-[[data-state=collapsed]]:!items-center group-data-[[data-state=collapsed]]:!justify-center", "group-data-[[data-state=expanded]]:w-full", className)}
         {...props}
       />
     )
@@ -773,6 +773,7 @@ export {
     
 
     
+
 
 
 
