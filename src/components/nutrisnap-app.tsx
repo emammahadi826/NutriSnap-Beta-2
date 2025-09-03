@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home as HomeIcon, User as UserIcon, X, ShoppingCart, Contact, User, Heart, Package, Home } from 'lucide-react';
+import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, X, PanelLeft } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
@@ -21,9 +21,8 @@ import {
   SidebarMenuButton,
   SidebarInset,
   SidebarTrigger,
-  SheetTitle,
   useSidebar,
-  SidebarSeparator,
+  SheetTitle,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -75,9 +74,9 @@ export function NutriSnapApp() {
             <p className="font-semibold text-sm truncate">
                 {user ? user.email : "Guest User"}
             </p>
-            {!user && 
+             {!user && 
                 <p className="text-xs text-muted-foreground">
-                    <Link href="/login" className="underline">Login or Sign up</Link>
+                    You are currently browsing as a guest.
                 </p>
             }
         </div>
@@ -108,6 +107,7 @@ export function NutriSnapApp() {
     
     return (
         <Sidebar>
+            <SheetTitle className="sr-only">Menu</SheetTitle>
             <SidebarHeader className="flex items-center justify-between">
                 <UserInfo />
                 <Button variant="ghost" size="icon" className="md:hidden h-8 w-8" onClick={() => setOpenMobile(false)}>
@@ -122,17 +122,10 @@ export function NutriSnapApp() {
                             <span className="text-base">Home</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
-                    {isGuest && (
-                      <div className="md:hidden mt-4">
-                        <GuestCreditInfo />
-                      </div>
-                    )}
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter className="gap-4">
-                <div className="hidden md:block">
-                  <GuestCreditInfo />
-                </div>
+                <GuestCreditInfo />
                 {user ? (
                     <Button variant="ghost" onClick={logOut} className="w-full justify-start text-base h-12">
                         <LogOut />
@@ -187,7 +180,7 @@ export function NutriSnapApp() {
                 <header className="flex justify-between items-center mb-8 gap-4">
                     <div className="flex items-center gap-2">
                          <SidebarTrigger className="md:hidden h-12 w-12">
-                            <HomeIcon className="h-7 w-7"/>
+                            <PanelLeft className="h-6 w-6"/>
                         </SidebarTrigger>
                         <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
                     </div>
