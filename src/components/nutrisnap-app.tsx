@@ -14,8 +14,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet";
-import { Menu, LogOut, LogIn, Camera, Upload } from 'lucide-react';
+import { Menu, LogOut, LogIn, Camera, Upload, Home as HomeIcon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 
@@ -44,14 +45,14 @@ export function NutriSnapApp() {
      </div>
   );
 
-  const MealLogButtons = () => (
-    <div className="flex gap-2">
+  const MealLogButtons = ({ inSheet = false }: { inSheet?: boolean }) => (
+    <div className={`flex gap-2 ${inSheet ? 'flex-col' : ''}`}>
       <MealLogDialog 
           onMealLog={addMeal} 
           isGuest={isGuest} 
           guestMealCount={guestMealCount}
           trigger={
-              <Button size="lg" variant="outline" className="text-base font-bold">
+              <Button size="lg" variant="outline" className={`font-bold text-base ${inSheet ? 'justify-start' : ''}`}>
                   <Upload className="mr-2 h-6 w-6" />
                   Upload Meal
               </Button>
@@ -63,7 +64,7 @@ export function NutriSnapApp() {
           guestMealCount={guestMealCount}
           startWithCamera={true}
           trigger={
-              <Button size="lg" variant="outline" className="text-base font-bold">
+              <Button size="lg" variant="outline" className={`font-bold text-base ${inSheet ? 'justify-start' : ''}`}>
                   <Camera className="mr-2 h-6 w-6" />
                   Take Photo
               </Button>
@@ -130,6 +131,18 @@ export function NutriSnapApp() {
                         {user ? `Logged in as ${user.email}` : "You are currently browsing as a guest."}
                       </SheetDescription>
                     </SheetHeader>
+
+                    <div className="flex flex-col gap-2">
+                      <SheetClose asChild>
+                        <Button asChild variant="ghost" className="justify-start w-full text-left">
+                            <Link href="/">
+                                <HomeIcon className="mr-2 h-5 w-5" />
+                                Home
+                            </Link>
+                        </Button>
+                      </SheetClose>
+                      <MealLogButtons inSheet={true} />
+                    </div>
                    
                     <AuthButtons inSheet={true} />
                   </SheetContent>
