@@ -131,7 +131,7 @@ export function NutriSnapApp() {
                           </AvatarFallback>
                         </Avatar>
                         <span className="truncate group-[[data-state=collapsed]]:hidden">{user.email}</span>
-                        <ChevronUp className="ml-auto group-[[data-state=collapsed]]:hidden" />
+                        <ChevronUp className="ml-auto h-4 w-4 group-[[data-state=collapsed]]:hidden" />
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -233,3 +233,4 @@ export function NutriSnapApp() {
     </SidebarProvider>
   );
 }
+
