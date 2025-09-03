@@ -159,7 +159,7 @@ export function ChatPage() {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="Ask anything..."
-                        className="flex-1 resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
+                        className="flex-1 resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
                         rows={1}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter' && !e.shiftKey) {
