@@ -20,7 +20,9 @@ import {
   SidebarMenuButton,
   useSidebar,
   SheetTitle,
-  SidebarTrigger
+  SidebarTrigger,
+  SidebarProvider,
+  SidebarInset
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -176,35 +178,41 @@ export function NutriSnapApp() {
 
   if (!isLoaded) {
     return (
-      <div className="container mx-auto p-4 md:p-8">
-        <header className="flex justify-between items-center mb-8">
-          <div className="flex items-center gap-4">
-            <h1 className="text-4xl font-bold text-primary opacity-50">NutriSnap</h1>
-          </div>
-          <div className="flex gap-4 items-center">
-             <Skeleton className="h-12 w-36 rounded-md" />
-             <Skeleton className="h-12 w-36 rounded-md" />
-             <Skeleton className="h-10 w-32 rounded-md" />
-          </div>
-        </header>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-          <Skeleton className="h-32 rounded-lg" />
-          <Skeleton className="h-32 rounded-lg" />
-          <Skeleton className="h-32 rounded-lg" />
-          <Skeleton className="h-32 rounded-lg" />
-        </div>
-        <div className="grid gap-8 md:grid-cols-2">
-            <Skeleton className="h-80 rounded-lg" />
-            <Skeleton className="h-80 rounded-lg" />
-        </div>
+      <div className="flex p-4">
+         <div className="hidden md:flex flex-col gap-4 w-[16rem]">
+            <Skeleton className="h-10" />
+            <Skeleton className="h-12" />
+            <div className="flex-grow" />
+            <Skeleton className="h-20" />
+            <Skeleton className="h-12" />
+         </div>
+         <div className="flex-1 pl-4">
+            <header className="flex justify-between items-center mb-8">
+                <Skeleton className="h-10 w-48" />
+                <div className="hidden md:flex gap-4 items-center">
+                    <Skeleton className="h-20 w-48 rounded-md" />
+                    <Skeleton className="h-20 w-48 rounded-md" />
+                </div>
+            </header>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+                <Skeleton className="h-32 rounded-lg" />
+                <Skeleton className="h-32 rounded-lg" />
+                <Skeleton className="h-32 rounded-lg" />
+                <Skeleton className="h-32 rounded-lg" />
+            </div>
+            <div className="grid gap-8 md:grid-cols-5">
+                <Skeleton className="h-80 rounded-lg md:col-span-3" />
+                <Skeleton className="h-80 rounded-lg md:col-span-2" />
+            </div>
+         </div>
       </div>
     );
   }
 
   return (
-    <>
+    <SidebarProvider>
       <AppSidebar />
-        <main className="min-h-screen w-full">
+        <SidebarInset>
            <div className="container mx-auto p-4 md:p-8">
               <header className="flex justify-between items-center mb-8 gap-4">
                   <div className="flex items-center gap-2">
@@ -222,7 +230,7 @@ export function NutriSnapApp() {
                   mealLogButton={<MealLogButtons />}
               />
           </div>
-      </main>
-    </>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
