@@ -78,12 +78,6 @@ export function NutriSnapApp() {
   
     const sidebarContent = (
       <>
-        {user && !isMobile && (
-          <SidebarHeader className="flex items-center justify-between p-2">
-              <UserInfo />
-              <SidebarTrigger className="hidden md:flex" />
-          </SidebarHeader>
-        )}
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -201,7 +195,7 @@ export function NutriSnapApp() {
         <SidebarInset>
            <header className="border-b p-4 flex justify-between items-center">
                <div className="flex items-center gap-2">
-                    <SidebarTrigger className="md:hidden"/>
+                    <SidebarTrigger />
                 </div>
            </header>
            <div className={activePage === 'home' ? "container mx-auto p-4 md:p-8" : ""}>
