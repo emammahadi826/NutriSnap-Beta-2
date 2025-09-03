@@ -71,7 +71,7 @@ export function NutriSnapApp() {
             <AvatarImage src={'https://github.com/shadcn.png'} alt={user?.displayName || 'User'} />
             <AvatarFallback>
                 {isGuest ? <UserIcon /> : user?.email?.charAt(0).toUpperCase()}
-            </Fallback>
+            </AvatarFallback>
         </Avatar>
         <div className="flex flex-col group-[[data-state=collapsed]]:hidden">
             <p className="font-semibold text-sm truncate">
@@ -107,12 +107,12 @@ export function NutriSnapApp() {
     const sidebarContent = (
       <>
         <SidebarHeader className="flex items-center justify-between p-0">
-           {user && <div className="flex items-center gap-2">
-             <div className="flex items-center gap-3">
-               <UserInfo />
-             </div>
-           </div>}
-           {user && <SidebarTrigger className="hidden" />}
+           {user && (
+            <div className="flex items-center justify-between w-full p-2">
+              <UserInfo />
+              <SidebarTrigger className="hidden md:flex" />
+            </div>
+           )}
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
