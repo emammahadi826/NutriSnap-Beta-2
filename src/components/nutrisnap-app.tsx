@@ -107,8 +107,10 @@ export function NutriSnapApp() {
     const sidebarContent = (
       <>
         <SidebarHeader className="flex items-center justify-between">
-           <UserInfo />
-           <SidebarTrigger />
+           <div className="flex items-center gap-3">
+             <UserInfo />
+           </div>
+           <SidebarTrigger className="group-data-[[data-state=expanded]]:flex hidden md:flex" />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
