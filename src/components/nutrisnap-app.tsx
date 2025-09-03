@@ -102,15 +102,13 @@ export function NutriSnapApp() {
 
   const AppSidebar = () => {
 
-    const { isMobile, openMobile, setOpenMobile, state } = useSidebar();
+    const { isMobile, openMobile, setOpenMobile } = useSidebar();
 
     const sidebarContent = (
       <>
         <SidebarHeader className="flex items-center justify-between">
-            <div className={cn("flex items-center gap-2", state === 'collapsed' ? 'w-full' : '')}>
-                <UserInfo />
-            </div>
-            <SidebarTrigger className={cn(state === 'collapsed' ? 'absolute right-4' : '')} />
+           <UserInfo />
+           <SidebarTrigger />
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
