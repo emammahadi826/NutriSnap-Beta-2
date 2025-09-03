@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, ChevronUp } from 'lucide-react';
+import { LogOut, LogIn, Camera, Upload, Home, User as UserIcon, ChevronUp, PanelLeft } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { MealLogDialog } from './meal-log-dialog';
 import { 
@@ -215,6 +215,7 @@ export function NutriSnapApp() {
     <SidebarProvider>
       <AppSidebar />
         <SidebarInset>
+           <header className="border-b p-4"></header>
            <div className="container mx-auto p-4 md:p-8">
               <header className="flex justify-between items-center mb-8 gap-4">
                   <div className="flex items-center gap-2">
