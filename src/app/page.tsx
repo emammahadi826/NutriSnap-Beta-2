@@ -2,10 +2,9 @@
 
 import { useAuth } from '@/hooks/use-auth';
 import { NutriSnapApp } from '@/components/nutrisnap-app';
-import Login from '@/app/login/page';
 
 export default function Home() {
-  const { user, loading } = useAuth();
+  const { loading } = useAuth();
 
   if (loading) {
     return (
@@ -17,7 +16,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen w-full">
-      {user ? <NutriSnapApp /> : <Login />}
+      <NutriSnapApp />
     </main>
   );
 }

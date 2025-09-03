@@ -6,10 +6,12 @@ import { MealLogDialog } from '@/components/meal-log-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
+import Link from 'next/link';
 
 export function NutriSnapApp() {
-  const { isLoaded, addMeal, getTodaysMeals, getTodaysSummary } = useMealLogger();
-  const { logOut } = useAuth();
+  const { isLoaded, addMeal, getTodaysMeals, getTodaysSummary, guestMealCount } = useMealLogger();
+  const { user, logOut } = useAuth();
+  const isGuest = !user;
 
   if (!isLoaded) {
     return (
@@ -40,8 +42,14 @@ export function NutriSnapApp() {
       <header className="flex flex-col sm:flex-row justify-between sm:items-center mb-8 gap-4">
         <h1 className="text-4xl font-bold font-headline text-primary">NutriSnap</h1>
         <div className="flex gap-4 items-center">
-          <MealLogDialog onMealLog={addMeal} />
-          <Button variant="outline" onClick={logOut}>Logout</Button>
+          <MealLogDialog onMealLog={addMeal} isGuest={isGuest} guestMealCount={guestMealCount} />
+          {user ? (
+            <Button variant="outline" onClick={logOut}>Logout</Button>
+          ) : (
+            <Button asChild variant="outline">
+                <Link href="/login">Login</Link>
+            </Button>
+          )}
         </div>
       </header>
       <Dashboard meals={getTodaysMeals()} summary={getTodaysSummary()} />

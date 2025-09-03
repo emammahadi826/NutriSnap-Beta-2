@@ -20,16 +20,19 @@ import { identifyFoodFromImage, IdentifyFoodFromImageOutput } from '@/ai/flows/i
 import { findFood } from '@/lib/nutrition-data';
 import type { Meal, LoggedItem } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import Link from 'next/link';
 
 interface MealLogDialogProps {
   onMealLog: (meal: Omit<Meal, 'id' | 'timestamp'>) => void;
+  isGuest: boolean;
+  guestMealCount: number;
 }
 
 type FoodResult = LoggedItem & { originalName: string; confidence: number };
 
-export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
+export function MealLogDialog({ onMealLog, isGuest, guestMealCount }: MealLogDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error'>('upload');
+  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error' | 'limit'>('upload');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [results, setResults] = useState<FoodResult[]>([]);
@@ -39,6 +42,15 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
+  
+  const GUEST_LIMIT = 3;
+
+  const handleDialogOpen = () => {
+    if (isGuest && guestMealCount >= GUEST_LIMIT) {
+      setView('limit');
+    }
+    setIsOpen(true);
+  }
 
   useEffect(() => {
     let stream: MediaStream | null = null;
@@ -107,6 +119,10 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
   }
 
   const handleAnalyze = async () => {
+    if (isGuest && guestMealCount >= GUEST_LIMIT) {
+        setView('limit');
+        return;
+    }
     if (!imageData) {
       toast({
         variant: "destructive",
@@ -205,7 +221,7 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
     onMealLog(meal);
     toast({
       title: "Meal Logged!",
-      description: "Your meal has been added to your daily log.",
+      description: `Your meal has been added to your ${isGuest ? 'guest' : 'daily'} log.`,
       className: "bg-primary text-primary-foreground"
     });
     handleOpenChange(false);
@@ -214,17 +230,31 @@ export function MealLogDialog({ onMealLog }: MealLogDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button size="lg" className="font-bold text-base">
+        <Button size="lg" className="font-bold text-base" onClick={handleDialogOpen}>
           <Camera className="mr-2 h-5 w-5" /> Log a Meal
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-[95vw] sm:max-w-md bg-card">
         <DialogHeader>
           <DialogTitle className="font-headline text-2xl">Log a New Meal</DialogTitle>
-          <DialogDescription>
+          {view !== 'limit' && <DialogDescription>
             Snap a photo of your meal and let our AI do the heavy lifting.
-          </DialogDescription>
+          </DialogDescription>}
         </DialogHeader>
+
+        {view === 'limit' && (
+           <div className="flex flex-col items-center justify-center text-center min-h-[20rem] gap-4">
+            <Info className="h-12 w-12 text-primary" />
+            <h3 className="text-xl font-bold">You've reached your guest limit!</h3>
+            <p className="text-muted-foreground">
+                You've logged {GUEST_LIMIT} meals as a guest. Please create an account to save your progress and log unlimited meals.
+            </p>
+            <div className="flex flex-col gap-2 w-full">
+                <Button asChild size="lg"><Link href="/login">Login or Sign Up</Link></Button>
+                <Button variant="ghost" onClick={() => handleOpenChange(false)}>Maybe Later</Button>
+            </div>
+          </div>
+        )}
         
         {view === 'loading' && (
           <div className="flex flex-col items-center justify-center h-64 gap-4">
