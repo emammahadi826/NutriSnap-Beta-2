@@ -194,62 +194,46 @@ export function NutriSnapApp() {
     );
   };
   
-  if (!isLoaded) {
-    return (
-      <div className="flex h-screen bg-background">
-         <div className="hidden md:flex flex-col gap-4 w-[16rem] p-4 border-r">
-            <div className="flex items-center gap-2 h-[69px] p-4 justify-center">
-              <Skeleton className="h-8 w-32" />
-            </div>
-            <div className="flex flex-col gap-2 p-4">
-              <Skeleton className="h-12" />
-              <Skeleton className="h-12" />
-            </div>
-            <div className="flex-grow" />
-            <div className="p-4 flex flex-col gap-4">
-                <Skeleton className="h-20" />
-                <Skeleton className="h-12" />
-            </div>
-         </div>
-         <main className="flex-1 flex flex-col">
-            <header className="flex h-[69px] items-center px-4 border-b md:hidden">
-                 <SidebarTrigger />
-             </header>
-            <div className="flex-1 p-4 md:p-8 overflow-auto">
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-                    <Skeleton className="h-32 rounded-lg" />
-                    <Skeleton className="h-32 rounded-lg" />
-                    <Skeleton className="h-32 rounded-lg" />
-                    <Skeleton className="h-32 rounded-lg" />
-                </div>
-                <div className="grid gap-8 md:grid-cols-5">
-                    <Skeleton className="h-80 rounded-lg md:col-span-3" />
-                    <Skeleton className="h-80 rounded-lg md:col-span-2" />
-                </div>
-            </div>
-         </main>
-      </div>
-    );
-  }
-
   return (
     <SidebarProvider>
       <div className="flex h-screen bg-background">
         <AppSidebar />
         <main className="flex-1 flex flex-col">
-          <header className="flex h-[69px] items-center px-4 border-b">
-            <SidebarTrigger />
-          </header>
-          <div className={activePage === 'home' ? "overflow-auto p-4 md:p-8" : "overflow-hidden h-[calc(100vh-69px)]"}>
-            {activePage === 'home' ? (
-              <Dashboard 
-                  meals={getTodaysMeals()} 
-                  summary={getTodaysSummary()}
-              />
-            ) : (
-              <ChatPage />
-            )}
-          </div>
+          {!isLoaded ? (
+             <>
+                <header className="flex h-[69px] items-center px-4 border-b">
+                     <SidebarTrigger />
+                 </header>
+                <div className="flex-1 p-4 md:p-8 overflow-auto">
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+                        <Skeleton className="h-32 rounded-lg" />
+                        <Skeleton className="h-32 rounded-lg" />
+                        <Skeleton className="h-32 rounded-lg" />
+                        <Skeleton className="h-32 rounded-lg" />
+                    </div>
+                    <div className="grid gap-8 md:grid-cols-5">
+                        <Skeleton className="h-80 rounded-lg md:col-span-3" />
+                        <Skeleton className="h-80 rounded-lg md:col-span-2" />
+                    </div>
+                </div>
+             </>
+          ) : (
+            <>
+              <header className="flex h-[69px] items-center px-4 border-b">
+                <SidebarTrigger />
+              </header>
+              <div className={activePage === 'home' ? "overflow-auto p-4 md:p-8" : "overflow-hidden h-[calc(100vh-69px)]"}>
+                {activePage === 'home' ? (
+                  <Dashboard 
+                      meals={getTodaysMeals()} 
+                      summary={getTodaysSummary()}
+                  />
+                ) : (
+                  <ChatPage />
+                )}
+              </div>
+            </>
+          )}
         </main>
       </div>
     </SidebarProvider>
