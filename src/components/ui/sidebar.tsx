@@ -142,7 +142,7 @@ const SidebarProvider = React.forwardRef<
               } as React.CSSProperties
             }
             className={cn(
-              "group/sidebar-wrapper w-full bg-background",
+              "group/sidebar-wrapper bg-background",
               className
             )}
             ref={ref}
@@ -303,7 +303,7 @@ const SidebarInset = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("", className)}
+      className={cn("flex-1", className)}
       {...props}
     />
   )
@@ -490,7 +490,7 @@ const SidebarMenuItem = React.forwardRef<
 SidebarMenuItem.displayName = "SidebarMenuItem"
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button flex items-center gap-2 overflow-hidden rounded-md p-2 outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground",
+  "peer/menu-button flex items-center gap-2 overflow-hidden rounded-md p-2 outline-none ring-sidebar-ring transition-all hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground",
   {
     variants: {
       variant: {
@@ -527,6 +527,7 @@ const SidebarMenuButton = React.forwardRef<
       size = "default",
       tooltip,
       className,
+      children,
       ...props
     },
     ref
@@ -535,14 +536,21 @@ const SidebarMenuButton = React.forwardRef<
     const { isMobile, state } = useSidebar()
 
     const button = (
-      <Comp
+       <Comp
         ref={ref}
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        className={cn(sidebarMenuButtonVariants({ variant, size }), "group-data-[[data-state=collapsed]]:!size-10 group-data-[[data-state=collapsed]]:!items-center group-data-[[data-state=collapsed]]:!justify-center group-data-[[data-state=collapsed]]:!p-0", className)}
+        className={cn(
+          sidebarMenuButtonVariants({ variant, size }),
+          "transition-all duration-200",
+          state === 'collapsed' && 'justify-center w-10 p-0',
+          className
+        )}
         {...props}
-      />
+      >
+        {children}
+        </Comp>
     )
 
     if (!tooltip) {
@@ -740,7 +748,5 @@ export {
   useSidebar,
   SheetTitle
 }
-
-    
 
     

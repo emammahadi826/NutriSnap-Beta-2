@@ -40,25 +40,6 @@ export function NutriSnapApp() {
   
   const isLoading = authLoading || !isLoaded;
 
-  const GuestCreditInfo = () => {
-    const creditsUsed = guestMealCount;
-    const creditsLeft = GUEST_LIMIT - creditsUsed;
-    const progress = (creditsLeft / GUEST_LIMIT) * 100;
-  
-    if (isGuest) {
-      return (
-        <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border group-data-[[data-state=expanded]]:block hidden">
-            <div className="text-center text-sm mb-2">
-                <p className="font-bold">{creditsLeft} credits left</p>
-                <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-            </div>
-          <Progress value={progress} className="h-2 bg-sidebar-accent/20" />
-        </div>
-      );
-    }
-    return null;
-  };
-
   const AppSidebar = () => {
     const { openMobile, setOpenMobile, state } = useSidebar();
   
@@ -76,19 +57,29 @@ export function NutriSnapApp() {
             <SidebarMenuItem>
               <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
                 <Home className="h-6 w-6"/>
-                <span className="group-data-[[data-state=collapsed]]:hidden">Home</span>
+                <span className={cn(state === 'collapsed' && 'hidden')}>Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
                     <MessageCircle className="h-6 w-6"/>
-                    <span className="group-data-[[data-state=collapsed]]:hidden">Chat</span>
+                    <span className={cn(state === 'collapsed' && 'hidden')}>Chat</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter className="gap-4 group-data-[[data-state=collapsed]]:hidden">
-          <GuestCreditInfo />
+        <SidebarFooter className={cn("gap-4", state === 'collapsed' && 'hidden')}>
+          
+          {isGuest && (
+            <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
+                <div className="text-center text-sm mb-2">
+                    <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
+                    <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                </div>
+              <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
+            </div>
+          )}
+
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -150,7 +141,17 @@ export function NutriSnapApp() {
               </SidebarMenu>
             </SidebarContent>
             <SidebarFooter className="gap-4">
-              <GuestCreditInfo />
+              
+              {isGuest && (
+                <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
+                    <div className="text-center text-sm mb-2">
+                        <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
+                        <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                    </div>
+                  <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
+                </div>
+              )}
+
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -201,29 +202,26 @@ export function NutriSnapApp() {
          <div className="flex h-screen bg-background">
           <AppSidebar />
            <main className="flex-1 flex flex-col">
+            
+            <header className="flex h-[69px] items-center px-4 border-b">
+                <SidebarTrigger />
+            </header>
+
             {isLoading ? (
-               <>
-                  <header className="flex h-[69px] items-center px-4 border-b">
-                       <SidebarTrigger />
-                   </header>
-                  <div className="flex-1 p-4 md:p-8 overflow-auto">
-                      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-                          <Skeleton className="h-32 rounded-lg" />
-                          <Skeleton className="h-32 rounded-lg" />
-                          <Skeleton className="h-32 rounded-lg" />
-                          <Skeleton className="h-32 rounded-lg" />
-                      </div>
-                      <div className="grid gap-8 md:grid-cols-5">
-                          <Skeleton className="h-80 rounded-lg md:col-span-3" />
-                          <Skeleton className="h-80 rounded-lg md:col-span-2" />
-                      </div>
-                  </div>
-               </>
+                <div className="flex-1 p-4 md:p-8 overflow-auto">
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+                        <Skeleton className="h-32 rounded-lg" />
+                        <Skeleton className="h-32 rounded-lg" />
+                        <Skeleton className="h-32 rounded-lg" />
+                        <Skeleton className="h-32 rounded-lg" />
+                    </div>
+                    <div className="grid gap-8 md:grid-cols-5">
+                        <Skeleton className="h-80 rounded-lg md:col-span-3" />
+                        <Skeleton className="h-80 rounded-lg md:col-span-2" />
+                    </div>
+                </div>
             ) : (
               <>
-                <header className="flex h-[69px] items-center px-4 border-b">
-                  <SidebarTrigger />
-                </header>
                 <div className={activePage === 'home' ? "overflow-auto p-4 md:p-8" : "overflow-hidden h-[calc(100vh-69px)]"}>
                   {activePage === 'home' ? (
                     <Dashboard 
