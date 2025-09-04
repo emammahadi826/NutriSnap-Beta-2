@@ -20,23 +20,24 @@ import {
   useSidebar,
   SidebarTrigger,
   SidebarProvider,
-  SheetTitle,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { ChatPage } from './chat-page';
 
 
 export function NutriSnapApp() {
   const { isLoaded, getTodaysMeals, getTodaysSummary, guestMealCount } = useMealLogger();
-  const { user, logOut } = useAuth();
+  const { user, logOut, loading: authLoading } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
   const [activePage, setActivePage] = useState<'home' | 'chat'>('home');
   const GUEST_LIMIT = 3;
+  
+  const isLoading = authLoading || !isLoaded;
 
   const GuestCreditInfo = () => {
     const creditsUsed = guestMealCount;
@@ -74,13 +75,13 @@ export function NutriSnapApp() {
             <SidebarMenuItem>
               <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
                 <Home className="h-6 w-6"/>
-                <span className="truncate group-data-[[data-state=collapsed]]:hidden">Home</span>
+                <span className="group-data-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
                     <MessageCircle className="h-6 w-6"/>
-                    <span className="truncate group-data-[[data-state=collapsed]]:hidden">Chat</span>
+                    <span className="group-data-[[data-state=collapsed]]:hidden">Chat</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -127,7 +128,7 @@ export function NutriSnapApp() {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
-            <SheetTitle className="sr-only">Menu</SheetTitle>
+            <SheetTitle>Menu</SheetTitle>
             <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
                <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
             </SidebarHeader>
@@ -195,47 +196,48 @@ export function NutriSnapApp() {
   };
   
   return (
-    <SidebarProvider>
-      <div className="flex h-screen bg-background">
-        <AppSidebar />
-        <main className="flex-1 flex flex-col">
-          {!isLoaded ? (
-             <>
+      <SidebarProvider>
+         <div className="flex h-screen bg-background">
+          <AppSidebar />
+          <main className="flex-1 flex flex-col">
+            {isLoading ? (
+               <>
+                  <header className="flex h-[69px] items-center px-4 border-b">
+                       <SidebarTrigger />
+                   </header>
+                  <div className="flex-1 p-4 md:p-8 overflow-auto">
+                      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+                          <Skeleton className="h-32 rounded-lg" />
+                          <Skeleton className="h-32 rounded-lg" />
+                          <Skeleton className="h-32 rounded-lg" />
+                          <Skeleton className="h-32 rounded-lg" />
+                      </div>
+                      <div className="grid gap-8 md:grid-cols-5">
+                          <Skeleton className="h-80 rounded-lg md:col-span-3" />
+                          <Skeleton className="h-80 rounded-lg md:col-span-2" />
+                      </div>
+                  </div>
+               </>
+            ) : (
+              <>
                 <header className="flex h-[69px] items-center px-4 border-b">
-                     <SidebarTrigger />
-                 </header>
-                <div className="flex-1 p-4 md:p-8 overflow-auto">
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-                        <Skeleton className="h-32 rounded-lg" />
-                        <Skeleton className="h-32 rounded-lg" />
-                        <Skeleton className="h-32 rounded-lg" />
-                        <Skeleton className="h-32 rounded-lg" />
-                    </div>
-                    <div className="grid gap-8 md:grid-cols-5">
-                        <Skeleton className="h-80 rounded-lg md:col-span-3" />
-                        <Skeleton className="h-80 rounded-lg md:col-span-2" />
-                    </div>
+                  <SidebarTrigger />
+                </header>
+                <div className={activePage === 'home' ? "overflow-auto p-4 md:p-8" : "overflow-hidden h-[calc(100vh-69px)]"}>
+                  {activePage === 'home' ? (
+                    <Dashboard 
+                        meals={getTodaysMeals()} 
+                        summary={getTodaysSummary()}
+                    />
+                  ) : (
+                    <ChatPage />
+                  )}
                 </div>
-             </>
-          ) : (
-            <>
-              <header className="flex h-[69px] items-center px-4 border-b">
-                <SidebarTrigger />
-              </header>
-              <div className={activePage === 'home' ? "overflow-auto p-4 md:p-8" : "overflow-hidden h-[calc(100vh-69px)]"}>
-                {activePage === 'home' ? (
-                  <Dashboard 
-                      meals={getTodaysMeals()} 
-                      summary={getTodaysSummary()}
-                  />
-                ) : (
-                  <ChatPage />
-                )}
-              </div>
-            </>
-          )}
-        </main>
-      </div>
-    </SidebarProvider>
+              </>
+            )}
+          </main>
+        </div>
+      </SidebarProvider>
   );
 }
+
