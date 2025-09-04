@@ -20,6 +20,7 @@ import {
   useSidebar,
   SidebarTrigger,
   SidebarProvider,
+  SidebarInset,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -57,12 +58,13 @@ export function NutriSnapApp() {
   };
 
   const AppSidebar = () => {
-    const { openMobile, setOpenMobile } = useSidebar();
+    const { openMobile, setOpenMobile, state } = useSidebar();
   
     const sidebarContent = (
       <>
-        <SidebarHeader className="p-4 flex items-center gap-2">
-           <h1 className="text-primary font-headline text-2xl group-data-[[data-state=collapsed]]:hidden">NutriSnap</h1>
+        <SidebarHeader className="p-4 flex items-center justify-center h-[69px]">
+           <h1 className="text-primary font-headline text-2xl group-data-[[data-state=expanded]]:block hidden">NutriSnap</h1>
+           <div className="text-primary font-headline font-bold text-3xl group-data-[[data-state=collapsed]]:block hidden">N</div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -122,7 +124,60 @@ export function NutriSnapApp() {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
-            {sidebarContent}
+             <SidebarHeader className="p-4 flex items-center gap-2 h-[69px] border-b">
+               <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
+            </SidebarHeader>
+            <SidebarContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
+                    <Home className="h-6 w-6"/>
+                    <span className="truncate">Home</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
+                        <MessageCircle className="h-6 w-6"/>
+                        <span className="truncate">Chat</span>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarContent>
+            <SidebarFooter className="gap-4">
+              <GuestCreditInfo />
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
+                      <Avatar className="h-7 w-7">
+                        <AvatarImage src={'https://github.com/shadcn.png'} alt={user.displayName || 'User'} />
+                        <AvatarFallback>
+                          {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="truncate">{user.email}</span>
+                      <ChevronUp className="ml-auto h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side="top"
+                    className="w-[--radix-popper-anchor-width]"
+                  >
+                    <DropdownMenuItem onClick={logOut}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Sign out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button asChild variant="outline" className="w-full justify-center text-base h-12">
+                  <Link href="/login">
+                    <LogIn className="h-5 w-5 mr-2" />
+                    <span className="truncate">Login / Sign Up</span>
+                  </Link>
+                </Button>
+              )}
+            </SidebarFooter>
           </SheetContent>
         </Sheet>
       );
@@ -139,23 +194,24 @@ export function NutriSnapApp() {
     return (
       <div className="flex h-screen bg-background">
          <div className="hidden md:flex flex-col gap-4 w-[16rem] p-4 border-r">
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-10 w-10 rounded-full" />
+            <div className="flex items-center gap-2 h-[69px] p-4 justify-center">
               <Skeleton className="h-8 w-32" />
             </div>
-            <div className="flex flex-col gap-2 mt-4">
+            <div className="flex flex-col gap-2 p-4">
               <Skeleton className="h-12" />
               <Skeleton className="h-12" />
             </div>
             <div className="flex-grow" />
-            <Skeleton className="h-20" />
-            <Skeleton className="h-12" />
+            <div className="p-4 flex flex-col gap-4">
+                <Skeleton className="h-20" />
+                <Skeleton className="h-12" />
+            </div>
          </div>
-         <div className="flex-1 flex flex-col">
+         <main className="flex-1 flex flex-col">
             <header className="flex h-[69px] items-center px-4 border-b">
                  <Skeleton className="h-8 w-8" />
              </header>
-            <main className="flex-1 p-4 md:p-8 overflow-auto">
+            <div className="flex-1 p-4 md:p-8 overflow-auto">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
                     <Skeleton className="h-32 rounded-lg" />
                     <Skeleton className="h-32 rounded-lg" />
@@ -166,8 +222,8 @@ export function NutriSnapApp() {
                     <Skeleton className="h-80 rounded-lg md:col-span-3" />
                     <Skeleton className="h-80 rounded-lg md:col-span-2" />
                 </div>
-            </main>
-         </div>
+            </div>
+         </main>
       </div>
     );
   }
@@ -195,3 +251,5 @@ export function NutriSnapApp() {
     </SidebarProvider>
   );
 }
+
+    
