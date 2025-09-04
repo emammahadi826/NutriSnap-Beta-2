@@ -20,7 +20,6 @@ import {
   useSidebar,
   SidebarTrigger,
   SidebarProvider,
-  SidebarInset,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -45,7 +44,7 @@ export function NutriSnapApp() {
   
     if (isGuest) {
       return (
-        <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border group-[[data-state=collapsed]]:hidden">
+        <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border group-data-[[data-state=expanded]]:block hidden">
             <div className="text-center text-sm mb-2">
                 <p className="font-bold">{creditsLeft} credits left</p>
                 <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
@@ -63,39 +62,42 @@ export function NutriSnapApp() {
     const sidebarContent = (
       <>
         <SidebarHeader className="p-4 flex items-center justify-center h-[69px]">
-           <h1 className="text-primary font-headline text-2xl group-data-[[data-state=expanded]]:block hidden">NutriSnap</h1>
-           <div className="text-primary font-headline font-bold text-3xl group-data-[[data-state=collapsed]]:block hidden">N</div>
+          {state === 'expanded' ? (
+            <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
+          ) : (
+            <div className="text-primary font-headline font-bold text-3xl">N</div>
+          )}
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
                 <Home className="h-6 w-6"/>
-                <span className="truncate group-[[data-state=collapsed]]:hidden">Home</span>
+                <span className="truncate group-data-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
                     <MessageCircle className="h-6 w-6"/>
-                    <span className="truncate group-[[data-state=collapsed]]:hidden">Chat</span>
+                    <span className="truncate group-data-[[data-state=collapsed]]:hidden">Chat</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter className="gap-4">
+        <SidebarFooter className="gap-4 group-data-[[data-state=collapsed]]:hidden">
           <GuestCreditInfo />
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2 group-[[data-state=collapsed]]:hidden">
+                <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
                   <Avatar className="h-7 w-7">
                     <AvatarImage src={'https://github.com/shadcn.png'} alt={user.displayName || 'User'} />
                     <AvatarFallback>
                       {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="truncate group-[[data-state=collapsed]]:hidden">{user.email}</span>
-                  <ChevronUp className="ml-auto h-4 w-4 group-[[data-state=collapsed]]:hidden" />
+                  <span className="truncate">{user.email}</span>
+                  <ChevronUp className="ml-auto h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -109,10 +111,10 @@ export function NutriSnapApp() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild variant="outline" className="w-full justify-center text-base h-12 group-[[data-state=collapsed]]:hidden">
+            <Button asChild variant="outline" className="w-full justify-center text-base h-12">
               <Link href="/login">
-                <LogIn className="h-5 w-5 group-[[data-state=expanded]]:mr-2" />
-                <span className="truncate group-[[data-state=collapsed]]:hidden">Login / Sign Up</span>
+                <LogIn className="h-5 w-5 mr-2" />
+                <span className="truncate">Login / Sign Up</span>
               </Link>
             </Button>
           )}
@@ -124,7 +126,7 @@ export function NutriSnapApp() {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
-             <SidebarHeader className="p-4 flex items-center gap-2 h-[69px] border-b">
+            <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
                <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
             </SidebarHeader>
             <SidebarContent>
@@ -251,5 +253,3 @@ export function NutriSnapApp() {
     </SidebarProvider>
   );
 }
-
-    
