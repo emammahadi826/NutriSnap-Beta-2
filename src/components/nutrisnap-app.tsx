@@ -20,6 +20,7 @@ import {
   useSidebar,
   SidebarTrigger,
   SidebarProvider,
+  SheetTitle,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -62,11 +63,11 @@ export function NutriSnapApp() {
     const sidebarContent = (
       <>
         <SidebarHeader className="p-4 flex items-center justify-center h-[69px]">
-          {state === 'expanded' ? (
-            <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
-          ) : (
-            <div className="text-primary font-headline font-bold text-3xl">N</div>
-          )}
+           {state === 'expanded' ? (
+                <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
+            ) : (
+                <div className="text-primary font-headline font-bold text-3xl">N</div>
+            )}
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -126,6 +127,7 @@ export function NutriSnapApp() {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
+            <SheetTitle className="sr-only">Menu</SheetTitle>
             <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
                <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
             </SidebarHeader>
@@ -210,8 +212,8 @@ export function NutriSnapApp() {
             </div>
          </div>
          <main className="flex-1 flex flex-col">
-            <header className="flex h-[69px] items-center px-4 border-b">
-                 <Skeleton className="h-8 w-8" />
+            <header className="flex h-[69px] items-center px-4 border-b md:hidden">
+                 <SidebarTrigger />
              </header>
             <div className="flex-1 p-4 md:p-8 overflow-auto">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
