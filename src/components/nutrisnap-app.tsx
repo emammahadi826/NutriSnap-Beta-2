@@ -20,8 +20,6 @@ import {
   useSidebar,
   SidebarTrigger,
   SidebarProvider,
-  SidebarInset,
-  SheetTitle
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -59,7 +57,7 @@ export function NutriSnapApp() {
   };
 
   const AppSidebar = () => {
-    const { openMobile, setOpenMobile, state } = useSidebar();
+    const { openMobile, setOpenMobile } = useSidebar();
   
     const sidebarContent = (
       <>
@@ -137,7 +135,6 @@ export function NutriSnapApp() {
     );
   };
   
-
   if (!isLoaded) {
     return (
       <div className="flex h-screen bg-background">
@@ -177,7 +174,7 @@ export function NutriSnapApp() {
 
   return (
     <SidebarProvider>
-      <div className="flex">
+      <div className="flex h-screen bg-background">
         <AppSidebar />
         <main className="flex-1 flex flex-col">
           <header className="flex h-[69px] items-center px-4 border-b">
