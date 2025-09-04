@@ -20,7 +20,6 @@ import {
   useSidebar,
   SidebarTrigger,
   SidebarProvider,
-  SidebarInset,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -28,6 +27,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { ChatPage } from './chat-page';
+import { cn } from '@/lib/utils';
 
 
 export function NutriSnapApp() {
@@ -239,5 +239,7 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
+    
 
     
