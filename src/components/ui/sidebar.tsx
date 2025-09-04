@@ -209,6 +209,7 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
+            <SheetTitle className="sr-only">Menu</SheetTitle>
             {children}
           </SheetContent>
         </Sheet>
@@ -302,7 +303,7 @@ const SidebarInset = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("flex-1", className)}
+      className={cn("", className)}
       {...props}
     />
   )
@@ -539,7 +540,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        className={cn(sidebarMenuButtonVariants({ variant, size }), "group-data-[[data-state=collapsed]]:!flex group-data-[[data-state=collapsed]]:!size-10 group-data-[[data-state=collapsed]]:!items-center group-data-[[data-state=collapsed]]:!justify-center group-data-[[data-state=collapsed]]:w-full", className)}
+        className={cn(sidebarMenuButtonVariants({ variant, size }), "group-data-[[data-state=collapsed]]:!size-10 group-data-[[data-state=collapsed]]:!items-center group-data-[[data-state=collapsed]]:!justify-center group-data-[[data-state=collapsed]]:!p-0", className)}
         {...props}
       />
     )
@@ -739,5 +740,7 @@ export {
   useSidebar,
   SheetTitle
 }
+
+    
 
     

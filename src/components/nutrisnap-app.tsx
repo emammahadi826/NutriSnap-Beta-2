@@ -20,6 +20,7 @@ import {
   useSidebar,
   SidebarTrigger,
   SidebarProvider,
+  SidebarInset,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -64,7 +65,7 @@ export function NutriSnapApp() {
     const sidebarContent = (
       <>
         <SidebarHeader className="p-4 flex items-center justify-center h-[69px]">
-           {state === 'expanded' ? (
+            {state === 'expanded' ? (
                 <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
             ) : (
                 <div className="text-primary font-headline font-bold text-3xl">N</div>
@@ -73,13 +74,13 @@ export function NutriSnapApp() {
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
+              <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
                 <Home className="h-6 w-6"/>
                 <span className="group-data-[[data-state=collapsed]]:hidden">Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12 group-data-[[data-state=collapsed]]:justify-center group-data-[[data-state=collapsed]]:p-0">
+                <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
                     <MessageCircle className="h-6 w-6"/>
                     <span className="group-data-[[data-state=collapsed]]:hidden">Chat</span>
                 </SidebarMenuButton>
@@ -199,7 +200,7 @@ export function NutriSnapApp() {
       <SidebarProvider>
          <div className="flex h-screen bg-background">
           <AppSidebar />
-          <main className="flex-1 flex flex-col">
+           <main className="flex-1 flex flex-col">
             {isLoading ? (
                <>
                   <header className="flex h-[69px] items-center px-4 border-b">
@@ -241,3 +242,4 @@ export function NutriSnapApp() {
   );
 }
 
+    
