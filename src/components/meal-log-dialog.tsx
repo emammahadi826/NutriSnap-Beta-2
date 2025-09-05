@@ -376,9 +376,6 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
                                 <Plus className="h-4 w-4" />
                             </Button>
                        </div>
-                       <Button variant="ghost" size="icon" className="absolute top-1 right-1 h-6 w-6 text-muted-foreground hover:text-destructive opacity-50 group-hover:opacity-100" onClick={() => handleRemoveItem(item.id)}>
-                            <X className="h-4 w-4" />
-                       </Button>
                     </Card>
                 ))}
             </div>
