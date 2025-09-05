@@ -1,3 +1,4 @@
+
 "use client";
 import {
   createContext,
@@ -11,6 +12,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
   User,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -19,7 +21,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   error: string | null;
-  signUp: (email: string, pass: string) => Promise<boolean>;
+  signUp: (email: string, pass: string, displayName: string) => Promise<boolean>;
   logIn: (email: string, pass: string) => Promise<boolean>;
   logOut: () => void;
 }
@@ -47,11 +49,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  const signUp = async (email: string, pass: string) => {
+  const signUp = async (email: string, pass: string, displayName: string) => {
     setLoading(true);
     setError(null);
     try {
-      await createUserWithEmailAndPassword(auth, email, pass);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+      if (userCredential.user) {
+        await updateProfile(userCredential.user, { displayName });
+      }
       return true;
     } catch (e: any) {
       setError(e.message);

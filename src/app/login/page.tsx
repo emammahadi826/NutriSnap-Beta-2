@@ -18,8 +18,10 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   );
 
 export default function Login() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const { signUp, logIn, loading, error } = useAuth();
   const { toast } = useToast();
@@ -28,7 +30,11 @@ export default function Login() {
     e.preventDefault();
     let success = false;
     if (isSignUp) {
-      success = await signUp(email, password);
+      if (password !== confirmPassword) {
+        toast({ variant: 'destructive', title: 'Sign-up Failed', description: "Passwords do not match." });
+        return;
+      }
+      success = await signUp(email, password, name);
       if (success) {
         toast({ title: 'Account created successfully!' });
       } else {
@@ -43,6 +49,14 @@ export default function Login() {
       }
     }
   };
+  
+  const toggleForm = () => {
+    setIsSignUp(!isSignUp);
+    setName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4 text-foreground">
@@ -63,6 +77,20 @@ export default function Login() {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
+             {isSignUp && (
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input 
+                  id="name" 
+                  type="text" 
+                  placeholder="John Doe" 
+                  required 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} 
+                  className="bg-background"
+                />
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input 
@@ -93,6 +121,19 @@ export default function Login() {
                 className="bg-background"
               />
             </div>
+            {isSignUp && (
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirm Password</Label>
+                <Input 
+                  id="confirm-password" 
+                  type="password" 
+                  required 
+                  value={confirmPassword} 
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="bg-background"
+                />
+              </div>
+            )}
             <Button type="submit" className="w-full h-10 font-semibold" disabled={loading}>
               {loading ? (isSignUp ? 'Creating...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
             </Button>
@@ -117,11 +158,7 @@ export default function Login() {
         <CardFooter className="flex justify-center text-sm">
             <p className="text-muted-foreground">
                 {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-                <Button variant="link" className="p-1" onClick={() => {
-                    setIsSignUp(!isSignUp);
-                    setEmail('');
-                    setPassword('');
-                }}>
+                <Button variant="link" className="p-1" onClick={toggleForm}>
                     {isSignUp ? 'Login' : 'Sign up'}
                 </Button>
             </p>
