@@ -23,24 +23,26 @@ const processMealDataForChart = (meals: Meal[]): DailySummaryWithDate[] => {
 
     // Initialize all days in the last 30 days with 0 values
     for (let i = 0; i < 30; i++) {
-        const date = format(subDays(endDate, i), 'yyyy-MM-dd');
-        dailyDataMap.set(date, { date, calories: 0, protein: 0, carbs: 0, fat: 0 });
+        const date = subDays(endDate, i);
+        const dateStr = format(date, 'yyyy-MM-dd');
+        dailyDataMap.set(dateStr, { date: dateStr, calories: 0, protein: 0, carbs: 0, fat: 0 });
     }
 
     meals.forEach(meal => {
         const mealDate = new Date(meal.timestamp);
         if (isWithinInterval(mealDate, { start: startDate, end: endDate })) {
             const dateStr = format(mealDate, 'yyyy-MM-dd');
-            const dayData = dailyDataMap.get(dateStr) || { date: dateStr, calories: 0, protein: 0, carbs: 0, fat: 0 };
+            const dayData = dailyDataMap.get(dateStr);
             
-            meal.items.forEach(item => {
-                dayData.calories += item.food.calories * item.servings;
-                dayData.protein += item.food.protein * item.servings;
-                dayData.carbs += item.food.carbs * item.servings;
-                dayData.fat += item.food.fat * item.servings;
-            });
-
-            dailyDataMap.set(dateStr, dayData);
+            if(dayData) {
+                meal.items.forEach(item => {
+                    dayData.calories += item.food.calories * item.servings;
+                    dayData.protein += item.food.protein * item.servings;
+                    dayData.carbs += item.food.carbs * item.servings;
+                    dayData.fat += item.food.fat * item.servings;
+                });
+                dailyDataMap.set(dateStr, dayData);
+            }
         }
     });
 
