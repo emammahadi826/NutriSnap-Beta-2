@@ -36,6 +36,27 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
+const CustomLegend = (props: any) => {
+    const { payload } = props;
+    if (!payload) return null;
+
+    return (
+        <div className="flex items-center justify-center flex-wrap gap-4 mt-4 text-sm text-foreground">
+            {
+                payload.map((entry: any, index: number) => {
+                    const { color, value, payload } = entry;
+                    return (
+                        <div key={`item-${index}`} className="flex items-center gap-1.5">
+                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }}></span>
+                            <span>{value} ({Math.round(payload.value)}g)</span>
+                        </div>
+                    )
+                })
+            }
+        </div>
+    );
+};
+
 
 export function Dashboard({ meals, summary }: DashboardProps) {
   
@@ -119,14 +140,7 @@ export function Dashboard({ meals, summary }: DashboardProps) {
                       <Cell key={`cell-${index}`} fill={entry.fill} stroke={entry.fill} />
                     ))}
                   </Pie>
-                   <Legend 
-                        iconSize={10} 
-                        wrapperStyle={{ position: 'relative', marginTop: '20px' }}
-                        formatter={(value, entry) => {
-                            const item = pieChartData.find(d => d.name === value);
-                            return <span style={{ color: 'hsl(var(--foreground))' }}>{value} ({Math.round(item?.value || 0)}g)</span>
-                        }}
-                    />
+                   <Legend content={<CustomLegend />} />
                      <foreignObject width="100%" height="100%">
                         <div className="w-full h-full flex items-center justify-center">
                             <div className="text-center">
