@@ -1,13 +1,12 @@
 
 "use client";
 
-import type { Meal, DailySummary, DailySummaryWithDate } from '@/lib/types';
+import type { Meal, DailySummary } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from '@/components/chart-wrapper';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from '@/components/chart-wrapper';
 import { Flame, Wheat, Drumstick, Droplets, Utensils } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { ReactNode } from 'react';
-import { format, subDays, isWithinInterval, parseISO } from 'date-fns';
+import { useMemo } from 'react';
 
 
 interface DashboardProps {
@@ -15,62 +14,21 @@ interface DashboardProps {
   summary: DailySummary;
 }
 
-const processMealDataForChart = (meals: Meal[]): DailySummaryWithDate[] => {
-    const endDate = new Date();
-    const startDate = subDays(endDate, 29);
-    
-    const dailyDataMap = new Map<string, DailySummaryWithDate>();
-
-    // Initialize all days in the last 30 days with 0 values
-    for (let i = 0; i < 30; i++) {
-        const date = subDays(endDate, i);
-        const dateStr = format(date, 'yyyy-MM-dd');
-        dailyDataMap.set(dateStr, { date: dateStr, calories: 0, protein: 0, carbs: 0, fat: 0 });
-    }
-
-    meals.forEach(meal => {
-        const mealDate = new Date(meal.timestamp);
-        if (isWithinInterval(mealDate, { start: startDate, end: endDate })) {
-            const dateStr = format(mealDate, 'yyyy-MM-dd');
-            const dayData = dailyDataMap.get(dateStr);
-            
-            if(dayData) {
-                meal.items.forEach(item => {
-                    dayData.calories += item.food.calories * item.servings;
-                    dayData.protein += item.food.protein * item.servings;
-                    dayData.carbs += item.food.carbs * item.servings;
-                    dayData.fat += item.food.fat * item.servings;
-                });
-                dailyDataMap.set(dateStr, dayData);
-            }
-        }
-    });
-
-    return Array.from(dailyDataMap.values()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+const COLORS = {
+    carbs: 'hsl(var(--chart-1))',
+    protein: 'hsl(var(--chart-2))',
+    fat: 'hsl(var(--chart-3))'
 };
 
-
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
+    const data = payload[0];
     return (
       <div className="rounded-lg border bg-popover p-2 text-popover-foreground shadow-sm">
-        <div className="font-bold">{format(parseISO(label), 'MMM d, yyyy')}</div>
-        <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-1 text-sm">
-            <div className="flex items-center">
-                <div className="w-2 h-2 rounded-full mr-1.5" style={{backgroundColor: 'hsl(var(--chart-1))'}} />
-                Carbs:
-            </div>
-            <div className="text-right font-mono">{`${Math.round(payload[0].value)}g`}</div>
-             <div className="flex items-center">
-                <div className="w-2 h-2 rounded-full mr-1.5" style={{backgroundColor: 'hsl(var(--chart-2))'}} />
-                Protein:
-            </div>
-            <div className="text-right font-mono">{`${Math.round(payload[1].value)}g`}</div>
-             <div className="flex items-center">
-                <div className="w-2 h-2 rounded-full mr-1.5" style={{backgroundColor: 'hsl(var(--chart-3))'}} />
-                Fat:
-            </div>
-            <div className="text-right font-mono">{`${Math.round(payload[2].value)}g`}</div>
+        <div className="flex items-center">
+            <div className="w-2 h-2 rounded-full mr-1.5" style={{backgroundColor: data.payload.fill}} />
+            {data.name}:
+             <span className="ml-2 font-mono font-bold">{`${Math.round(data.value)}g`}</span>
         </div>
       </div>
     );
@@ -81,7 +39,13 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export function Dashboard({ meals, summary }: DashboardProps) {
   
-  const chartData = processMealDataForChart(meals);
+  const pieChartData = useMemo(() => [
+    { name: 'Carbs', value: Math.max(0, summary.carbs), fill: COLORS.carbs },
+    { name: 'Protein', value: Math.max(0, summary.protein), fill: COLORS.protein },
+    { name: 'Fat', value: Math.max(0, summary.fat), fill: COLORS.fat },
+  ], [summary]);
+  
+  const hasData = pieChartData.some(item => item.value > 0);
 
   return (
     <div className="space-y-8">
@@ -133,51 +97,53 @@ export function Dashboard({ meals, summary }: DashboardProps) {
       <section className="grid gap-8 md:grid-cols-5">
         <Card className="md:col-span-3">
           <CardHeader>
-            <CardTitle>Macro Trends</CardTitle>
-            <CardDescription>Your macronutrient intake for the last 30 days.</CardDescription>
+            <CardTitle>Today's Macro Breakdown</CardTitle>
+            <CardDescription>Your macronutrient distribution for today.</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-                <AreaChart
-                    data={chartData}
-                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
-                    <defs>
-                        <linearGradient id="colorCarbs" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0}/>
-                        </linearGradient>
-                         <linearGradient id="colorProtein" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0}/>
-                        </linearGradient>
-                         <linearGradient id="colorFat" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="hsl(var(--chart-3))" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="hsl(var(--chart-3))" stopOpacity={0}/>
-                        </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border) / 0.5)" />
-                    <XAxis 
-                        dataKey="date" 
-                        stroke="hsl(var(--muted-foreground))"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(str) => format(parseISO(str), 'd MMM')}
+              {hasData ? (
+                <PieChart>
+                  <Tooltip content={<CustomTooltip />} />
+                  <Pie
+                    data={pieChartData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    innerRadius={80}
+                    outerRadius={120}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {pieChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} stroke={entry.fill} />
+                    ))}
+                  </Pie>
+                   <Legend 
+                        iconSize={10} 
+                        wrapperStyle={{ bottom: 20 }}
+                        formatter={(value, entry) => {
+                            const { color } = entry;
+                            const item = pieChartData.find(d => d.name === value);
+                            return <span style={{ color: 'hsl(var(--foreground))' }}>{value} ({Math.round(item?.value || 0)}g)</span>
+                        }}
                     />
-                    <YAxis 
-                        stroke="hsl(var(--muted-foreground))"
-                        fontSize={12}
-                        tickLine={false}
-                        axisLine={false}
-                        tickFormatter={(value) => `${value}g`}
-                    />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Area type="monotone" dataKey="carbs" name="Carbs" stroke="hsl(var(--chart-1))" fillOpacity={1} fill="url(#colorCarbs)" />
-                    <Area type="monotone" dataKey="protein" name="Protein" stroke="hsl(var(--chart-2))" fillOpacity={1} fill="url(#colorProtein)" />
-                    <Area type="monotone" dataKey="fat" name="Fat" stroke="hsl(var(--chart-3))" fillOpacity={1} fill="url(#colorFat)" />
-                </AreaChart>
+                     <foreignObject width="100%" height="100%">
+                        <div className="w-full h-full flex items-center justify-center">
+                            <div className="text-center">
+                                <p className="text-4xl font-bold text-foreground">{Math.round(summary.calories)}</p>
+                                <p className="text-sm text-muted-foreground">Total Kcal</p>
+                            </div>
+                        </div>
+                    </foreignObject>
+                </PieChart>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
+                    <PieChart className="h-24 w-24 opacity-20" />
+                    <p className="mt-4">No data to display.</p>
+                    <p className="text-sm">Log a meal to see your macro breakdown.</p>
+                </div>
+              )}
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -218,3 +184,4 @@ export function Dashboard({ meals, summary }: DashboardProps) {
     </div>
   );
 }
+
