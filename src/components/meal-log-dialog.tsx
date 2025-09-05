@@ -66,20 +66,35 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
     const getCameraPermission = async () => {
       if (view !== 'camera' || !isOpen) return;
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const videoConstraints: MediaStreamConstraints = {
+            video: {
+                facingMode: { exact: "environment" }
+            }
+        };
+        stream = await navigator.mediaDevices.getUserMedia(videoConstraints);
         setHasCameraPermission(true);
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
         }
-      } catch (error) {
-        console.error('Error accessing camera:', error);
-        setHasCameraPermission(false);
-        toast({
-          variant: 'destructive',
-          title: 'Camera Access Denied',
-          description: 'Please enable camera permissions in your browser settings to use this app.',
-        });
+      } catch (err) {
+        console.error('Error accessing rear camera, trying any camera:', err);
+        try {
+            // Fallback to any available camera if the rear one fails
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            setHasCameraPermission(true);
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+            }
+        } catch (error) {
+            console.error('Error accessing camera:', error);
+            setHasCameraPermission(false);
+            toast({
+              variant: 'destructive',
+              title: 'Camera Access Denied',
+              description: 'Please enable camera permissions in your browser settings to use this app.',
+            });
+        }
       }
     };
 
