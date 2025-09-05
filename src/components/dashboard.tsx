@@ -3,7 +3,7 @@
 
 import type { Meal, DailySummary, DailySummaryWithDate } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from '@/components/chart-wrapper';
 import { Flame, Wheat, Drumstick, Droplets, Utensils } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { ReactNode } from 'react';
