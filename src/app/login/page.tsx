@@ -41,17 +41,17 @@ export default function Login() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4 text-foreground">
       <div className="flex items-center gap-2 mb-8">
         <Flame className="w-8 h-8 text-primary" />
-        <h1 className="text-3xl font-bold font-headline">NutriSnap</h1>
+        <h1 className="text-2xl font-bold font-headline">NutriSnap</h1>
       </div>
-      <Card className="w-full max-w-sm border-border/50">
+      <Card className="w-full max-w-sm border-border/50 bg-card">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">
+          <CardTitle className="text-2xl font-semibold">
             {isSignUp ? 'Create an account' : 'Welcome back'}
           </CardTitle>
           <CardDescription>
             {isSignUp
-              ? 'Enter your email below to create your account'
-              : 'Enter your credentials to access your account'}
+              ? 'Enter your details to get started'
+              : 'Login to access your account'}
           </CardDescription>
         </CardHeader>
         <CardContent as="form" onSubmit={handleSubmit} className="space-y-4">
@@ -64,18 +64,25 @@ export default function Login() {
               required 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
-              className="bg-input"
+              className="bg-background"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <div className="flex items-center justify-between">
+                <Label htmlFor="password">Password</Label>
+                {!isSignUp && (
+                     <Link href="#" className="text-xs text-primary/80 hover:text-primary hover:underline">
+                        Forgot your password?
+                    </Link>
+                )}
+            </div>
             <Input 
               id="password" 
               type="password" 
               required 
               value={password} 
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-input"
+              className="bg-background"
             />
           </div>
           <Button type="submit" className="w-full h-10 font-semibold" disabled={loading}>
@@ -95,7 +102,7 @@ export default function Login() {
             </p>
         </CardFooter>
       </Card>
-      <p className="px-8 text-center text-sm text-muted-foreground mt-8">
+      <p className="px-8 text-center text-xs text-muted-foreground mt-8 max-w-sm">
         By clicking continue, you agree to our{' '}
         <Link href="#" className="underline underline-offset-4 hover:text-primary">
           Terms of Service
