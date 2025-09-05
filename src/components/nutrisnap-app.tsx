@@ -32,7 +32,7 @@ import { MealLogDialog } from './meal-log-dialog';
 
 
 export function NutriSnapApp() {
-  const { isLoaded, meals, getTodaysSummary, guestMealCount, addMeal } = useMealLogger();
+  const { isLoaded, meals, guestMealCount, addMeal } = useMealLogger();
   const { user, logOut, loading: authLoading } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
@@ -121,6 +121,7 @@ export function NutriSnapApp() {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
+             <SheetTitle className="sr-only">Menu</SheetTitle>
             <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
                <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
             </SidebarHeader>
@@ -197,7 +198,7 @@ export function NutriSnapApp() {
     );
   };
 
-  const summary = getTodaysSummary();
+  const summary = useMealLogger().getTodaysSummary();
   
   return (
       <SidebarProvider>
