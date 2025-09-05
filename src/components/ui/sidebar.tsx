@@ -245,7 +245,7 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, children, ...props }, ref) => {
-  const { toggleSidebar, state } = useSidebar()
+  const { toggleSidebar } = useSidebar()
 
   return (
     <Button
@@ -253,7 +253,7 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-7 w-7", className)}
+      className={cn("h-9 w-9", className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
@@ -303,7 +303,7 @@ const SidebarInset = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("flex-1", className)}
+      className={cn("", className)}
       {...props}
     />
   )
