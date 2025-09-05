@@ -8,10 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import type { UserProfile } from '@/lib/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 export default function CompleteProfile() {
@@ -101,60 +101,50 @@ export default function CompleteProfile() {
                 />
             </div>
 
-             <div className="space-y-2">
+            <div className="space-y-2">
                 <Label>Gender <span className="text-destructive">*</span></Label>
-                <RadioGroup
-                    onValueChange={(value) => setGender(value as 'male' | 'female' | 'other')}
-                    className="flex items-center gap-x-4"
-                    required
-                >
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="male" id="male" />
-                        <Label htmlFor="male">Male</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="female" id="female" />
-                        <Label htmlFor="female">Female</Label>
-                    </div>
-                     <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="other" id="other" />
-                        <Label htmlFor="other">Other</Label>
-                    </div>
-                </RadioGroup>
+                <Select onValueChange={(value) => setGender(value as 'male' | 'female' | 'other')} value={gender}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select your gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
 
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                 <div className="space-y-2">
-                    <Label htmlFor="age">Age <span className="text-destructive">*</span></Label>
-                    <Input
-                        id="age"
-                        type="number"
-                        placeholder="e.g., 25"
-                        required
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="weight">Weight (kg)</Label>
-                    <Input
-                        id="weight"
-                        type="number"
-                        placeholder="e.g., 70"
-                        value={weight}
-                        onChange={(e) => setWeight(e.target.value)}
-                    />
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="height">Height (cm)</Label>
-                    <Input
-                        id="height"
-                        type="number"
-                        placeholder="e.g., 175"
-                        value={height}
-                        onChange={(e) => setHeight(e.target.value)}
-                    />
-                </div>
+            <div className="space-y-2">
+                <Label htmlFor="age">Age <span className="text-destructive">*</span></Label>
+                <Input
+                    id="age"
+                    type="number"
+                    placeholder="e.g., 25"
+                    required
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="weight">Weight (kg)</Label>
+                <Input
+                    id="weight"
+                    type="number"
+                    placeholder="e.g., 70"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
+                />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="height">Height (cm)</Label>
+                <Input
+                    id="height"
+                    type="number"
+                    placeholder="e.g., 175"
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
+                />
             </div>
 
             <Button type="submit" className="w-full h-11 font-semibold text-base" disabled={isSubmitting}>
