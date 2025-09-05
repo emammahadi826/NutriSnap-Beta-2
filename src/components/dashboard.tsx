@@ -68,6 +68,10 @@ export function Dashboard({ meals, summary }: DashboardProps) {
   
   const hasData = pieChartData.some(item => item.value > 0);
 
+  const todaysMeals = useMemo(() => {
+    return meals.filter(meal => new Date(meal.timestamp).toDateString() === new Date().toDateString());
+  }, [meals]);
+
   return (
     <div className="space-y-8">
       <section>
@@ -168,9 +172,9 @@ export function Dashboard({ meals, summary }: DashboardProps) {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-[300px] pr-4">
-              {meals.filter(meal => new Date(meal.timestamp).toDateString() === new Date().toDateString()).length > 0 ? (
+              {todaysMeals.length > 0 ? (
                 <ul className="space-y-4">
-                  {meals.filter(meal => new Date(meal.timestamp).toDateString() === new Date().toDateString()).map(meal => (
+                  {todaysMeals.map(meal => (
                     <li key={meal.id} className="flex items-start gap-4">
                       <div className="bg-secondary p-3 rounded-full mt-1">
                          <Utensils className="h-5 w-5 text-secondary-foreground" />
