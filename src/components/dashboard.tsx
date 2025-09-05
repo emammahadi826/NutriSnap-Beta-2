@@ -1,12 +1,13 @@
 
 "use client";
 
-import type { Meal, DailySummary } from '@/lib/types';
+import type { Meal, DailySummary, DailySummaryWithDate } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Flame, Wheat, Drumstick, Droplets, Utensils } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { ReactNode } from 'react';
+import { format, subDays, isWithinInterval, parseISO } from 'date-fns';
 
 
 interface DashboardProps {
@@ -14,10 +15,71 @@ interface DashboardProps {
   summary: DailySummary;
 }
 
+const processMealDataForChart = (meals: Meal[]): DailySummaryWithDate[] => {
+    const endDate = new Date();
+    const startDate = subDays(endDate, 29);
+    
+    const dailyDataMap = new Map<string, DailySummaryWithDate>();
+
+    // Initialize all days in the last 30 days with 0 values
+    for (let i = 0; i < 30; i++) {
+        const date = format(subDays(endDate, i), 'yyyy-MM-dd');
+        dailyDataMap.set(date, { date, calories: 0, protein: 0, carbs: 0, fat: 0 });
+    }
+
+    meals.forEach(meal => {
+        const mealDate = new Date(meal.timestamp);
+        if (isWithinInterval(mealDate, { start: startDate, end: endDate })) {
+            const dateStr = format(mealDate, 'yyyy-MM-dd');
+            const dayData = dailyDataMap.get(dateStr) || { date: dateStr, calories: 0, protein: 0, carbs: 0, fat: 0 };
+            
+            meal.items.forEach(item => {
+                dayData.calories += item.food.calories * item.servings;
+                dayData.protein += item.food.protein * item.servings;
+                dayData.carbs += item.food.carbs * item.servings;
+                dayData.fat += item.food.fat * item.servings;
+            });
+
+            dailyDataMap.set(dateStr, dayData);
+        }
+    });
+
+    return Array.from(dailyDataMap.values()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+};
+
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="rounded-lg border bg-popover p-2 text-popover-foreground shadow-sm">
+        <div className="font-bold">{format(parseISO(label), 'MMM d, yyyy')}</div>
+        <div className="grid grid-cols-2 gap-x-2 gap-y-1 mt-1 text-sm">
+            <div className="flex items-center">
+                <div className="w-2 h-2 rounded-full mr-1.5" style={{backgroundColor: 'hsl(var(--chart-1))'}} />
+                Carbs:
+            </div>
+            <div className="text-right font-mono">{`${Math.round(payload[0].value)}g`}</div>
+             <div className="flex items-center">
+                <div className="w-2 h-2 rounded-full mr-1.5" style={{backgroundColor: 'hsl(var(--chart-2))'}} />
+                Protein:
+            </div>
+            <div className="text-right font-mono">{`${Math.round(payload[1].value)}g`}</div>
+             <div className="flex items-center">
+                <div className="w-2 h-2 rounded-full mr-1.5" style={{backgroundColor: 'hsl(var(--chart-3))'}} />
+                Fat:
+            </div>
+            <div className="text-right font-mono">{`${Math.round(payload[2].value)}g`}</div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+
 export function Dashboard({ meals, summary }: DashboardProps) {
-  const macroData = [
-    { name: 'Macros', carbs: Math.round(summary.carbs), protein: Math.round(summary.protein), fat: Math.round(summary.fat) },
-  ];
+  
+  const chartData = processMealDataForChart(meals);
 
   return (
     <div className="space-y-8">
@@ -69,38 +131,51 @@ export function Dashboard({ meals, summary }: DashboardProps) {
       <section className="grid gap-8 md:grid-cols-5">
         <Card className="md:col-span-3">
           <CardHeader>
-            <CardTitle>Macro Breakdown</CardTitle>
-            <CardDescription>Your macronutrient distribution for today (in grams).</CardDescription>
+            <CardTitle>Macro Trends</CardTitle>
+            <CardDescription>Your macronutrient intake for the last 30 days.</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={macroData} layout="vertical" margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" stroke="hsl(var(--muted-foreground))" fontSize={12} allowDecimals={false} tickMargin={5} />
-                <YAxis type="category" dataKey="name" hide />
-                <Tooltip
-                  cursor={false}
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--popover))',
-                    borderColor: 'hsl(var(--border))',
-                    borderRadius: 'var(--radius)',
-                    color: 'hsl(var(--popover-foreground))',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-                  }}
-                  itemStyle={{
-                    color: 'hsl(var(--popover-foreground))',
-                  }}
-                  labelStyle={{
-                     color: 'hsl(var(--muted-foreground))',
-                     marginBottom: '0.5rem',
-                     fontWeight: 'bold',
-                  }}
-                />
-                <Legend />
-                <Bar dataKey="carbs" name="Carbs" stackId="a" fill="hsl(var(--chart-1))" radius={[4, 0, 0, 4]} />
-                <Bar dataKey="protein" name="Protein" stackId="a" fill="hsl(var(--chart-2))" />
-                <Bar dataKey="fat" name="Fat" stackId="a" fill="hsl(var(--chart-3))" radius={[0, 4, 4, 0]} />
-              </BarChart>
+                <AreaChart
+                    data={chartData}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                    <defs>
+                        <linearGradient id="colorCarbs" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0}/>
+                        </linearGradient>
+                         <linearGradient id="colorProtein" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0}/>
+                        </linearGradient>
+                         <linearGradient id="colorFat" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="hsl(var(--chart-3))" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="hsl(var(--chart-3))" stopOpacity={0}/>
+                        </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border) / 0.5)" />
+                    <XAxis 
+                        dataKey="date" 
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(str) => format(parseISO(str), 'MMM d')}
+                    />
+                    <YAxis 
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(value) => `${value}g`}
+                    />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend />
+                    <Area type="monotone" dataKey="carbs" name="Carbs" stroke="hsl(var(--chart-1))" fillOpacity={1} fill="url(#colorCarbs)" />
+                    <Area type="monotone" dataKey="protein" name="Protein" stroke="hsl(var(--chart-2))" fillOpacity={1} fill="url(#colorProtein)" />
+                    <Area type="monotone" dataKey="fat" name="Fat" stroke="hsl(var(--chart-3))" fillOpacity={1} fill="url(#colorFat)" />
+                </AreaChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
@@ -112,9 +187,9 @@ export function Dashboard({ meals, summary }: DashboardProps) {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-[300px] pr-4">
-              {meals.length > 0 ? (
+              {meals.filter(meal => new Date(meal.timestamp).toDateString() === new Date().toDateString()).length > 0 ? (
                 <ul className="space-y-4">
-                  {meals.map(meal => (
+                  {meals.filter(meal => new Date(meal.timestamp).toDateString() === new Date().toDateString()).map(meal => (
                     <li key={meal.id} className="flex items-start gap-4">
                       <div className="bg-secondary p-3 rounded-full mt-1">
                          <Utensils className="h-5 w-5 text-secondary-foreground" />

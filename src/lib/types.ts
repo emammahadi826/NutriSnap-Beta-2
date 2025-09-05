@@ -27,3 +27,7 @@ export interface DailySummary {
   carbs: number;
   fat: number;
 }
+
+export interface DailySummaryWithDate extends DailySummary {
+    date: string;
+}
