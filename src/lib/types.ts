@@ -1,3 +1,4 @@
+
 export interface Food {
   name: string;
   calories: number;
@@ -26,4 +27,12 @@ export interface DailySummary {
   protein: number;
   carbs: number;
   fat: number;
+}
+
+export interface UserProfile {
+  displayName: string;
+  gender: 'male' | 'female' | 'other';
+  age: number;
+  weight?: number; // in kg
+  height?: number; // in cm
 }

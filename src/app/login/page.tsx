@@ -18,7 +18,6 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   );
 
 export default function Login() {
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -36,17 +35,13 @@ export default function Login() {
         toast({ variant: 'destructive', title: 'Sign-up Failed', description: "Passwords do not match." });
         return;
       }
-      success = await signUp(email, password, name);
-      if (success) {
-        toast({ title: 'Account created successfully!' });
-      } else {
+      success = await signUp(email, password);
+      if (!success) {
         toast({ variant: 'destructive', title: 'Sign-up Failed', description: error });
       }
     } else {
       success = await logIn(email, password);
-      if (success) {
-        toast({ title: 'Logged in successfully!' });
-      } else {
+      if (!success) {
         toast({ variant: 'destructive', title: 'Login Failed', description: error });
       }
     }
@@ -54,7 +49,6 @@ export default function Login() {
   
   const toggleForm = () => {
     setIsSignUp(!isSignUp);
-    setName('');
     setEmail('');
     setPassword('');
     setConfirmPassword('');
@@ -81,20 +75,6 @@ export default function Login() {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-             {isSignUp && (
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input 
-                  id="name" 
-                  type="text" 
-                  placeholder="John Doe" 
-                  required 
-                  value={name} 
-                  onChange={(e) => setName(e.target.value)} 
-                  className="bg-background"
-                />
-              </div>
-            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input 

@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, PanelLeft } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -33,7 +33,7 @@ import { MealLogDialog } from './meal-log-dialog';
 
 export function NutriSnapApp() {
   const { isLoaded, meals, guestMealCount, addMeal } = useMealLogger();
-  const { user, logOut, loading: authLoading } = useAuth();
+  const { user, userProfile, logOut, loading: authLoading } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
   const [activePage, setActivePage] = useState<'home' | 'chat'>('home');
@@ -86,12 +86,12 @@ export function NutriSnapApp() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
                   <Avatar className="h-7 w-7">
-                    <AvatarImage src={'https://github.com/shadcn.png'} alt={user.displayName || 'User'} />
+                    <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                     <AvatarFallback>
-                      {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+                      {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="truncate">{user.email}</span>
+                  <span className="truncate">{userProfile?.displayName || user.email}</span>
                   <ChevronUp className="ml-auto h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -158,12 +158,12 @@ export function NutriSnapApp() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
                       <Avatar className="h-7 w-7">
-                        <AvatarImage src={'https://github.com/shadcn.png'} alt={user.displayName || 'User'} />
+                        <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
-                          {user?.email ? user.email.charAt(0).toUpperCase() : <UserIcon />}
+                          {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="truncate">{user.email}</span>
+                      <span className="truncate">{userProfile?.displayName || user.email}</span>
                       <ChevronUp className="ml-auto h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
