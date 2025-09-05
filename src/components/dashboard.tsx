@@ -163,7 +163,7 @@ export function Dashboard({ meals, summary }: DashboardProps) {
                         fontSize={12}
                         tickLine={false}
                         axisLine={false}
-                        tickFormatter={(str) => format(parseISO(str), 'd')}
+                        tickFormatter={(str) => format(parseISO(str), 'd MMM')}
                     />
                     <YAxis 
                         stroke="hsl(var(--muted-foreground))"
