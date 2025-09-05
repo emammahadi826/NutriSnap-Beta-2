@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Flame } from 'lucide-react';
+import { Flame, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -23,6 +23,8 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { signUp, logIn, loading, error } = useAuth();
   const { toast } = useToast();
 
@@ -56,6 +58,8 @@ export default function Login() {
     setEmail('');
     setPassword('');
     setConfirmPassword('');
+    setShowPassword(false);
+    setShowConfirmPassword(false);
   }
 
   return (
@@ -112,26 +116,48 @@ export default function Login() {
                       </Link>
                   )}
               </div>
-              <Input 
-                id="password" 
-                type="password" 
-                required 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-background"
-              />
+              <div className="relative">
+                <Input 
+                  id="password" 
+                  type={showPassword ? "text" : "password"} 
+                  required 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="bg-background pr-10"
+                />
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  size="icon"
+                  className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
+                  onClick={() => setShowPassword(prev => !prev)}
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </Button>
+              </div>
             </div>
             {isSignUp && (
               <div className="space-y-2">
                 <Label htmlFor="confirm-password">Confirm Password</Label>
-                <Input 
-                  id="confirm-password" 
-                  type="password" 
-                  required 
-                  value={confirmPassword} 
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="bg-background"
-                />
+                <div className="relative">
+                    <Input 
+                        id="confirm-password" 
+                        type={showConfirmPassword ? "text" : "password"} 
+                        required 
+                        value={confirmPassword} 
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="bg-background pr-10"
+                    />
+                    <Button 
+                        type="button" 
+                        variant="ghost" 
+                        size="icon"
+                        className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
+                        onClick={() => setShowConfirmPassword(prev => !prev)}
+                    >
+                        {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </Button>
+                </div>
               </div>
             )}
             <Button type="submit" className="w-full h-10 font-semibold" disabled={loading}>
