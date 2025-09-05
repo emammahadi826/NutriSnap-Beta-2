@@ -121,9 +121,8 @@ export function Dashboard({ meals, summary }: DashboardProps) {
                   </Pie>
                    <Legend 
                         iconSize={10} 
-                        wrapperStyle={{ bottom: 20 }}
+                        wrapperStyle={{ position: 'relative', marginTop: '20px' }}
                         formatter={(value, entry) => {
-                            const { color } = entry;
                             const item = pieChartData.find(d => d.name === value);
                             return <span style={{ color: 'hsl(var(--foreground))' }}>{value} ({Math.round(item?.value || 0)}g)</span>
                         }}
@@ -139,7 +138,7 @@ export function Dashboard({ meals, summary }: DashboardProps) {
                 </PieChart>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
-                    <PieChart className="h-24 w-24 opacity-20" />
+                    <Utensils className="h-12 w-12 opacity-50" />
                     <p className="mt-4">No data to display.</p>
                     <p className="text-sm">Log a meal to see your macro breakdown.</p>
                 </div>
@@ -184,4 +183,3 @@ export function Dashboard({ meals, summary }: DashboardProps) {
     </div>
   );
 }
-
