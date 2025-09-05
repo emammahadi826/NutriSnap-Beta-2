@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -9,6 +10,15 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Flame } from 'lucide-react';
 import Link from 'next/link';
+
+const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg role="img" viewBox="0 0 24 24" {...props}>
+      <path
+        fill="currentColor"
+        d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.02-2.37 1.62-4.24 1.62-3.33 0-6.03-2.7-6.03-6.03s2.7-6.03 6.03-6.03c1.9 0 3.16.77 4.08 1.65l2.66-2.66C18.04 2.62 15.61 1.5 12.48 1.5c-5.48 0-9.94 4.46-9.94 9.94s4.46 9.94 9.94 9.94c5.22 0 9.4-4.34 9.4-9.56 0-.6-.05-1.18-.16-1.74Z"
+      />
+    </svg>
+  );
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -88,6 +98,22 @@ export default function Login() {
             </div>
             <Button type="submit" className="w-full h-10 font-semibold" disabled={loading}>
               {loading ? (isSignUp ? 'Creating...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
+            </Button>
+
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border/50" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">
+                  Or
+                </span>
+              </div>
+            </div>
+
+            <Button variant="outline" className="w-full" type="button" disabled={loading}>
+                <GoogleIcon className="mr-2 h-4 w-4" />
+                Sign in with Google
             </Button>
           </CardContent>
         </form>
