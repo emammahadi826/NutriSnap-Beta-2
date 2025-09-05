@@ -27,7 +27,7 @@ interface AuthContextType {
   userProfile: UserProfile | null;
   loading: boolean;
   error: string | null;
-  signUp: (email: string, pass: string) => Promise<boolean>;
+  signUpAndCreateProfile: (email: string, pass: string, profileData: UserProfile) => Promise<boolean>;
   logIn: (email: string, pass: string) => Promise<boolean>;
   logOut: () => void;
   updateUserProfile: (profileData: Partial<UserProfile>) => Promise<boolean>;
@@ -38,7 +38,7 @@ const AuthContext = createContext<AuthContextType>({
   userProfile: null,
   loading: true,
   error: null,
-  signUp: async () => false,
+  signUpAndCreateProfile: async () => false,
   logIn: async () => false,
   logOut: () => {},
   updateUserProfile: async () => false,
@@ -68,12 +68,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(user);
         const profile = await fetchUserProfile(user);
         setUserProfile(profile);
-         if (!profile?.displayName) {
-          // If profile is incomplete, redirect to complete-profile
-          if (window.location.pathname !== '/complete-profile') {
-            router.push('/complete-profile');
-          }
-        }
+         if (!profile?.displayName && window.location.pathname !== '/complete-profile') {
+           // This case should ideally not happen with the new flow, but as a fallback
+           router.push('/complete-profile');
+         }
       } else {
         setUser(null);
         setUserProfile(null);
@@ -84,19 +82,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, [fetchUserProfile, router]);
 
-  const signUp = async (email: string, pass: string) => {
+  const signUpAndCreateProfile = async (email: string, pass: string, profileData: UserProfile) => {
     setLoading(true);
     setError(null);
     try {
-      await createUserWithEmailAndPassword(auth, email, pass);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+      const newUser = userCredential.user;
+      
+      // Update Firebase Auth profile displayName
+      await updateFirebaseProfile(newUser, { displayName: profileData.displayName });
+
+      // Create user profile document in Firestore
+      const userDocRef = doc(db, "users", newUser.uid);
+      await setDoc(userDocRef, profileData);
+
+      // Manually update local state as onAuthStateChanged might be slow
+      setUser(newUser);
+      setUserProfile(profileData);
+      
       return true;
     } catch (e: any) {
       setError(e.message);
+      console.error("Sign up failed:", e.message);
       return false;
     } finally {
       setLoading(false);
     }
   };
+
 
   const logIn = async (email: string, pass: string) => {
     setLoading(true);
@@ -149,7 +162,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     userProfile,
     loading,
     error,
-    signUp,
+    signUpAndCreateProfile,
     logIn,
     logOut,
     updateUserProfile,

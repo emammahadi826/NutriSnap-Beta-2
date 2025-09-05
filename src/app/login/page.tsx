@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Flame, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" {...props}>
@@ -24,25 +25,30 @@ export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { signUp, logIn, loading, error } = useAuth();
+  const { logIn, loading, error } = useAuth();
   const { toast } = useToast();
+  const router = useRouter();
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    let success = false;
     if (isSignUp) {
       if (password !== confirmPassword) {
         toast({ variant: 'destructive', title: 'Sign-up Failed', description: "Passwords do not match." });
         return;
       }
-      success = await signUp(email, password);
-      if (!success) {
-        toast({ variant: 'destructive', title: 'Sign-up Failed', description: error });
-      }
+      // Redirect to complete profile page with credentials
+      const params = new URLSearchParams();
+      params.set('email', email);
+      params.set('password', password);
+      router.push(`/complete-profile?${params.toString()}`);
+
     } else {
-      success = await logIn(email, password);
+      const success = await logIn(email, password);
       if (!success) {
         toast({ variant: 'destructive', title: 'Login Failed', description: error });
+      } else {
+        router.push('/');
       }
     }
   };
@@ -141,7 +147,7 @@ export default function Login() {
               </div>
             )}
             <Button type="submit" className="w-full h-10 font-semibold" disabled={loading}>
-              {loading ? (isSignUp ? 'Creating...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
+              {loading ? (isSignUp ? 'Proceeding...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
             </Button>
 
             <div className="relative my-4">

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/hooks/use-auth.tsx';
+import React from 'react';
 
 export const metadata: Metadata = {
   title: 'NutriSnap',
@@ -22,7 +23,9 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <AuthProvider>
-            {children}
+            <React.Suspense fallback={<div>Loading...</div>}>
+              {children}
+            </React.Suspense>
             <Toaster />
         </AuthProvider>
       </body>
