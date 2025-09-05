@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -28,10 +28,11 @@ import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { ChatPage } from './chat-page';
 import { cn } from '@/lib/utils';
+import { MealLogDialog } from './meal-log-dialog';
 
 
 export function NutriSnapApp() {
-  const { isLoaded, getTodaysMeals, getTodaysSummary, guestMealCount } = useMealLogger();
+  const { isLoaded, getTodaysMeals, getTodaysSummary, guestMealCount, addMeal } = useMealLogger();
   const { user, logOut, loading: authLoading } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
@@ -205,6 +206,31 @@ export function NutriSnapApp() {
             
             <header className="flex h-[69px] items-center px-4 border-b">
                 <SidebarTrigger />
+                <div className="ml-auto flex items-center gap-2">
+                    <MealLogDialog
+                        onMealLog={addMeal}
+                        isGuest={isGuest}
+                        guestMealCount={guestMealCount}
+                        trigger={
+                            <Button variant="ghost" size="icon">
+                                <Upload className="h-5 w-5" />
+                                <span className="sr-only">Upload Meal</span>
+                            </Button>
+                        }
+                    />
+                    <MealLogDialog
+                        onMealLog={addMeal}
+                        isGuest={isGuest}
+                        guestMealCount={guestMealCount}
+                        startWithCamera={true}
+                        trigger={
+                            <Button variant="ghost" size="icon">
+                                <Camera className="h-5 w-5" />
+                                <span className="sr-only">Take Photo</span>
+                            </Button>
+                        }
+                    />
+                </div>
             </header>
 
             {isLoading ? (
@@ -222,7 +248,7 @@ export function NutriSnapApp() {
                 </div>
             ) : (
               <>
-                <div className={activePage === 'home' ? "overflow-auto p-4 md:p-8" : "overflow-hidden h-[calc(100vh-69px)]"}>
+                <div className={cn("overflow-auto", activePage === 'home' ? "p-4 md:p-8" : "h-[calc(100vh-69px)]")}>
                   {activePage === 'home' ? (
                     <Dashboard 
                         meals={getTodaysMeals()} 
