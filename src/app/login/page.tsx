@@ -54,41 +54,43 @@ export default function Login() {
               : 'Login to access your account'}
           </CardDescription>
         </CardHeader>
-        <CardContent as="form" onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              placeholder="m@example.com" 
-              required 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              className="bg-background"
-            />
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                {!isSignUp && (
-                     <Link href="#" className="text-xs text-primary/80 hover:text-primary hover:underline">
-                        Forgot your password?
-                    </Link>
-                )}
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="m@example.com" 
+                required 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                className="bg-background"
+              />
             </div>
-            <Input 
-              id="password" 
-              type="password" 
-              required 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-background"
-            />
-          </div>
-          <Button type="submit" className="w-full h-10 font-semibold" disabled={loading}>
-            {loading ? (isSignUp ? 'Creating...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
-          </Button>
-        </CardContent>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  {!isSignUp && (
+                       <Link href="#" className="text-xs text-primary/80 hover:text-primary hover:underline">
+                          Forgot your password?
+                      </Link>
+                  )}
+              </div>
+              <Input 
+                id="password" 
+                type="password" 
+                required 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-background"
+              />
+            </div>
+            <Button type="submit" className="w-full h-10 font-semibold" disabled={loading}>
+              {loading ? (isSignUp ? 'Creating...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
+            </Button>
+          </CardContent>
+        </form>
         <CardFooter className="flex justify-center text-sm">
             <p className="text-muted-foreground">
                 {isSignUp ? 'Already have an account?' : "Don't have an account?"}
