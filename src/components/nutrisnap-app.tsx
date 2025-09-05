@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, PanelLeft } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -32,7 +32,7 @@ import { MealLogDialog } from './meal-log-dialog';
 
 
 export function NutriSnapApp() {
-  const { isLoaded, getTodaysMeals, getTodaysSummary, guestMealCount, addMeal } = useMealLogger();
+  const { isLoaded, getTodaysMeals, getAllMeals, getTodaysSummary, guestMealCount, addMeal } = useMealLogger();
   const { user, logOut, loading: authLoading } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
@@ -197,6 +197,10 @@ export function NutriSnapApp() {
       </Sidebar>
     );
   };
+
+  const todaysMeals = getTodaysMeals();
+  const todaysSummary = getTodaysSummary();
+  const allMeals = getAllMeals();
   
   return (
       <SidebarProvider>
@@ -251,8 +255,8 @@ export function NutriSnapApp() {
                 <div className={cn("overflow-auto", activePage === 'home' ? "p-4 md:p-8" : "h-[calc(100vh-69px)]")}>
                   {activePage === 'home' ? (
                     <Dashboard 
-                        meals={getTodaysMeals()} 
-                        summary={getTodaysSummary()}
+                        meals={allMeals} 
+                        summary={todaysSummary}
                     />
                   ) : (
                     <ChatPage />
@@ -265,7 +269,3 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
-
-    
-
-    

@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
@@ -14,6 +15,7 @@ export interface MealLogger {
     meals: Meal[];
     addMeal: (newMeal: Omit<Meal, 'id' | 'timestamp'>) => Promise<void>;
     getTodaysMeals: () => Meal[];
+    getAllMeals: () => Meal[];
     getTodaysSummary: () => DailySummary;
     guestMealCount: number;
 }
@@ -146,6 +148,11 @@ export function useMealLogger(): MealLogger {
     if (!isLoaded) return [];
     return meals.filter(meal => isToday(new Date(meal.timestamp)));
   }, [meals, isLoaded]);
+
+  const getAllMeals = useCallback((): Meal[] => {
+    if (!isLoaded) return [];
+    return meals;
+  }, [meals, isLoaded]);
   
   const getTodaysSummary = useCallback((): DailySummary => {
     const todaysMeals = getTodaysMeals();
@@ -163,5 +170,5 @@ export function useMealLogger(): MealLogger {
     );
   }, [getTodaysMeals]);
 
-  return { isLoaded, meals, addMeal, getTodaysMeals, getTodaysSummary, guestMealCount };
+  return { isLoaded, meals, addMeal, getTodaysMeals, getAllMeals, getTodaysSummary, guestMealCount };
 }
