@@ -80,7 +80,7 @@ export default function CompleteProfile() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4 text-foreground">
-      <Card className="w-full max-w-lg">
+      <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center">Complete Your Profile</CardTitle>
           <CardDescription className="text-center text-muted-foreground">
