@@ -3,6 +3,7 @@
 
 import { useAuth } from '@/hooks/use-auth';
 import { NutriSnapApp } from '@/components/nutrisnap-app';
+import { ClientOnly } from '@/components/client-only';
 
 export default function Home() {
   const { loading } = useAuth();
@@ -17,7 +18,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen w-full">
-      <NutriSnapApp />
+      <ClientOnly>
+        <NutriSnapApp />
+      </ClientOnly>
     </main>
   );
 }
