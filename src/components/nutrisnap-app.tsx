@@ -67,6 +67,12 @@ export function NutriSnapApp() {
                     <span className={cn(state === 'collapsed' && 'hidden')}>Chat</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
+            <SidebarMenuItem>
+                <SidebarMenuButton variant={'ghost'} size="lg" className="h-12">
+                    <Settings className="h-6 w-6"/>
+                    <span className={cn(state === 'collapsed' && 'hidden')}>Settings</span>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
@@ -114,14 +120,6 @@ export function NutriSnapApp() {
               </Button>
             )}
           </div>
-            <SidebarMenu>
-                <SidebarMenuItem>
-                    <SidebarMenuButton variant={'ghost'} size="lg" className="h-12 w-full">
-                        <Settings className="h-6 w-6"/>
-                        <span className={cn(state === 'collapsed' && 'hidden')}>Settings</span>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
         </SidebarFooter>
       </>
     );
@@ -146,6 +144,12 @@ export function NutriSnapApp() {
                     <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
                         <MessageCircle className="h-6 w-6"/>
                         <span className="truncate">Chat</span>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton variant={'ghost'} size="lg" className="h-12 w-full">
+                        <Settings className="h-6 w-6"/>
+                        <span className="truncate">Settings</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
@@ -195,14 +199,6 @@ export function NutriSnapApp() {
                         </Button>
                     )}
                 </div>
-                 <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton variant={'ghost'} size="lg" className="h-12 w-full">
-                            <Settings className="h-6 w-6"/>
-                            <span className="truncate">Settings</span>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
             </SidebarFooter>
           </SheetContent>
         </Sheet>
