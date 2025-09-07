@@ -8,7 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 function SettingsSkeleton() {
     return (
-        <div className="space-y-8 max-w-2xl mx-auto">
+        <div className="space-y-8">
             <div className="space-y-2">
                 <Skeleton className="h-6 w-24" />
                 <Skeleton className="h-10 w-full" />
@@ -43,7 +43,7 @@ export function SettingsPage({ onBack }: { onBack: () => void }) {
     const { user, loading } = useAuth();
 
     return (
-        <div className="max-w-2xl mx-auto">
+        <div>
             <header className="mb-8">
                 <h1 className="text-3xl font-bold">Settings</h1>
                 <p className="text-muted-foreground">Manage your account and profile settings.</p>

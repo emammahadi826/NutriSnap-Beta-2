@@ -96,7 +96,7 @@ export default function SettingsForm({ onSaveSuccess }: SettingsFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-8 max-w-2xl">
         <div className="space-y-2">
             <Label htmlFor="name">Full Name <span className="text-destructive">*</span></Label>
             <Input
