@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from '@/hooks/use-auth';
@@ -9,7 +10,7 @@ export default function Home() {
   if (loading) {
     return (
         <div className="flex items-center justify-center min-h-screen">
-            <div className="text-xl text-muted-foreground">Loading...</div>
+            <div className="text-xl text-muted-foreground">লোড হচ্ছে...</div>
         </div>
     );
   }

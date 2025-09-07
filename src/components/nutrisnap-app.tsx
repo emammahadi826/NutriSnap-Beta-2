@@ -48,7 +48,7 @@ export function NutriSnapApp() {
       <>
         <SidebarHeader className="p-4 flex items-center justify-center h-[69px]">
             {state === 'expanded' ? (
-                <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
+                <h1 className="text-primary font-headline text-2xl">নিউট্রিস্ন্যাপ</h1>
             ) : (
                 <div className="text-primary font-headline font-bold text-3xl">N</div>
             )}
@@ -58,13 +58,13 @@ export function NutriSnapApp() {
             <SidebarMenuItem>
               <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
                 <Home className="h-6 w-6"/>
-                <span className={cn(state === 'collapsed' && 'hidden')}>Home</span>
+                <span className={cn(state === 'collapsed' && 'hidden')}>হোম</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
                     <MessageCircle className="h-6 w-6"/>
-                    <span className={cn(state === 'collapsed' && 'hidden')}>Chat</span>
+                    <span className={cn(state === 'collapsed' && 'hidden')}>চ্যাট</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -74,8 +74,8 @@ export function NutriSnapApp() {
           {isGuest && (
             <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
                 <div className="text-center text-sm mb-2">
-                    <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
-                    <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                    <p className="font-bold">{GUEST_LIMIT - guestMealCount} ক্রেডিট বাকি</p>
+                    <p className="text-xs text-muted-foreground">সীমাহীন খাবারের জন্য লগ ইন করুন।</p>
                 </div>
               <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
             </div>
@@ -101,7 +101,7 @@ export function NutriSnapApp() {
               >
                 <DropdownMenuItem onClick={logOut}>
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sign out</span>
+                  <span>সাইন আউট</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -109,7 +109,7 @@ export function NutriSnapApp() {
             <Button asChild variant="outline" className="w-full justify-center text-base h-12">
               <Link href="/login">
                 <LogIn className="h-5 w-5 mr-2" />
-                <span className="truncate">Login / Sign Up</span>
+                <span className="truncate">লগইন / সাইন আপ</span>
               </Link>
             </Button>
           )}
@@ -121,22 +121,22 @@ export function NutriSnapApp() {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
-             <SheetTitle className="sr-only">Menu</SheetTitle>
+             <SheetTitle className="sr-only">মেনু</SheetTitle>
             <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
-               <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
+               <h1 className="text-primary font-headline text-2xl">নিউট্রিস্ন্যাপ</h1>
             </SidebarHeader>
             <SidebarContent>
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
                     <Home className="h-6 w-6"/>
-                    <span className="truncate">Home</span>
+                    <span className="truncate">হোম</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
                     <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
                         <MessageCircle className="h-6 w-6"/>
-                        <span className="truncate">Chat</span>
+                        <span className="truncate">চ্যাট</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
@@ -146,8 +146,8 @@ export function NutriSnapApp() {
               {isGuest && (
                 <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
                     <div className="text-center text-sm mb-2">
-                        <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
-                        <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                        <p className="font-bold">{GUEST_LIMIT - guestMealCount} ক্রেডিট বাকি</p>
+                        <p className="text-xs text-muted-foreground">সীমাহীন খাবারের জন্য লগ ইন করুন।</p>
                     </div>
                   <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
                 </div>
@@ -173,7 +173,7 @@ export function NutriSnapApp() {
                   >
                     <DropdownMenuItem onClick={logOut}>
                       <LogOut className="mr-2 h-4 w-4" />
-                      <span>Sign out</span>
+                      <span>সাইন আউট</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -181,7 +181,7 @@ export function NutriSnapApp() {
                 <Button asChild variant="outline" className="w-full justify-center text-base h-12">
                   <Link href="/login">
                     <LogIn className="h-5 w-5 mr-2" />
-                    <span className="truncate">Login / Sign Up</span>
+                    <span className="truncate">লগইন / সাইন আপ</span>
                   </Link>
                 </Button>
               )}
@@ -216,7 +216,7 @@ export function NutriSnapApp() {
                         trigger={
                             <Button variant="ghost" size="icon">
                                 <Upload className="h-5 w-5" />
-                                <span className="sr-only">Upload Meal</span>
+                                <span className="sr-only">খাবার আপলোড করুন</span>
                             </Button>
                         }
                     />
@@ -228,7 +228,7 @@ export function NutriSnapApp() {
                         trigger={
                             <Button variant="ghost" size="icon">
                                 <Camera className="h-5 w-5" />
-                                <span className="sr-only">Take Photo</span>
+                                <span className="sr-only">ছবি তুলুন</span>
                             </Button>
                         }
                     />

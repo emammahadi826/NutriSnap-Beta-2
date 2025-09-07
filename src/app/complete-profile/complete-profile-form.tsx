@@ -35,8 +35,8 @@ export default function CompleteProfileForm() {
     if (!emailParam || !passwordParam) {
       toast({
         variant: 'destructive',
-        title: 'Error',
-        description: 'Missing sign-up information. Please start again.',
+        title: 'ত্রুটি',
+        description: 'সাইন-আপ তথ্য অনুপস্থিত। অনুগ্রহ করে আবার শুরু করুন।',
       });
       router.push('/login');
     } else {
@@ -58,8 +58,8 @@ export default function CompleteProfileForm() {
     if (!name || !gender || !age) {
         toast({
             variant: 'destructive',
-            title: 'Missing Information',
-            description: 'Please fill out all required fields (Name, Gender, Age).'
+            title: 'তথ্য অনুপস্থিত',
+            description: 'অনুগ্রহ করে সমস্ত প্রয়োজনীয় ক্ষেত্র পূরণ করুন (নাম, লিঙ্গ, বয়স)।'
         });
         return;
     }
@@ -81,16 +81,16 @@ export default function CompleteProfileForm() {
 
     if (success) {
         toast({
-            title: 'Account Created!',
-            description: 'Welcome to NutriSnap!',
+            title: 'অ্যাকাউন্ট তৈরি হয়েছে!',
+            description: 'নিউট্রিস্ন্যাপ-এ স্বাগতম!',
             className: 'bg-primary text-primary-foreground'
         });
         router.push('/');
     } else {
         toast({
             variant: 'destructive',
-            title: 'Sign-up Failed',
-            description: authError || 'Could not create your account. Please try again.'
+            title: 'সাইন-আপ ব্যর্থ হয়েছে',
+            description: authError || 'আপনার অ্যাকাউন্ট তৈরি করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।'
         });
     }
     setIsSubmitting(false);
@@ -100,19 +100,19 @@ export default function CompleteProfileForm() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4 text-foreground">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold text-center">Complete Your Profile</CardTitle>
+          <CardTitle className="text-3xl font-bold text-center">আপনার প্রোফাইল সম্পূর্ণ করুন</CardTitle>
           <CardDescription className="text-center text-muted-foreground">
-            Tell us a bit about yourself to personalize your experience.
+            আপনার অভিজ্ঞতা ব্যক্তিগতকৃত করতে নিজের সম্পর্কে কিছু বলুন।
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
             <CardContent className="space-y-6">
             <div className="space-y-2">
-                <Label htmlFor="name">Full Name <span className="text-destructive">*</span></Label>
+                <Label htmlFor="name">পুরো নাম <span className="text-destructive">*</span></Label>
                 <Input
                 id="name"
                 type="text"
-                placeholder="John Doe"
+                placeholder="যেমন, জন ডো"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -120,53 +120,53 @@ export default function CompleteProfileForm() {
             </div>
 
             <div className="space-y-2">
-                <Label>Gender <span className="text-destructive">*</span></Label>
+                <Label>লিঙ্গ <span className="text-destructive">*</span></Label>
                 <Select onValueChange={(value) => setGender(value as 'male' | 'female' | 'other')} value={gender}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Select your gender" />
+                        <SelectValue placeholder="আপনার লিঙ্গ নির্বাচন করুন" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
+                        <SelectItem value="male">পুরুষ</SelectItem>
+                        <SelectItem value="female">মহিলা</SelectItem>
+                        <SelectItem value="other">অন্যান্য</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="age">Age <span className="text-destructive">*</span></Label>
+                <Label htmlFor="age">বয়স <span className="text-destructive">*</span></Label>
                 <Input
                     id="age"
                     type="number"
-                    placeholder="e.g., 25"
+                    placeholder="যেমন, ২৫"
                     required
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
                 />
             </div>
             <div className="space-y-2">
-                <Label htmlFor="weight">Weight (kg)</Label>
+                <Label htmlFor="weight">ওজন (কেজি)</Label>
                 <Input
                     id="weight"
                     type="number"
-                    placeholder="e.g., 70"
+                    placeholder="যেমন, ৭০"
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
                 />
             </div>
             <div className="space-y-2">
-                <Label htmlFor="height">Height (ft)</Label>
+                <Label htmlFor="height">উচ্চতা (ফুট)</Label>
                 <Input
                     id="height"
                     type="number"
-                    placeholder="e.g., 5.9"
+                    placeholder="যেমন, ৫.৯"
                     value={height}
                     onChange={(e) => setHeight(e.target.value)}
                 />
             </div>
 
             <Button type="submit" className="w-full h-11 font-semibold text-base" disabled={isSubmitting}>
-              {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save and Continue'}
+              {isSubmitting ? <Loader2 className="animate-spin" /> : 'সংরক্ষণ করুন এবং চালিয়ে যান'}
             </Button>
             </CardContent>
         </form>

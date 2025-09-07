@@ -28,7 +28,7 @@ const CustomTooltip = ({ active, payload }: any) => {
         <div className="flex items-center">
             <div className="w-2 h-2 rounded-full mr-1.5" style={{backgroundColor: data.payload.fill}} />
             {data.name}:
-             <span className="ml-2 font-mono font-bold">{`${Math.round(data.value)}g`}</span>
+             <span className="ml-2 font-mono font-bold">{`${Math.round(data.value)}গ্রাম`}</span>
         </div>
       </div>
     );
@@ -40,15 +40,22 @@ const CustomLegend = (props: any) => {
     const { payload } = props;
     if (!payload) return null;
 
+    const names: { [key: string]: string } = {
+        Carbs: 'কার্বোহাইড্রেট',
+        Protein: 'প্রোটিন',
+        Fat: 'ফ্যাট'
+    }
+
     return (
         <div className="flex items-center justify-center flex-wrap gap-4 mt-4 text-sm text-foreground">
             {
                 payload.map((entry: any, index: number) => {
                     const { color, value, payload } = entry;
+                    const bengaliName = names[value] || value;
                     return (
                         <div key={`item-${index}`} className="flex items-center gap-1.5">
                             <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }}></span>
-                            <span>{value} ({Math.round(payload.value)}g)</span>
+                            <span>{bengaliName} ({Math.round(payload.value)}গ্রাম)</span>
                         </div>
                     )
                 })
@@ -78,42 +85,42 @@ export function Dashboard({ meals, summary }: DashboardProps) {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Calories</CardTitle>
+              <CardTitle className="text-sm font-medium">মোট ক্যালোরি</CardTitle>
               <Flame className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{Math.round(summary.calories)}</div>
-              <p className="text-xs text-muted-foreground">kcal consumed today</p>
+              <p className="text-xs text-muted-foreground">ক্যালোরি আজ গ্রহণ করা হয়েছে</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Carbohydrates</CardTitle>
+              <CardTitle className="text-sm font-medium">কার্বোহাইড্রেট</CardTitle>
               <Wheat className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{Math.round(summary.carbs)}g</div>
-              <p className="text-xs text-muted-foreground">Goal: ~150g</p>
+              <div className="text-2xl font-bold">{Math.round(summary.carbs)}গ্রাম</div>
+              <p className="text-xs text-muted-foreground">লক্ষ্য: ~১৫০গ্রাম</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Protein</CardTitle>
+              <CardTitle className="text-sm font-medium">প্রোটিন</CardTitle>
               <Drumstick className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{Math.round(summary.protein)}g</div>
-              <p className="text-xs text-muted-foreground">Goal: ~120g</p>
+              <div className="text-2xl font-bold">{Math.round(summary.protein)}গ্রাম</div>
+              <p className="text-xs text-muted-foreground">লক্ষ্য: ~১২০গ্রাম</p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Fat</CardTitle>
+              <CardTitle className="text-sm font-medium">ফ্যাট</CardTitle>
               <Droplets className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{Math.round(summary.fat)}g</div>
-              <p className="text-xs text-muted-foreground">Goal: ~60g</p>
+              <div className="text-2xl font-bold">{Math.round(summary.fat)}গ্রাম</div>
+              <p className="text-xs text-muted-foreground">লক্ষ্য: ~৬০গ্রাম</p>
             </CardContent>
           </Card>
         </div>
@@ -122,8 +129,8 @@ export function Dashboard({ meals, summary }: DashboardProps) {
       <section className="grid gap-8 md:grid-cols-5">
         <Card className="md:col-span-3">
           <CardHeader>
-            <CardTitle>Today's Macro Breakdown</CardTitle>
-            <CardDescription>Your macronutrient distribution for today.</CardDescription>
+            <CardTitle>আজকের ম্যাক্রো ভাঙ্গন</CardTitle>
+            <CardDescription>আজকের জন্য আপনার ম্যাক্রোনিউট্রিয়েন্ট বিতরণ।</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -149,7 +156,7 @@ export function Dashboard({ meals, summary }: DashboardProps) {
                         <div className="w-full h-full flex items-center justify-center">
                             <div className="text-center">
                                 <p className="text-4xl font-bold text-foreground">{Math.round(summary.calories)}</p>
-                                <p className="text-sm text-muted-foreground">Total Kcal</p>
+                                <p className="text-sm text-muted-foreground">মোট ক্যালোরি</p>
                             </div>
                         </div>
                     </foreignObject>
@@ -157,8 +164,8 @@ export function Dashboard({ meals, summary }: DashboardProps) {
               ) : (
                 <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
                     <Utensils className="h-12 w-12 opacity-50" />
-                    <p className="mt-4">No data to display.</p>
-                    <p className="text-sm">Log a meal to see your macro breakdown.</p>
+                    <p className="mt-4">প্রদর্শনের জন্য কোন ডেটা নেই।</p>
+                    <p className="text-sm">আপনার ম্যাক্রো ভাঙ্গন দেখতে একটি খাবার লগ করুন।</p>
                 </div>
               )}
             </ResponsiveContainer>
@@ -167,8 +174,8 @@ export function Dashboard({ meals, summary }: DashboardProps) {
 
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle>Today's Meals</CardTitle>
-            <CardDescription>A log of all your meals from today.</CardDescription>
+            <CardTitle>আজকের খাবার</CardTitle>
+            <CardDescription>আজ থেকে আপনার সমস্ত খাবারের একটি লগ।</CardDescription>
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-[300px] pr-4">
@@ -190,8 +197,8 @@ export function Dashboard({ meals, summary }: DashboardProps) {
                 </ul>
               ) : (
                 <div className="flex flex-col items-center justify-center text-center h-[250px]">
-                  <p className="text-lg text-muted-foreground">No meals logged yet</p>
-                  <p className="text-sm text-muted-foreground">Go to the chat to log a meal!</p>
+                  <p className="text-lg text-muted-foreground">এখনও কোন খাবার লগ করা হয়নি</p>
+                  <p className="text-sm text-muted-foreground">একটি খাবার লগ করতে চ্যাটে যান!</p>
                 </div>
               )}
             </ScrollArea>

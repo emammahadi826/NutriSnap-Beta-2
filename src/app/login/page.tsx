@@ -34,7 +34,7 @@ export default function Login() {
     e.preventDefault();
     if (isSignUp) {
       if (password !== confirmPassword) {
-        toast({ variant: 'destructive', title: 'Sign-up Failed', description: "Passwords do not match." });
+        toast({ variant: 'destructive', title: 'সাইন-আপ ব্যর্থ হয়েছে', description: "পাসওয়ার্ড मेल খাচ্ছে না।" });
         return;
       }
       // Redirect to complete profile page with credentials
@@ -46,7 +46,7 @@ export default function Login() {
     } else {
       const success = await logIn(email, password);
       if (!success) {
-        toast({ variant: 'destructive', title: 'Login Failed', description: error });
+        toast({ variant: 'destructive', title: 'লগইন ব্যর্থ হয়েছে', description: error });
       } else {
         router.push('/');
       }
@@ -66,23 +66,23 @@ export default function Login() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4 text-foreground">
       <div className="flex items-center gap-2 mb-8">
         <Flame className="w-8 h-8 text-primary" />
-        <h1 className="text-2xl font-bold font-headline">NutriSnap</h1>
+        <h1 className="text-2xl font-bold font-headline">নিউট্রিস্ন্যাপ</h1>
       </div>
       <Card className="w-full max-w-sm border-border/50 bg-card">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-semibold">
-            {isSignUp ? 'Create an account' : 'Welcome back'}
+            {isSignUp ? 'একটি অ্যাকাউন্ট তৈরি করুন' : 'আবার স্বাগতম'}
           </CardTitle>
           <CardDescription>
             {isSignUp
-              ? 'Enter your details to get started'
-              : 'Login to access your account'}
+              ? 'শুরু করার জন্য আপনার বিবরণ লিখুন'
+              : 'আপনার অ্যাকাউন্টে প্রবেশ করতে লগইন করুন'}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">ইমেল</Label>
               <Input 
                 id="email" 
                 type="email" 
@@ -95,10 +95,10 @@ export default function Login() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">পাসওয়ার্ড</Label>
                   {!isSignUp && (
                        <Link href="#" className="text-xs text-primary/80 hover:text-primary hover:underline">
-                          Forgot your password?
+                          আপনি কি পাসওয়ার্ড ভুলে গেছেন?
                       </Link>
                   )}
               </div>
@@ -124,7 +124,7 @@ export default function Login() {
             </div>
             {isSignUp && (
               <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm Password</Label>
+                <Label htmlFor="confirm-password">পাসওয়ার্ড নিশ্চিত করুন</Label>
                 <div className="relative">
                     <Input 
                         id="confirm-password" 
@@ -147,7 +147,7 @@ export default function Login() {
               </div>
             )}
             <Button type="submit" className="w-full h-10 font-semibold" disabled={loading}>
-              {loading ? (isSignUp ? 'Proceeding...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
+              {loading ? (isSignUp ? '진행중...' : 'লগইন করা হচ্ছে...') : (isSignUp ? 'সাইন আপ' : 'লগইন')}
             </Button>
 
             <div className="relative my-4">
@@ -156,36 +156,36 @@ export default function Login() {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-card px-2 text-muted-foreground">
-                  Or
+                  অথবা
                 </span>
               </div>
             </div>
 
             <Button variant="outline" className="w-full" type="button" disabled={loading}>
                 <GoogleIcon className="mr-2 h-4 w-4" />
-                Sign in with Google
+                Google দিয়ে সাইন ইন করুন
             </Button>
           </CardContent>
         </form>
         <CardFooter className="flex justify-center text-sm">
             <p className="text-muted-foreground">
-                {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+                {isSignUp ? 'ইতিমধ্যে একটি অ্যাকাউন্ট আছে?' : "অ্যাকাউন্ট নেই?"}
                 <Button variant="link" className="p-1" onClick={toggleForm}>
-                    {isSignUp ? 'Login' : 'Sign up'}
+                    {isSignUp ? 'লগইন' : 'সাইন আপ'}
                 </Button>
             </p>
         </CardFooter>
       </Card>
       <p className="px-8 text-center text-xs text-muted-foreground mt-8 max-w-sm">
-        By clicking continue, you agree to our{' '}
+        চালিয়ে যেতে ক্লিক করে, আপনি আমাদের{' '}
         <Link href="#" className="underline underline-offset-4 hover:text-primary">
-          Terms of Service
+          পরিষেবার শর্তাবলী
         </Link>{' '}
-        and{' '}
+        এবং{' '}
         <Link href="#" className="underline underline-offset-4 hover:text-primary">
-          Privacy Policy
+          গোপনীয়তা নীতি
         </Link>
-        .
+        -তে সম্মত হচ্ছেন।
       </p>
     </div>
   );

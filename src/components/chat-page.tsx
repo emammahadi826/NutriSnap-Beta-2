@@ -43,7 +43,7 @@ export function ChatPage() {
 
         const userMessage: Message = { role: 'user', content: input };
         setMessages(prev => [...prev, userMessage]);
-        setInput('');
+setInput('');
         setIsLoading(true);
         
         try {
@@ -59,7 +59,7 @@ export function ChatPage() {
 
         } catch (error) {
             console.error("Error calling chat flow:", error);
-            const errorMessage: Message = { role: 'model', content: "Sorry, I'm having trouble connecting. Please try again later." };
+            const errorMessage: Message = { role: 'model', content: "দুঃখিত, আমি সংযোগ করতে পারছি না। অনুগ্রহ করে পরে আবার চেষ্টা করুন।" };
             setMessages(prev => [...prev, errorMessage]);
         } finally {
             setIsLoading(false);
@@ -82,8 +82,8 @@ export function ChatPage() {
                     {messages.length === 0 && (
                         <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
                             <Bot className="w-16 h-16 mb-4" />
-                            <h2 className="text-2xl font-bold">NutriSnap Bot</h2>
-                            <p>Ask me anything about nutrition, fitness, or your meals!</p>
+                            <h2 className="text-2xl font-bold">নিউট্রিস্ন্যাপ বট</h2>
+                            <p>পুষ্টি, ফিটনেস বা আপনার খাবার সম্পর্কে আমাকে কিছু জিজ্ঞাসা করুন!</p>
                         </div>
                     )}
                     {messages.map((message, index) => (
@@ -137,7 +137,7 @@ export function ChatPage() {
                                 trigger={
                                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                         <Upload className="mr-2 h-4 w-4" />
-                                        Upload Meal
+                                        খাবার আপলোড করুন
                                     </DropdownMenuItem>
                                 }
                             />
@@ -149,7 +149,7 @@ export function ChatPage() {
                                 trigger={
                                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                         <Camera className="mr-2 h-4 w-4" />
-                                        Take Photo
+                                        ছবি তুলুন
                                     </DropdownMenuItem>
                                 }
                             />
@@ -158,7 +158,7 @@ export function ChatPage() {
                     <Textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        placeholder="Ask anything..."
+                        placeholder="কিছু জিজ্ঞাসা করুন..."
                         className="flex-1 resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
                         rows={1}
                         onKeyDown={(e) => {
