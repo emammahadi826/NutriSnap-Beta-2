@@ -74,15 +74,33 @@ export default function CompleteProfileForm() {
         });
         return;
     }
+    
+    const ageNum = Number(age);
+    const weightNum = Number(weight);
+    const heightNum = Number(height);
+
+    if (ageNum > 150) {
+        toast({ variant: 'destructive', description: "Age cannot exceed 150." });
+        return;
+    }
+     if (weight && weightNum > 500) {
+        toast({ variant: 'destructive', description: "Weight cannot exceed 500 kg." });
+        return;
+    }
+    if (height && heightNum > 300) {
+        toast({ variant: 'destructive', description: "Height cannot exceed 300 cm." });
+        return;
+    }
+
 
     setIsSubmitting(true);
     
     const profileData: UserProfile = {
         displayName: name,
         gender: gender,
-        age: Number(age),
-        weight: weight ? Number(weight) : undefined,
-        height: height ? Number(height) : undefined,
+        age: ageNum,
+        weight: weight ? weightNum : undefined,
+        height: height ? heightNum : undefined,
     };
 
     const success = await signUpAndCreateProfile(email, password, profileData);
@@ -145,6 +163,8 @@ export default function CompleteProfileForm() {
                     required
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
+                    min="1"
+                    max="150"
                 />
             </div>
             <div className="space-y-2">
@@ -156,6 +176,8 @@ export default function CompleteProfileForm() {
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
                     inputMode="decimal"
+                    min="1"
+                    max="500"
                 />
             </div>
             <div className="space-y-2">
@@ -167,6 +189,8 @@ export default function CompleteProfileForm() {
                     value={height}
                     onChange={(e) => setHeight(e.target.value)}
                     inputMode="decimal"
+                    min="1"
+                    max="300"
                 />
             </div>
 
