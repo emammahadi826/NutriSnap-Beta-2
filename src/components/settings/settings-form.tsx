@@ -4,20 +4,21 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 import type { UserProfile } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useRouter } from 'next/navigation';
 
+interface SettingsFormProps {
+    onSaveSuccess: () => void;
+}
 
-export default function SettingsForm() {
+export default function SettingsForm({ onSaveSuccess }: SettingsFormProps) {
   const { user, userProfile, updateUserProfile, loading: authLoading } = useAuth();
   const { toast } = useToast();
-  const router = useRouter();
   
   const [name, setName] = useState('');
   const [gender, setGender] = useState<'male' | 'female' | 'other' | undefined>(undefined);
@@ -84,7 +85,7 @@ export default function SettingsForm() {
             description: 'Your changes have been saved successfully.',
             className: 'bg-primary text-primary-foreground'
         });
-        router.push('/');
+        onSaveSuccess();
     } else {
          toast({
             variant: 'destructive',
@@ -181,3 +182,5 @@ export default function SettingsForm() {
       </Card>
   );
 }
+
+    

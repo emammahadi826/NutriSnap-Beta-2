@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -31,6 +31,7 @@ import { ChatPage } from './chat-page';
 import { cn } from '@/lib/utils';
 import { MealLogDialog } from './meal-log-dialog';
 import { useRouter } from 'next/navigation';
+import { SettingsPage } from '@/components/settings/settings-page';
 
 
 export function NutriSnapApp() {
@@ -38,7 +39,7 @@ export function NutriSnapApp() {
   const { user, userProfile, logOut, loading: authLoading } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
-  const [activePage, setActivePage] = useState<'home' | 'chat'>('home');
+  const [activePage, setActivePage] = useState<'home' | 'chat' | 'settings'>('home');
   const router = useRouter();
   const GUEST_LIMIT = 3;
   
@@ -47,6 +48,13 @@ export function NutriSnapApp() {
   const AppSidebar = () => {
     const { openMobile, setOpenMobile, state } = useSidebar();
   
+    const handleMenuItemClick = (page: 'home' | 'chat' | 'settings') => {
+        setActivePage(page);
+        if (isMobile) {
+            setOpenMobile(false);
+        }
+    }
+
     const sidebarContent = (
       <>
         <SidebarHeader className="p-4 flex items-center justify-center h-[69px]">
@@ -59,13 +67,13 @@ export function NutriSnapApp() {
         <SidebarContent className="flex flex-col">
           <SidebarMenu className="flex-1">
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
+              <SidebarMenuButton onClick={() => handleMenuItemClick('home')} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
                 <Home className="h-6 w-6"/>
                 <span className={cn(state === 'collapsed' && 'hidden')}>Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
+                <SidebarMenuButton onClick={() => handleMenuItemClick('chat')} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
                     <MessageCircle className="h-6 w-6"/>
                     <span className={cn(state === 'collapsed' && 'hidden')}>Chat</span>
                 </SidebarMenuButton>
@@ -104,8 +112,8 @@ export function NutriSnapApp() {
                   side="top"
                   className="w-[--radix-popper-anchor-width]"
                 >
-                  <DropdownMenuItem onClick={() => router.push('/settings')}>
-                    <Settings className="mr-2 h-4 w-4" />
+                  <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
+                    <SettingsIcon className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={logOut}>
@@ -138,13 +146,13 @@ export function NutriSnapApp() {
             <SidebarContent className="flex flex-col">
               <SidebarMenu className="flex-1">
                 <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
+                  <SidebarMenuButton onClick={() => handleMenuItemClick('home')} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
                     <Home className="h-6 w-6"/>
                     <span className="truncate">Home</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                    <SidebarMenuButton onClick={() => { setActivePage('chat'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
+                    <SidebarMenuButton onClick={() => handleMenuItemClick('chat')} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
                         <MessageCircle className="h-6 w-6"/>
                         <span className="truncate">Chat</span>
                     </SidebarMenuButton>
@@ -182,8 +190,8 @@ export function NutriSnapApp() {
                             side="top"
                             className="w-[--radix-popper-anchor-width]"
                         >
-                           <DropdownMenuItem onClick={() => router.push('/settings')}>
-                                <Settings className="mr-2 h-4 w-4" />
+                           <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
+                                <SettingsIcon className="mr-2 h-4 w-4" />
                                 <span>Settings</span>
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={logOut}>
@@ -216,6 +224,20 @@ export function NutriSnapApp() {
 
   const summary = useMealLogger().getTodaysSummary();
   
+  const renderActivePage = () => {
+    switch (activePage) {
+        case 'home':
+            return <Dashboard meals={meals} summary={summary} />;
+        case 'chat':
+            return <ChatPage />;
+        case 'settings':
+            return <SettingsPage onBack={() => setActivePage('home')} />;
+        default:
+            return <Dashboard meals={meals} summary={summary} />;
+    }
+  }
+
+
   return (
       <SidebarProvider>
          <div className="flex h-screen bg-background">
@@ -266,15 +288,8 @@ export function NutriSnapApp() {
                 </div>
             ) : (
               <>
-                <div className={cn("overflow-auto", activePage === 'home' ? "p-4 md:p-8" : "h-[calc(100vh-69px)]")}>
-                  {activePage === 'home' ? (
-                    <Dashboard 
-                        meals={meals} 
-                        summary={summary}
-                    />
-                  ) : (
-                    <ChatPage />
-                  )}
+                <div className={cn("overflow-auto", activePage !== 'chat' ? "p-4 md:p-8" : "h-[calc(100vh-69px)]")}>
+                  {renderActivePage()}
                 </div>
               </>
             )}
@@ -283,3 +298,5 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
+    

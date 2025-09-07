@@ -746,7 +746,6 @@ export {
   SidebarSeparator,
   SidebarTrigger,
   useSidebar,
-  SheetTitle
 }
 
     

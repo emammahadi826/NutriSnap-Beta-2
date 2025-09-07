@@ -4,11 +4,8 @@
 import { Suspense } from 'react';
 import SettingsForm from './settings-form';
 import { useAuth } from '@/hooks/use-auth';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 function SettingsSkeleton() {
@@ -42,22 +39,14 @@ function SettingsSkeleton() {
 }
 
 
-export default function SettingsPage() {
+export function SettingsPage({ onBack }: { onBack: () => void }) {
     const { user, loading } = useAuth();
-    const router = useRouter();
-
-    useEffect(() => {
-        if (!loading && !user) {
-            router.push('/login?redirect=/settings');
-        }
-    }, [user, loading, router]);
-
 
     if (loading || !user) {
         return (
-            <div className="p-4 md:p-8">
+            <div>
                  <header className="mb-8">
-                     <Button variant="ghost" onClick={() => router.back()} className="mb-4">
+                     <Button variant="ghost" onClick={onBack} className="mb-4">
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Back
                     </Button>
@@ -70,9 +59,9 @@ export default function SettingsPage() {
     }
 
     return (
-        <div className="p-4 md:p-8">
+        <div>
             <header className="mb-8 max-w-2xl mx-auto">
-                <Button variant="ghost" onClick={() => router.push('/')} className="mb-4 -ml-4">
+                <Button variant="ghost" onClick={onBack} className="mb-4 -ml-4">
                     <ArrowLeft className="mr-2 h-4 w-4" />
                     Back to Dashboard
                 </Button>
@@ -80,8 +69,10 @@ export default function SettingsPage() {
                 <p className="text-muted-foreground">Manage your account and profile settings.</p>
             </header>
             <Suspense fallback={<SettingsSkeleton />}>
-                <SettingsForm />
+                <SettingsForm onSaveSuccess={onBack} />
             </Suspense>
         </div>
     );
 }
+
+    
