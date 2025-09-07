@@ -7,6 +7,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from '@/com
 import { Flame, Wheat, Drumstick, Droplets, Utensils } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMemo } from 'react';
+import { isToday } from 'date-fns';
 
 
 interface DashboardProps {
@@ -69,7 +70,7 @@ export function Dashboard({ meals, summary }: DashboardProps) {
   const hasData = pieChartData.some(item => item.value > 0);
 
   const todaysMeals = useMemo(() => {
-    return meals.filter(meal => new Date(meal.timestamp).toDateString() === new Date().toDateString());
+    return meals.filter(meal => isToday(new Date(meal.timestamp)));
   }, [meals]);
 
   return (
