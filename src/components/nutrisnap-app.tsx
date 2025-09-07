@@ -25,7 +25,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { ChatPage } from './chat-page';
 import { cn } from '@/lib/utils';
@@ -152,11 +152,11 @@ export function NutriSnapApp() {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "16rem" } as React.CSSProperties}>
-             
-            <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
-               <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
-            </SidebarHeader>
-            <SidebarContent className="flex flex-col">
+              <SheetTitle>Sidebar Menu</SheetTitle>
+              <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
+                <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
+              </SidebarHeader>
+              <SidebarContent className="flex flex-col">
               <SidebarMenu className="flex-1">
                 <SidebarMenuItem>
                   <SidebarMenuButton onClick={() => handleMenuItemClick('home')} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
@@ -268,10 +268,10 @@ export function NutriSnapApp() {
          <div className="flex h-screen bg-background">
           <AppSidebar />
            <main className="flex-1 flex flex-col">
-            <header className="flex h-[69px] items-center px-4 border-b">
+            <header className="flex h-[69px] items-center px-4 border-b justify-between">
                 <SidebarTrigger />
                 {activePage === 'home' && (
-                    <div className="ml-auto flex items-center gap-2">
+                    <div className="flex items-center gap-2">
                         <MealLogDialog
                             onMealLog={addMeal}
                             isGuest={isGuest}
@@ -325,5 +325,3 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
-
-    
