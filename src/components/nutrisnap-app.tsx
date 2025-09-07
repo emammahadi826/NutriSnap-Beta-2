@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon, BarChart2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -33,13 +33,6 @@ import { MealLogDialog } from './meal-log-dialog';
 import { SettingsPage } from '@/components/settings/settings-page';
 import { ClientOnly } from './client-only';
 import { ReportPage } from './report/report-page';
-
-const AnalyticsIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor" {...props}>
-        <path d="M5.67 36.68a4.23 4.23 0 1 1 4.22-4.22 4.24 4.24 0 0 1-4.22 4.22zm0-6.46a2.23 2.23 0 1 0 2.22 2.24 2.24 2.24 0 0 0-2.22-2.24z"/><path d="M6.77 30.42A1 1 0 0 1 6 28.85l8.09-11.65a1 1 0 0 1 1.39-.2 1 1 0 0 1 .25 1.39L7.59 30a1 1 0 0 1-.82.42z"/><path d="M17.37 19.18A4.23 4.23 0 1 1 21.6 15a4.23 4.23 0 0 1-4.23 4.18zm0-6.45A2.23 2.23 0 1 0 19.6 15a2.23 2.23 0 0 0-2.23-2.27z"/><path d="M26.49 27.27a1 1 0 0 1-.77-.36l-7.27-8.66a1 1 0 0 1 .12-1.41A1 1 0 0 1 20 17l7.27 8.65a1 1 0 0 1-.76 1.65z"/><path d="M29.07 32.42a4.23 4.23 0 1 1 4.23-4.22 4.22 4.22 0 0 1-4.23 4.22zm0-6.45a2.23 2.23 0 1 0 2.23 2.23 2.22 2.22 0 0 0-2.23-2.2z"/><path d="M39.13 33.62a1.15 1.15 0 0 1-.35-.07l-7.28-2.78a1 1 0 0 1-.58-1.29 1 1 0 0 1 1.29-.58l7.28 2.78a1 1 0 0 1-.36 1.94z"/><path d="M42.34 37.27A4.23 4.23 0 1 1 46.56 33a4.23 4.23 0 0 1-4.22 4.27zm0-6.45A2.23 2.23 0 1 0 44.56 33a2.23 2.23 0 0 0-2.22-2.18z"/>
-    </svg>
-);
-
 
 export function NutriSnapApp() {
   const { isLoaded, meals, guestMealCount, addMeal } = useMealLogger();
@@ -86,7 +79,7 @@ export function NutriSnapApp() {
             </SidebarMenuItem>
             <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => handleMenuItemClick('report')} isActive={activePage === 'report'} variant={'outline'} size="lg" className="h-12">
-                    <AnalyticsIcon className="h-6 w-6"/>
+                    <BarChart2 className="h-6 w-6"/>
                     <span className={cn(state === 'collapsed' && 'hidden')}>Report</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
@@ -178,7 +171,7 @@ export function NutriSnapApp() {
                 </SidebarMenuItem>
                  <SidebarMenuItem>
                     <SidebarMenuButton onClick={() => handleMenuItemClick('report')} isActive={activePage === 'report'} variant={'outline'} size="lg" className="h-12">
-                        <AnalyticsIcon className="h-6 w-6"/>
+                        <BarChart2 className="h-6 w-6"/>
                         <span className="truncate">Report</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
