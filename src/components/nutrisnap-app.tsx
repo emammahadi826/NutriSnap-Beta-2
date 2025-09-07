@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon, BarChart2 } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -33,6 +33,7 @@ import { MealLogDialog } from './meal-log-dialog';
 import { SettingsPage } from '@/components/settings/settings-page';
 import { ClientOnly } from './client-only';
 import { ReportPage } from '@/components/report/report-page';
+import { BarChart2 } from 'lucide-react';
 
 export function NutriSnapApp() {
   const { isLoaded, meals, guestMealCount, addMeal } = useMealLogger();
@@ -105,7 +106,7 @@ export function NutriSnapApp() {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2", state === 'expanded' ? 'justify-start' : 'justify-center')}>
+                     <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2", state === 'expanded' ? 'justify-start' : 'justify-center')}>
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback className="rounded-lg">
@@ -267,10 +268,9 @@ export function NutriSnapApp() {
          <div className="flex h-screen bg-background">
           <AppSidebar />
            <main className="flex-1 flex flex-col">
-            
-            {activePage !== 'chat' && activePage !== 'report' && (
-                 <header className="flex h-[69px] items-center px-4 border-b">
-                    <SidebarTrigger />
+            <header className="flex h-[69px] items-center px-4 border-b">
+                <SidebarTrigger />
+                {activePage === 'home' && (
                     <div className="ml-auto flex items-center gap-2">
                         <MealLogDialog
                             onMealLog={addMeal}
@@ -296,8 +296,8 @@ export function NutriSnapApp() {
                             }
                         />
                     </div>
-                </header>
-            )}
+                )}
+            </header>
            
 
             {isLoading ? (
