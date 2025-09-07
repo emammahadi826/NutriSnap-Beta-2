@@ -79,16 +79,16 @@ export default function CompleteProfileForm() {
     const weightNum = Number(weight);
     const heightNum = Number(height);
 
-    if (ageNum > 150) {
-        toast({ variant: 'destructive', description: "Age cannot exceed 150." });
+    if (ageNum > 150 || ageNum <=0) {
+        toast({ variant: 'destructive', description: "Please enter a valid age." });
         return;
     }
-     if (weight && weightNum > 500) {
-        toast({ variant: 'destructive', description: "Weight cannot exceed 500 kg." });
+     if (weight && (weightNum > 500 || weightNum <= 0)) {
+        toast({ variant: 'destructive', description: "Please enter a valid weight." });
         return;
     }
-    if (height && heightNum > 300) {
-        toast({ variant: 'destructive', description: "Height cannot exceed 300 cm." });
+    if (height && (heightNum > 9 || heightNum < 2)) {
+        toast({ variant: 'destructive', description: "Height must be between 2 and 9 feet." });
         return;
     }
 
@@ -100,7 +100,8 @@ export default function CompleteProfileForm() {
         gender: gender,
         age: ageNum,
         weight: weight ? weightNum : undefined,
-        height: height ? heightNum : undefined,
+        // Convert feet to cm for storage
+        height: height ? Math.round(heightNum * 30.48) : undefined,
     };
 
     const success = await signUpAndCreateProfile(email, password, profileData);
@@ -181,16 +182,17 @@ export default function CompleteProfileForm() {
                 />
             </div>
             <div className="space-y-2">
-                <Label htmlFor="height">Height (cm)</Label>
+                <Label htmlFor="height">Height (ft)</Label>
                 <Input
                     id="height"
                     type="number"
-                    placeholder="e.g., 175"
+                    placeholder="e.g., 5.9"
                     value={height}
                     onChange={(e) => setHeight(e.target.value)}
                     inputMode="decimal"
-                    min="1"
-                    max="300"
+                    min="2"
+                    max="9"
+                    step="0.1"
                 />
             </div>
 
