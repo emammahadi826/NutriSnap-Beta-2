@@ -25,12 +25,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { useState } from 'react';
 import { ChatPage } from './chat-page';
 import { cn } from '@/lib/utils';
 import { MealLogDialog } from './meal-log-dialog';
-import { useRouter } from 'next/navigation';
 import { SettingsPage } from '@/components/settings/settings-page';
 import { ClientOnly } from './client-only';
 
@@ -41,7 +40,6 @@ export function NutriSnapApp() {
   const isGuest = !user;
   const isMobile = useIsMobile();
   const [activePage, setActivePage] = useState<'home' | 'chat' | 'settings'>('home');
-  const router = useRouter();
   const GUEST_LIMIT = 3;
   
   const isLoading = authLoading || !isLoaded;
@@ -100,7 +98,7 @@ export function NutriSnapApp() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
-                      <Avatar className="h-7 w-7">
+                      <Avatar className="h-7 w-7 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
                           {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
@@ -142,7 +140,7 @@ export function NutriSnapApp() {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
-             <SheetTitle className="sr-only">Menu</SheetTitle>
+             
             <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
                <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
             </SidebarHeader>
@@ -180,7 +178,7 @@ export function NutriSnapApp() {
                           <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                               <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
-                              <Avatar className="h-7 w-7">
+                              <Avatar className="h-7 w-7 rounded-lg">
                                   <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                                   <AvatarFallback>
                                   {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
@@ -303,3 +301,4 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
