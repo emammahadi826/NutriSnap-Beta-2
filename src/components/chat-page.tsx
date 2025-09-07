@@ -94,8 +94,7 @@ setInput('');
                                 </Avatar>
                             )}
                             <div className={cn(
-                                "max-w-prose p-3 rounded-lg",
-                                message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
+                                "max-w-prose p-3 rounded-lg bg-muted",
                             )}>
                                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                             </div>
