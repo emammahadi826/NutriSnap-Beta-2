@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon, FileText } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -32,6 +32,7 @@ import { cn } from '@/lib/utils';
 import { MealLogDialog } from './meal-log-dialog';
 import { SettingsPage } from '@/components/settings/settings-page';
 import { ClientOnly } from './client-only';
+import { ReportPage } from './report/report-page';
 
 
 export function NutriSnapApp() {
@@ -39,7 +40,7 @@ export function NutriSnapApp() {
   const { user, userProfile, logOut, loading: authLoading } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
-  const [activePage, setActivePage] = useState<'home' | 'chat' | 'settings'>('home');
+  const [activePage, setActivePage] = useState<'home' | 'chat' | 'settings' | 'report'>('home');
   const GUEST_LIMIT = 3;
   
   const isLoading = authLoading || !isLoaded;
@@ -47,7 +48,7 @@ export function NutriSnapApp() {
   const AppSidebar = () => {
     const { openMobile, setOpenMobile, state } = useSidebar();
   
-    const handleMenuItemClick = (page: 'home' | 'chat' | 'settings') => {
+    const handleMenuItemClick = (page: 'home' | 'chat' | 'settings' | 'report') => {
         setActivePage(page);
         if (isMobile) {
             setOpenMobile(false);
@@ -75,6 +76,12 @@ export function NutriSnapApp() {
                 <SidebarMenuButton onClick={() => handleMenuItemClick('chat')} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
                     <MessageCircle className="h-6 w-6"/>
                     <span className={cn(state === 'collapsed' && 'hidden')}>Chat</span>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+                <SidebarMenuButton onClick={() => handleMenuItemClick('report')} isActive={activePage === 'report'} variant={'outline'} size="lg" className="h-12">
+                    <FileText className="h-6 w-6"/>
+                    <span className={cn(state === 'collapsed' && 'hidden')}>Report</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -158,6 +165,12 @@ export function NutriSnapApp() {
                         <span className="truncate">Chat</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <SidebarMenuButton onClick={() => handleMenuItemClick('report')} isActive={activePage === 'report'} variant={'outline'} size="lg" className="h-12">
+                        <FileText className="h-6 w-6"/>
+                        <span className="truncate">Report</span>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
@@ -235,6 +248,8 @@ export function NutriSnapApp() {
             return <ChatPage />;
         case 'settings':
             return <SettingsPage onBack={() => setActivePage('home')} />;
+        case 'report':
+            return <ReportPage />;
         default:
             return <Dashboard meals={meals} summary={summary} />;
     }
@@ -301,4 +316,3 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
-
