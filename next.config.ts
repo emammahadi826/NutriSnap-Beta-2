@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -33,6 +34,7 @@ const nextConfig: NextConfig = {
   devIndicators: {
     allowedDevOrigins: [
       '*.cluster-yylgzpipxrar4v4a72liastuqy.cloudworkstations.dev',
+      '*.cloudworkstations.dev',
     ],
   },
 };
