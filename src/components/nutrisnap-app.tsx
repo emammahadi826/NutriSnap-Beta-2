@@ -32,6 +32,7 @@ import { cn } from '@/lib/utils';
 import { MealLogDialog } from './meal-log-dialog';
 import { useRouter } from 'next/navigation';
 import { SettingsPage } from '@/components/settings/settings-page';
+import { ClientOnly } from './client-only';
 
 
 export function NutriSnapApp() {
@@ -81,56 +82,58 @@ export function NutriSnapApp() {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-          <div className={cn("flex flex-col gap-4", state === 'collapsed' && 'hidden')}>
-            {isGuest && (
-              <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
-                  <div className="text-center text-sm mb-2">
-                      <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
-                      <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                  </div>
-                <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
-              </div>
-            )}
-            
-            <SidebarSeparator />
+          <ClientOnly>
+            <div className={cn("flex flex-col gap-4", state === 'collapsed' && 'hidden')}>
+              {isGuest && (
+                <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
+                    <div className="text-center text-sm mb-2">
+                        <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
+                        <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                    </div>
+                  <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
+                </div>
+              )}
+              
+              <SidebarSeparator />
 
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
-                    <Avatar className="h-7 w-7">
-                      <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                      <AvatarFallback>
-                        {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="truncate">{userProfile?.displayName || user.email}</span>
-                    <ChevronUp className="ml-auto h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  side="top"
-                  className="w-[--radix-popper-anchor-width]"
-                >
-                  <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
-                    <SettingsIcon className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={logOut}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Sign Out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Button asChild variant="outline" className="w-full justify-center text-base h-12">
-                <Link href="/login">
-                  <LogIn className="h-5 w-5 mr-2" />
-                  <span className="truncate">Login / Sign Up</span>
-                </Link>
-              </Button>
-            )}
-          </div>
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
+                      <Avatar className="h-7 w-7">
+                        <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
+                        <AvatarFallback>
+                          {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="truncate">{userProfile?.displayName || user.email}</span>
+                      <ChevronUp className="ml-auto h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    side="top"
+                    className="w-[--radix-popper-anchor-width]"
+                  >
+                    <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
+                      <SettingsIcon className="mr-2 h-4 w-4" />
+                      <span>Settings</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={logOut}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Sign Out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button asChild variant="outline" className="w-full justify-center text-base h-12">
+                  <Link href="/login">
+                    <LogIn className="h-5 w-5 mr-2" />
+                    <span className="truncate">Login / Sign Up</span>
+                  </Link>
+                </Button>
+              )}
+            </div>
+          </ClientOnly>
         </SidebarFooter>
       </>
     );
@@ -160,55 +163,57 @@ export function NutriSnapApp() {
               </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
-                <div className="flex flex-col gap-4">
-                    {isGuest && (
-                        <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
-                            <div className="text-center text-sm mb-2">
-                                <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
-                                <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                            </div>
-                        <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
-                        </div>
-                    )}
-                    <SidebarSeparator />
+              <ClientOnly>
+                  <div className="flex flex-col gap-4">
+                      {isGuest && (
+                          <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
+                              <div className="text-center text-sm mb-2">
+                                  <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
+                                  <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                              </div>
+                          <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
+                          </div>
+                      )}
+                      <SidebarSeparator />
 
-                    {user ? (
-                        <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
-                            <Avatar className="h-7 w-7">
-                                <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                                <AvatarFallback>
-                                {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
-                                </AvatarFallback>
-                            </Avatar>
-                            <span className="truncate">{userProfile?.displayName || user.email}</span>
-                            <ChevronUp className="ml-auto h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                            side="top"
-                            className="w-[--radix-popper-anchor-width]"
-                        >
-                           <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
-                                <SettingsIcon className="mr-2 h-4 w-4" />
-                                <span>Settings</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={logOut}>
-                                <LogOut className="mr-2 h-4 w-4" />
-                                <span>Sign Out</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                        </DropdownMenu>
-                    ) : (
-                        <Button asChild variant="outline" className="w-full justify-center text-base h-12">
-                        <Link href="/login">
-                            <LogIn className="h-5 w-5 mr-2" />
-                            <span className="truncate">Login / Sign Up</span>
-                        </Link>
-                        </Button>
-                    )}
-                </div>
+                      {user ? (
+                          <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
+                              <Avatar className="h-7 w-7">
+                                  <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
+                                  <AvatarFallback>
+                                  {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
+                                  </AvatarFallback>
+                              </Avatar>
+                              <span className="truncate">{userProfile?.displayName || user.email}</span>
+                              <ChevronUp className="ml-auto h-4 w-4" />
+                              </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                              side="top"
+                              className="w-[--radix-popper-anchor-width]"
+                          >
+                            <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
+                                  <SettingsIcon className="mr-2 h-4 w-4" />
+                                  <span>Settings</span>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={logOut}>
+                                  <LogOut className="mr-2 h-4 w-4" />
+                                  <span>Sign Out</span>
+                              </DropdownMenuItem>
+                          </DropdownMenuContent>
+                          </DropdownMenu>
+                      ) : (
+                          <Button asChild variant="outline" className="w-full justify-center text-base h-12">
+                          <Link href="/login">
+                              <LogIn className="h-5 w-5 mr-2" />
+                              <span className="truncate">Login / Sign Up</span>
+                          </Link>
+                          </Button>
+                      )}
+                  </div>
+              </ClientOnly>
             </SidebarFooter>
           </SheetContent>
         </Sheet>
@@ -298,5 +303,3 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
-
-    
