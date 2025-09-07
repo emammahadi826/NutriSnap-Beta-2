@@ -76,7 +76,7 @@ export function Dashboard({ meals, summary }: DashboardProps) {
   return (
     <div className="space-y-8">
       <section>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <Card className="flex flex-col">
             <CardHeader>
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Calories</CardTitle>
@@ -124,8 +124,8 @@ export function Dashboard({ meals, summary }: DashboardProps) {
         </div>
       </section>
 
-      <section className="grid gap-8 md:grid-cols-5">
-        <Card className="md:col-span-3">
+      <section className="grid gap-8 lg:grid-cols-5">
+        <Card className="lg:col-span-3">
           <CardHeader>
             <CardTitle>Today's Macro Breakdown</CardTitle>
             <CardDescription>Your macronutrient distribution for today.</CardDescription>
@@ -170,7 +170,7 @@ export function Dashboard({ meals, summary }: DashboardProps) {
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-2">
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Today's Meals</CardTitle>
             <CardDescription>A log of all your meals from today.</CardDescription>
