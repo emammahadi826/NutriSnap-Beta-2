@@ -4,7 +4,7 @@
 import { useMemo, useState } from 'react';
 import type { Meal } from '@/lib/types';
 import { subDays, format, isSameDay, startOfDay } from 'date-fns';
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from '@/components/chart-wrapper';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Utensils } from 'lucide-react';
@@ -30,17 +30,17 @@ const COLORS: Record<DataType, string> = {
   fat: 'hsl(var(--chart-4))',
 };
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label, unit }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0];
     return (
       <div className="rounded-lg border bg-popover p-2 text-popover-foreground shadow-sm">
         <p className="font-bold">{label}</p>
         <div className="flex items-center">
-          <div className="w-2 h-2 rounded-full mr-1.5" style={{ backgroundColor: data.payload.fill }} />
+          <div className="w-2 h-2 rounded-full mr-1.5" style={{ backgroundColor: data.fill }} />
           {data.name}:
           <span className="ml-2 font-mono font-bold">
-            {Math.round(data.value)} {data.name !== 'calories' ? 'g' : 'kcal'}
+            {Math.round(data.value)} {unit}
           </span>
         </div>
       </div>
@@ -100,6 +100,7 @@ export function NutritionChart({ meals }: NutritionChartProps) {
   }, [processedData, dataType]);
   
   const hasData = chartData.some(d => d.value > 0);
+  const dataUnit = dataType === 'calories' ? 'kcal' : 'g';
 
   return (
     <Card>
@@ -131,16 +132,22 @@ export function NutritionChart({ meals }: NutritionChartProps) {
         <div className="w-full h-[350px]">
             {hasData ? (
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <AreaChart data={chartData}>
+                     <defs>
+                        <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={COLORS[dataType]} stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor={COLORS[dataType]} stopOpacity={0.1}/>
+                        </linearGradient>
+                      </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.5}/>
                     <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
-                    <YAxis tickLine={false} axisLine={false} tickMargin={8} unit={dataType === 'calories' ? '' : 'g'} />
+                    <YAxis tickLine={false} axisLine={false} tickMargin={8} unit={dataUnit} />
                     <Tooltip 
                         cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
-                        content={<CustomTooltip />}
+                        content={<CustomTooltip unit={dataUnit}/>}
                     />
-                    <Bar dataKey="value" name={dataType.charAt(0).toUpperCase() + dataType.slice(1)} radius={[4, 4, 0, 0]} />
-                    </BarChart>
+                    <Area type="monotone" dataKey="value" name={dataType.charAt(0).toUpperCase() + dataType.slice(1)} stroke={COLORS[dataType]} fillOpacity={1} fill="url(#chartGradient)" strokeWidth={2} />
+                    </AreaChart>
                 </ResponsiveContainer>
              ) : (
                 <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
