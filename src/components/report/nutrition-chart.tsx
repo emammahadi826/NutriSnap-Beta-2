@@ -121,7 +121,7 @@ export function NutritionChart({ meals }: NutritionChartProps) {
       </CardHeader>
       <CardContent className="space-y-6">
          <Tabs value={dataType} onValueChange={(value) => setDataType(value as any)}>
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto">
+            <TabsList className="flex-wrap h-auto">
                 <TabsTrigger value="calories">Calories</TabsTrigger>
                 <TabsTrigger value="protein">Protein</TabsTrigger>
                 <TabsTrigger value="carbs">Carbs</TabsTrigger>
