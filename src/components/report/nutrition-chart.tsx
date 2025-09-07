@@ -4,7 +4,7 @@
 import { useMemo, useState } from 'react';
 import type { Meal } from '@/lib/types';
 import { subDays, format, isSameDay, startOfDay } from 'date-fns';
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from '@/components/chart-wrapper';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from '@/components/chart-wrapper';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Utensils } from 'lucide-react';
@@ -28,24 +28,47 @@ type SummaryData = {
     fat: number;
 }
 
-const CustomTooltip = ({ active, payload, label, unit }: any) => {
+const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
-    const data = payload[0];
     return (
       <div className="rounded-lg border bg-popover p-2 text-popover-foreground shadow-sm">
         <p className="font-bold">{label}</p>
-        <div className="flex items-center">
-          <div className="w-2 h-2 rounded-full mr-1.5" style={{ backgroundColor: 'hsl(var(--chart-1))' }} />
-          Calories:
-          <span className="ml-2 font-mono font-bold">
-            {Math.round(data.value)} {unit}
-          </span>
-        </div>
+        {payload.map((pld: any) => (
+             <div key={pld.dataKey} className="flex items-center">
+                <div className="w-2 h-2 rounded-full mr-1.5" style={{ backgroundColor: pld.fill }} />
+                {pld.name}:
+                <span className="ml-2 font-mono font-bold">
+                    {Math.round(pld.value)} {pld.dataKey === 'calories' ? 'kcal' : 'g'}
+                </span>
+             </div>
+        ))}
       </div>
     );
   }
   return null;
 };
+
+const CustomLegend = (props: any) => {
+    const { payload } = props;
+    if (!payload) return null;
+
+    return (
+        <div className="flex items-center justify-center flex-wrap gap-4 mt-4 text-sm text-foreground">
+            {
+                payload.map((entry: any, index: number) => {
+                    const { color, value } = entry;
+                    const name = value.charAt(0).toUpperCase() + value.slice(1);
+                    return (
+                        <div key={`item-${index}`} className="flex items-center gap-1.5">
+                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color }}></span>
+                            <span>{name}</span>
+                        </div>
+                    )
+                })
+            }
+        </div>
+    );
+}
 
 export function NutritionChart({ meals }: NutritionChartProps) {
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
@@ -95,8 +118,7 @@ export function NutritionChart({ meals }: NutritionChartProps) {
     return { chartData: finalChartData, summaryData: totalSummary };
   }, [meals, timeRange]);
   
-  const hasData = chartData.some(d => d.calories > 0);
-  const dataUnit = 'kcal';
+  const hasData = chartData.some(d => d.calories > 0 || d.protein > 0 || d.carbs > 0 || d.fat > 0);
 
   return (
     <div className="space-y-8">
@@ -145,8 +167,8 @@ export function NutritionChart({ meals }: NutritionChartProps) {
         <CardHeader>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <CardTitle>Calorie Intake</CardTitle>
-                    <CardDescription>Your daily calorie summary.</CardDescription>
+                    <CardTitle>Nutrition Breakdown</CardTitle>
+                    <CardDescription>Your daily nutrition summary.</CardDescription>
                 </div>
                 <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as any)} className="w-full sm:w-auto">
                     <TabsList>
@@ -161,22 +183,21 @@ export function NutritionChart({ meals }: NutritionChartProps) {
             <div className="w-full h-[350px]">
                 {hasData ? (
                     <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={chartData}>
-                        <defs>
-                            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor={'hsl(var(--chart-1))'} stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor={'hsl(var(--chart-1))'} stopOpacity={0.1}/>
-                            </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.5}/>
-                        <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
-                        <YAxis tickLine={false} axisLine={false} tickMargin={8} unit={dataUnit} />
-                        <Tooltip 
-                            cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
-                            content={<CustomTooltip unit={dataUnit}/>}
-                        />
-                        <Area type="monotone" dataKey="calories" name="Calories" stroke={'hsl(var(--chart-1))'} fillOpacity={1} fill="url(#chartGradient)" strokeWidth={2} />
-                        </AreaChart>
+                        <BarChart data={chartData}>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.5}/>
+                            <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
+                            <YAxis yAxisId="left" orientation="left" stroke="hsl(var(--chart-1))" tickLine={false} axisLine={false} tickMargin={8} unit="kcal" />
+                            <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" tickLine={false} axisLine={false} tickMargin={8} unit="g"/>
+                            <Tooltip 
+                                cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
+                                content={<CustomTooltip />}
+                            />
+                             <Legend content={<CustomLegend />} />
+                            <Bar yAxisId="left" dataKey="calories" name="Calories" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
+                            <Bar yAxisId="right" dataKey="protein" name="Protein" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
+                            <Bar yAxisId="right" dataKey="carbs" name="Carbs" fill="hsl(var(--chart-3))" radius={[4, 4, 0, 0]} />
+                            <Bar yAxisId="right" dataKey="fat" name="Fat" fill="hsl(var(--chart-4))" radius={[4, 4, 0, 0]} />
+                        </BarChart>
                     </ResponsiveContainer>
                 ) : (
                     <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
