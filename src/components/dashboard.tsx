@@ -76,44 +76,48 @@ export function Dashboard({ meals, summary }: DashboardProps) {
     <div className="space-y-8">
       <section>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Calories</CardTitle>
-              <Flame className="h-4 w-4 text-muted-foreground" />
+          <Card className="flex flex-col">
+            <CardHeader>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Calories</CardTitle>
             </CardHeader>
+            <CardContent className="flex-grow">
+              <div className="text-4xl font-bold tracking-tight">{Math.round(summary.calories)}</div>
+            </CardContent>
             <CardContent>
-              <div className="text-2xl font-bold">{Math.round(summary.calories)}</div>
-              <p className="text-xs text-muted-foreground">calories consumed today</p>
+                <p className="text-xs text-muted-foreground">calories consumed today</p>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Carbohydrates</CardTitle>
-              <Wheat className="h-4 w-4 text-muted-foreground" />
+          <Card className="flex flex-col">
+            <CardHeader>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Carbohydrates</CardTitle>
             </CardHeader>
+            <CardContent className="flex-grow">
+               <div className="text-4xl font-bold tracking-tight">{Math.round(summary.carbs)}g</div>
+            </CardContent>
             <CardContent>
-              <div className="text-2xl font-bold">{Math.round(summary.carbs)}g</div>
               <p className="text-xs text-muted-foreground">Goal: ~150g</p>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Protein</CardTitle>
-              <Drumstick className="h-4 w-4 text-muted-foreground" />
+          <Card className="flex flex-col">
+            <CardHeader>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Protein</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{Math.round(summary.protein)}g</div>
-              <p className="text-xs text-muted-foreground">Goal: ~120g</p>
+            <CardContent className="flex-grow">
+              <div className="text-4xl font-bold tracking-tight">{Math.round(summary.protein)}g</div>
+            </CardContent>
+             <CardContent>
+                <p className="text-xs text-muted-foreground">Goal: ~120g</p>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Fat</CardTitle>
-              <Droplets className="h-4 w-4 text-muted-foreground" />
+          <Card className="flex flex-col">
+            <CardHeader>
+              <CardTitle className="text-sm font-medium text-muted-foreground">Fat</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{Math.round(summary.fat)}g</div>
-              <p className="text-xs text-muted-foreground">Goal: ~60g</p>
+            <CardContent className="flex-grow">
+              <div className="text-4xl font-bold tracking-tight">{Math.round(summary.fat)}g</div>
+            </CardContent>
+             <CardContent>
+                <p className="text-xs text-muted-foreground">Goal: ~60g</p>
             </CardContent>
           </Card>
         </div>
