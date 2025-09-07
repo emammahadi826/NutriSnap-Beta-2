@@ -151,7 +151,7 @@ setInput('');
                             }
                         }}
                     />
-                    <Button type="submit" size="icon" disabled={isLoading || !input.trim()} className="rounded-full flex-shrink-0">
+                    <Button type="submit" size="icon" disabled={isLoading || !input.trim()} className="rounded-full flex-shrink-0 bg-primary text-primary-foreground hover:bg-primary/90">
                         <Send className="w-5 h-5" />
                     </Button>
                 </form>
