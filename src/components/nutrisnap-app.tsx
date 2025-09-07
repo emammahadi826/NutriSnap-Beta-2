@@ -32,7 +32,7 @@ import { cn } from '@/lib/utils';
 import { MealLogDialog } from './meal-log-dialog';
 import { SettingsPage } from '@/components/settings/settings-page';
 import { ClientOnly } from './client-only';
-import { ReportPage } from './report/report-page';
+import { ReportPage } from '@/components/report/report-page';
 
 export function NutriSnapApp() {
   const { isLoaded, meals, guestMealCount, addMeal } = useMealLogger();
@@ -268,34 +268,37 @@ export function NutriSnapApp() {
           <AppSidebar />
            <main className="flex-1 flex flex-col">
             
-            <header className="flex h-[69px] items-center px-4 border-b">
-                <SidebarTrigger />
-                <div className="ml-auto flex items-center gap-2">
-                    <MealLogDialog
-                        onMealLog={addMeal}
-                        isGuest={isGuest}
-                        guestMealCount={guestMealCount}
-                        trigger={
-                            <Button variant="ghost" size="icon">
-                                <Upload className="h-5 w-5" />
-                                <span className="sr-only">Upload Meal</span>
-                            </Button>
-                        }
-                    />
-                    <MealLogDialog
-                        onMealLog={addMeal}
-                        isGuest={isGuest}
-                        guestMealCount={guestMealCount}
-                        startWithCamera={true}
-                        trigger={
-                            <Button variant="ghost" size="icon">
-                                <Camera className="h-5 w-5" />
-                                <span className="sr-only">Use Camera</span>
-                            </Button>
-                        }
-                    />
-                </div>
-            </header>
+            {activePage !== 'chat' && (
+                 <header className="flex h-[69px] items-center px-4 border-b">
+                    <SidebarTrigger />
+                    <div className="ml-auto flex items-center gap-2">
+                        <MealLogDialog
+                            onMealLog={addMeal}
+                            isGuest={isGuest}
+                            guestMealCount={guestMealCount}
+                            trigger={
+                                <Button variant="ghost" size="icon">
+                                    <Upload className="h-5 w-5" />
+                                    <span className="sr-only">Upload Meal</span>
+                                </Button>
+                            }
+                        />
+                        <MealLogDialog
+                            onMealLog={addMeal}
+                            isGuest={isGuest}
+                            guestMealCount={guestMealCount}
+                            startWithCamera={true}
+                            trigger={
+                                <Button variant="ghost" size="icon">
+                                    <Camera className="h-5 w-5" />
+                                    <span className="sr-only">Use Camera</span>
+                                </Button>
+                            }
+                        />
+                    </div>
+                </header>
+            )}
+           
 
             {isLoading ? (
                 <div className="flex-1 p-4 md:p-8 overflow-auto">
@@ -312,7 +315,7 @@ export function NutriSnapApp() {
                 </div>
             ) : (
               <>
-                <div className={cn("overflow-auto", activePage !== 'chat' ? "p-4 md:p-8" : "h-[calc(100vh-69px)]")}>
+                <div className={cn("overflow-auto", activePage !== 'chat' ? "p-4 md:p-8" : "h-[calc(100vh-0px)]")}>
                   {renderActivePage()}
                 </div>
               </>
@@ -322,3 +325,5 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
+    
