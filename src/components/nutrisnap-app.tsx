@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -69,50 +69,59 @@ export function NutriSnapApp() {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter className={cn("gap-4", state === 'collapsed' && 'hidden')}>
-          
-          {isGuest && (
-            <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
-                <div className="text-center text-sm mb-2">
-                    <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
-                    <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                </div>
-              <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
-            </div>
-          )}
+        <SidebarFooter>
+          <div className={cn("flex flex-col gap-4", state === 'collapsed' && 'hidden')}>
+            {isGuest && (
+              <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
+                  <div className="text-center text-sm mb-2">
+                      <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
+                      <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                  </div>
+                <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
+              </div>
+            )}
 
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
-                  <Avatar className="h-7 w-7">
-                    <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                    <AvatarFallback>
-                      {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="truncate">{userProfile?.displayName || user.email}</span>
-                  <ChevronUp className="ml-auto h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                className="w-[--radix-popper-anchor-width]"
-              >
-                <DropdownMenuItem onClick={logOut}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sign Out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button asChild variant="outline" className="w-full justify-center text-base h-12">
-              <Link href="/login">
-                <LogIn className="h-5 w-5 mr-2" />
-                <span className="truncate">Login / Sign Up</span>
-              </Link>
-            </Button>
-          )}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
+                    <Avatar className="h-7 w-7">
+                      <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
+                      <AvatarFallback>
+                        {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="truncate">{userProfile?.displayName || user.email}</span>
+                    <ChevronUp className="ml-auto h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-popper-anchor-width]"
+                >
+                  <DropdownMenuItem onClick={logOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Sign Out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button asChild variant="outline" className="w-full justify-center text-base h-12">
+                <Link href="/login">
+                  <LogIn className="h-5 w-5 mr-2" />
+                  <span className="truncate">Login / Sign Up</span>
+                </Link>
+              </Button>
+            )}
+          </div>
+            <SidebarMenu>
+                <SidebarMenuItem>
+                    <SidebarMenuButton variant={'ghost'} size="lg" className="h-12 w-full">
+                        <Settings className="h-6 w-6"/>
+                        <span className={cn(state === 'collapsed' && 'hidden')}>Settings</span>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
         </SidebarFooter>
       </>
     );
@@ -141,50 +150,59 @@ export function NutriSnapApp() {
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarContent>
-            <SidebarFooter className="gap-4">
-              
-              {isGuest && (
-                <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
-                    <div className="text-center text-sm mb-2">
-                        <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
-                        <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                    </div>
-                  <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
-                </div>
-              )}
+            <SidebarFooter>
+                <div className="flex flex-col gap-4">
+                    {isGuest && (
+                        <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
+                            <div className="text-center text-sm mb-2">
+                                <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
+                                <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                            </div>
+                        <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
+                        </div>
+                    )}
 
-              {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
-                      <Avatar className="h-7 w-7">
-                        <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                        <AvatarFallback>
-                          {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="truncate">{userProfile?.displayName || user.email}</span>
-                      <ChevronUp className="ml-auto h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    side="top"
-                    className="w-[--radix-popper-anchor-width]"
-                  >
-                    <DropdownMenuItem onClick={logOut}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>Sign Out</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Button asChild variant="outline" className="w-full justify-center text-base h-12">
-                  <Link href="/login">
-                    <LogIn className="h-5 w-5 mr-2" />
-                    <span className="truncate">Login / Sign Up</span>
-                  </Link>
-                </Button>
-              )}
+                    {user ? (
+                        <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
+                            <Avatar className="h-7 w-7">
+                                <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
+                                <AvatarFallback>
+                                {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
+                                </AvatarFallback>
+                            </Avatar>
+                            <span className="truncate">{userProfile?.displayName || user.email}</span>
+                            <ChevronUp className="ml-auto h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                            side="top"
+                            className="w-[--radix-popper-anchor-width]"
+                        >
+                            <DropdownMenuItem onClick={logOut}>
+                            <LogOut className="mr-2 h-4 w-4" />
+                            <span>Sign Out</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <Button asChild variant="outline" className="w-full justify-center text-base h-12">
+                        <Link href="/login">
+                            <LogIn className="h-5 w-5 mr-2" />
+                            <span className="truncate">Login / Sign Up</span>
+                        </Link>
+                        </Button>
+                    )}
+                </div>
+                 <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton variant={'ghost'} size="lg" className="h-12 w-full">
+                            <Settings className="h-6 w-6"/>
+                            <span className="truncate">Settings</span>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
             </SidebarFooter>
           </SheetContent>
         </Sheet>
