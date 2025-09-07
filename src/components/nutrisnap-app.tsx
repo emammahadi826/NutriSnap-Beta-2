@@ -68,12 +68,6 @@ export function NutriSnapApp() {
                     <span className={cn(state === 'collapsed' && 'hidden')}>Chat</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem className="mt-auto">
-                <SidebarMenuButton variant={'outline'} size="lg" className="h-12">
-                    <Settings className="h-6 w-6"/>
-                    <span className={cn(state === 'collapsed' && 'hidden')}>Settings</span>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
@@ -108,6 +102,10 @@ export function NutriSnapApp() {
                   side="top"
                   className="w-[--radix-popper-anchor-width]"
                 >
+                  <DropdownMenuItem>
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={logOut}>
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Sign Out</span>
@@ -149,12 +147,6 @@ export function NutriSnapApp() {
                         <span className="truncate">Chat</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
-                 <SidebarMenuItem className="mt-auto">
-                    <SidebarMenuButton variant={'outline'} size="lg" className="h-12 w-full">
-                        <Settings className="h-6 w-6"/>
-                        <span className="truncate">Settings</span>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
@@ -188,9 +180,13 @@ export function NutriSnapApp() {
                             side="top"
                             className="w-[--radix-popper-anchor-width]"
                         >
+                            <DropdownMenuItem>
+                                <Settings className="mr-2 h-4 w-4" />
+                                <span>Settings</span>
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={logOut}>
-                            <LogOut className="mr-2 h-4 w-4" />
-                            <span>Sign Out</span>
+                                <LogOut className="mr-2 h-4 w-4" />
+                                <span>Sign Out</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                         </DropdownMenu>
