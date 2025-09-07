@@ -6,17 +6,13 @@ import { NutriSnapApp } from '@/components/nutrisnap-app';
 import { ClientOnly } from '@/components/client-only';
 
 export default function Home() {
-  const { loading } = useAuth();
-
-  // The loading state is now handled inside NutriSnapApp to prevent hydration errors.
-  // We will always render the main structure.
+  const { loading, user } = useAuth();
+  
   if (loading) {
     return (
-      <main className="min-h-screen w-full">
-        <ClientOnly>
-          <NutriSnapApp />
-        </ClientOnly>
-      </main>
+        <main className="flex items-center justify-center min-h-screen">
+          Loading...
+        </main>
     );
   }
 

@@ -30,6 +30,7 @@ import { useState } from 'react';
 import { ChatPage } from './chat-page';
 import { cn } from '@/lib/utils';
 import { MealLogDialog } from './meal-log-dialog';
+import { useRouter } from 'next/navigation';
 
 
 export function NutriSnapApp() {
@@ -38,6 +39,7 @@ export function NutriSnapApp() {
   const isGuest = !user;
   const isMobile = useIsMobile();
   const [activePage, setActivePage] = useState<'home' | 'chat'>('home');
+  const router = useRouter();
   const GUEST_LIMIT = 3;
   
   const isLoading = authLoading || !isLoaded;
@@ -102,7 +104,7 @@ export function NutriSnapApp() {
                   side="top"
                   className="w-[--radix-popper-anchor-width]"
                 >
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/settings')}>
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </DropdownMenuItem>
@@ -180,7 +182,7 @@ export function NutriSnapApp() {
                             side="top"
                             className="w-[--radix-popper-anchor-width]"
                         >
-                            <DropdownMenuItem>
+                           <DropdownMenuItem onClick={() => router.push('/settings')}>
                                 <Settings className="mr-2 h-4 w-4" />
                                 <span>Settings</span>
                             </DropdownMenuItem>
