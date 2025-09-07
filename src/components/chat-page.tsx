@@ -88,31 +88,15 @@ setInput('');
                     )}
                     {messages.map((message, index) => (
                         <div key={index} className={cn("flex items-start gap-4", message.role === 'user' ? 'justify-end' : '')}>
-                            {message.role === 'model' && (
-                                <Avatar className="w-8 h-8 border">
-                                    <AvatarFallback><Bot className="w-5 h-5" /></AvatarFallback>
-                                </Avatar>
-                            )}
                             <div className={cn(
                                 "max-w-prose p-3 rounded-lg bg-muted",
                             )}>
                                 <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                             </div>
-                             {message.role === 'user' && (
-                                <Avatar className="w-8 h-8">
-                                     <AvatarImage src={user?.photoURL ?? undefined} />
-                                    <AvatarFallback>
-                                         <User className="w-5 h-5" />
-                                    </AvatarFallback>
-                                </Avatar>
-                            )}
                         </div>
                     ))}
                      {isLoading && (
                         <div className="flex items-start gap-4">
-                            <Avatar className="w-8 h-8 border">
-                                <AvatarFallback><Bot className="w-5 h-5" /></AvatarFallback>
-                            </Avatar>
                             <div className="max-w-prose p-3 rounded-lg bg-muted">
                                 <Loader2 className="w-5 h-5 animate-spin" />
                             </div>
