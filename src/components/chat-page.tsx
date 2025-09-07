@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Bot, Send, User, Loader2, Plus, Upload, Camera } from 'lucide-react';
@@ -105,56 +104,58 @@ setInput('');
                 </div>
             </ScrollArea>
              <div className="p-4 bg-background">
-                 <form onSubmit={handleSendMessage} className="flex items-center gap-2 bg-muted p-2 rounded-full">
-                     <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="rounded-full flex-shrink-0">
-                                <Plus className="w-5 h-5" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent side="top" align="start">
-                            <MealLogDialog 
-                                onMealLog={addMeal} 
-                                isGuest={isGuest} 
-                                guestMealCount={guestMealCount}
-                                trigger={
-                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                        <Upload className="mr-2 h-4 w-4" />
-                                        Upload Meal
-                                    </DropdownMenuItem>
+                <div className="max-w-4xl mx-auto w-full">
+                    <form onSubmit={handleSendMessage} className="flex items-center gap-2 bg-muted p-2 rounded-full">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="rounded-full flex-shrink-0">
+                                    <Plus className="w-5 h-5" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent side="top" align="start">
+                                <MealLogDialog 
+                                    onMealLog={addMeal} 
+                                    isGuest={isGuest} 
+                                    guestMealCount={guestMealCount}
+                                    trigger={
+                                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                            <Upload className="mr-2 h-4 w-4" />
+                                            Upload Meal
+                                        </DropdownMenuItem>
+                                    }
+                                />
+                                <MealLogDialog 
+                                    onMealLog={addMeal} 
+                                    isGuest={isGuest} 
+                                    guestMealCount={guestMealCount}
+                                    startWithCamera={true}
+                                    trigger={
+                                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                            <Camera className="mr-2 h-4 w-4" />
+                                            Use Camera
+                                        </DropdownMenuItem>
+                                    }
+                                />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        <Textarea
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="Ask anything..."
+                            className="flex-1 resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                            rows={1}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    handleSendMessage(e);
                                 }
-                            />
-                            <MealLogDialog 
-                                onMealLog={addMeal} 
-                                isGuest={isGuest} 
-                                guestMealCount={guestMealCount}
-                                startWithCamera={true}
-                                trigger={
-                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                        <Camera className="mr-2 h-4 w-4" />
-                                        Use Camera
-                                    </DropdownMenuItem>
-                                }
-                            />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <Textarea
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="Ask anything..."
-                        className="flex-1 resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                        rows={1}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                                e.preventDefault();
-                                handleSendMessage(e);
-                            }
-                        }}
-                    />
-                    <Button type="submit" size="icon" disabled={isLoading || !input.trim()} className="rounded-full flex-shrink-0 bg-primary text-primary-foreground hover:bg-primary/90">
-                        <Send className="w-5 h-5" />
-                    </Button>
-                </form>
+                            }}
+                        />
+                        <Button type="submit" size="icon" disabled={isLoading || !input.trim()} className="rounded-full flex-shrink-0 bg-primary text-primary-foreground hover:bg-primary/90">
+                            <Send className="w-5 h-5" />
+                        </Button>
+                    </form>
+                </div>
             </div>
         </div>
     );
