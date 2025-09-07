@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A conversational AI for answering nutrition-related questions.
@@ -28,7 +29,7 @@ const nutrisnapChatFlow = ai.defineFlow(
     
     IMPORTANT: You are not a medical professional. Do not provide medical advice. If a user asks for medical advice, you must decline and recommend they consult a doctor or registered dietitian.`;
 
-    const {output} = await ai.generate({
+    const {text} = await ai.generate({
         prompt: {
             text: systemPrompt,
             history
@@ -36,6 +37,6 @@ const nutrisnapChatFlow = ai.defineFlow(
         model: 'googleai/gemini-2.5-flash',
     });
 
-    return { response: output.text! };
+    return { response: text! };
   }
 );
