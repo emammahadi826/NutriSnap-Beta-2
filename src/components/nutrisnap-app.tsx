@@ -109,7 +109,7 @@ export function NutriSnapApp() {
                      <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2", state === 'expanded' ? 'justify-start' : 'justify-center')}>
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                        <AvatarFallback className="rounded-lg">
+                        <AvatarFallback>
                           {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                         </AvatarFallback>
                       </Avatar>
@@ -198,7 +198,7 @@ export function NutriSnapApp() {
                               <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2", "justify-start")}>
                               <Avatar className="h-8 w-8 rounded-lg">
                                   <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                                  <AvatarFallback className="rounded-lg">
+                                  <AvatarFallback>
                                   {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                                   </AvatarFallback>
                               </Avatar>
@@ -325,3 +325,5 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
+    
