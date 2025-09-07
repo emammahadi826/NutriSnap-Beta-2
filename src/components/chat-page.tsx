@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MealLogDialog } from './meal-log-dialog';
+import { ChatMessageContent } from './chat-message-content';
 
 
 type Message = {
@@ -90,7 +91,7 @@ setInput('');
                             <div className={cn(
                                 "max-w-prose p-3 rounded-lg bg-muted",
                             )}>
-                                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                                <ChatMessageContent content={message.content} />
                             </div>
                         </div>
                     ))}
