@@ -8,7 +8,7 @@ export function ReportPage() {
     const { meals, isLoaded } = useMealLogger();
 
     return (
-        <div>
+        <div className="space-y-6">
             {isLoaded ? (
                 <NutritionChart meals={meals} />
             ) : (

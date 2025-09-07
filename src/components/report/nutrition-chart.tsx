@@ -21,14 +21,12 @@ type ChartDataPoint = {
   fat: number;
 };
 
-type DataType = 'calories' | 'protein' | 'carbs' | 'fat';
-
-const COLORS: Record<DataType, string> = {
-  calories: 'hsl(var(--chart-1))',
-  protein: 'hsl(var(--chart-2))',
-  carbs: 'hsl(var(--chart-3))',
-  fat: 'hsl(var(--chart-4))',
-};
+type SummaryData = {
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+}
 
 const CustomTooltip = ({ active, payload, label, unit }: any) => {
   if (active && payload && payload.length) {
@@ -37,8 +35,8 @@ const CustomTooltip = ({ active, payload, label, unit }: any) => {
       <div className="rounded-lg border bg-popover p-2 text-popover-foreground shadow-sm">
         <p className="font-bold">{label}</p>
         <div className="flex items-center">
-          <div className="w-2 h-2 rounded-full mr-1.5" style={{ backgroundColor: data.fill }} />
-          {data.name}:
+          <div className="w-2 h-2 rounded-full mr-1.5" style={{ backgroundColor: 'hsl(var(--chart-1))' }} />
+          Calories:
           <span className="ml-2 font-mono font-bold">
             {Math.round(data.value)} {unit}
           </span>
@@ -51,9 +49,8 @@ const CustomTooltip = ({ active, payload, label, unit }: any) => {
 
 export function NutritionChart({ meals }: NutritionChartProps) {
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
-  const [dataType, setDataType] = useState<DataType>('calories');
 
-  const processedData = useMemo(() => {
+  const { chartData, summaryData } = useMemo(() => {
     const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
     const endDate = new Date();
     const startDate = subDays(endDate, days - 1);
@@ -73,91 +70,124 @@ export function NutritionChart({ meals }: NutritionChartProps) {
         const dateKey = format(mealDate, 'MMM d');
         
         let dayData = dateMap.get(dateKey);
-        if (!dayData) { // Should not happen with pre-initialization, but as a fallback
-            dayData = { date: dateKey, calories: 0, protein: 0, carbs: 0, fat: 0 };
+        if (dayData) {
+          meal.items.forEach(item => {
+            dayData!.calories += item.food.calories * item.servings;
+            dayData!.protein += item.food.protein * item.servings;
+            dayData!.carbs += item.food.carbs * item.servings;
+            dayData!.fat += item.food.fat * item.servings;
+          });
+          dateMap.set(dateKey, dayData);
         }
-
-        meal.items.forEach(item => {
-          dayData!.calories += item.food.calories * item.servings;
-          dayData!.protein += item.food.protein * item.servings;
-          dayData!.carbs += item.food.carbs * item.servings;
-          dayData!.fat += item.food.fat * item.servings;
-        });
-
-        dateMap.set(dateKey, dayData);
       }
     });
 
-    return Array.from(dateMap.values()).reverse();
-  }, [meals, timeRange]);
+    const finalChartData = Array.from(dateMap.values()).reverse();
+    
+    const totalSummary = finalChartData.reduce((acc, day) => {
+        acc.calories += day.calories;
+        acc.protein += day.protein;
+        acc.carbs += day.carbs;
+        acc.fat += day.fat;
+        return acc;
+    }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
 
-  const chartData = useMemo(() => {
-    return processedData.map(d => ({
-        ...d,
-        value: d[dataType],
-        fill: COLORS[dataType]
-    }));
-  }, [processedData, dataType]);
+    return { chartData: finalChartData, summaryData: totalSummary };
+  }, [meals, timeRange]);
   
-  const hasData = chartData.some(d => d.value > 0);
-  const dataUnit = dataType === 'calories' ? 'kcal' : 'g';
+  const hasData = chartData.some(d => d.calories > 0);
+  const dataUnit = 'kcal';
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-                 <CardTitle>Nutrition Report</CardTitle>
-                <CardDescription>Your daily nutrition summary.</CardDescription>
+    <div className="space-y-8">
+        <section>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Total Calories</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-4xl font-bold tracking-tight">{Math.round(summaryData.calories)}</div>
+                        <p className="text-xs text-muted-foreground">in the last {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '3 months'}</p>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Total Protein</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-4xl font-bold tracking-tight">{Math.round(summaryData.protein)}g</div>
+                        <p className="text-xs text-muted-foreground">in the last {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '3 months'}</p>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Total Carbs</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-4xl font-bold tracking-tight">{Math.round(summaryData.carbs)}g</div>
+                        <p className="text-xs text-muted-foreground">in the last {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '3 months'}</p>
+                    </CardContent>
+                </Card>
+                 <Card>
+                    <CardHeader>
+                        <CardTitle className="text-sm font-medium text-muted-foreground">Total Fat</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-4xl font-bold tracking-tight">{Math.round(summaryData.fat)}g</div>
+                        <p className="text-xs text-muted-foreground">in the last {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '3 months'}</p>
+                    </CardContent>
+                </Card>
             </div>
-            <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as any)} className="w-full sm:w-auto">
-                <TabsList>
-                    <TabsTrigger value="7d">Last 7 Days</TabsTrigger>
-                    <TabsTrigger value="30d">Last 30 Days</TabsTrigger>
-                    <TabsTrigger value="90d">Last 3 Months</TabsTrigger>
-                </TabsList>
-            </Tabs>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-         <Tabs value={dataType} onValueChange={(value) => setDataType(value as any)}>
-            <TabsList className="flex-wrap h-auto">
-                <TabsTrigger value="calories">Calories</TabsTrigger>
-                <TabsTrigger value="protein">Protein</TabsTrigger>
-                <TabsTrigger value="carbs">Carbs</TabsTrigger>
-                <TabsTrigger value="fat">Fat</TabsTrigger>
-            </TabsList>
-        </Tabs>
-        
-        <div className="w-full h-[350px]">
-            {hasData ? (
-                <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartData}>
-                     <defs>
-                        <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor={COLORS[dataType]} stopOpacity={0.8}/>
-                          <stop offset="95%" stopColor={COLORS[dataType]} stopOpacity={0.1}/>
-                        </linearGradient>
-                      </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.5}/>
-                    <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
-                    <YAxis tickLine={false} axisLine={false} tickMargin={8} unit={dataUnit} />
-                    <Tooltip 
-                        cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
-                        content={<CustomTooltip unit={dataUnit}/>}
-                    />
-                    <Area type="monotone" dataKey="value" name={dataType.charAt(0).toUpperCase() + dataType.slice(1)} stroke={COLORS[dataType]} fillOpacity={1} fill="url(#chartGradient)" strokeWidth={2} />
-                    </AreaChart>
-                </ResponsiveContainer>
-             ) : (
-                <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
-                    <Utensils className="h-12 w-12 opacity-50" />
-                    <p className="mt-4">No data to display for this period.</p>
-                    <p className="text-sm">Log meals to see your nutrition report.</p>
+        </section>
+
+        <Card>
+        <CardHeader>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <CardTitle>Calorie Intake</CardTitle>
+                    <CardDescription>Your daily calorie summary.</CardDescription>
                 </div>
-            )}
-        </div>
-      </CardContent>
-    </Card>
+                <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as any)} className="w-full sm:w-auto">
+                    <TabsList>
+                        <TabsTrigger value="7d">Last 7 Days</TabsTrigger>
+                        <TabsTrigger value="30d">Last 30 Days</TabsTrigger>
+                        <TabsTrigger value="90d">Last 3 Months</TabsTrigger>
+                    </TabsList>
+                </Tabs>
+            </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+            <div className="w-full h-[350px]">
+                {hasData ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData}>
+                        <defs>
+                            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={'hsl(var(--chart-1))'} stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor={'hsl(var(--chart-1))'} stopOpacity={0.1}/>
+                            </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.5}/>
+                        <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
+                        <YAxis tickLine={false} axisLine={false} tickMargin={8} unit={dataUnit} />
+                        <Tooltip 
+                            cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
+                            content={<CustomTooltip unit={dataUnit}/>}
+                        />
+                        <Area type="monotone" dataKey="calories" name="Calories" stroke={'hsl(var(--chart-1))'} fillOpacity={1} fill="url(#chartGradient)" strokeWidth={2} />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                ) : (
+                    <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
+                        <Utensils className="h-12 w-12 opacity-50" />
+                        <p className="mt-4">No data to display for this period.</p>
+                        <p className="text-sm">Log meals to see your nutrition report.</p>
+                    </div>
+                )}
+            </div>
+        </CardContent>
+        </Card>
+    </div>
   );
 }
