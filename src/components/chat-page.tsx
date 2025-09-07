@@ -104,7 +104,7 @@ setInput('');
                 </div>
             </ScrollArea>
              <div className="p-4 bg-background">
-                <div className="max-w-4xl mx-auto w-full">
+                <div className="max-w-xl mx-auto w-full">
                     <form onSubmit={handleSendMessage} className="flex items-center gap-2 bg-muted p-2 rounded-full">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
