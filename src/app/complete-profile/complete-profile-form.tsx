@@ -46,14 +46,12 @@ export default function CompleteProfileForm() {
   }, [searchParams, router, toast]);
   
     useEffect(() => {
-        if (authError && !isSubmitting) {
-             if (!authError.includes('already registered')) {
-                toast({
-                    variant: 'destructive',
-                    title: 'Sign-up Failed',
-                    description: authError,
-                });
-            }
+        if (authError && isSubmitting) {
+            toast({
+                variant: 'destructive',
+                title: 'Sign-up Failed',
+                description: authError,
+            });
         }
     }, [authError, isSubmitting, toast]);
 
