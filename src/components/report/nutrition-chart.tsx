@@ -3,7 +3,7 @@
 
 import { useMemo, useState } from 'react';
 import type { Meal } from '@/lib/types';
-import { subDays, format, isSameDay, startOfDay } from 'date-fns';
+import { subDays, format, isSameDay, startOfDay, differenceInDays } from 'date-fns';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from '@/components/chart-wrapper';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -73,9 +73,17 @@ const CustomLegend = (props: any) => {
 export function NutritionChart({ meals }: NutritionChartProps) {
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
 
-  const { chartData, summaryData } = useMemo(() => {
-    const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
-    const endDate = new Date();
+  const { chartData, summaryData, totalDays } = useMemo(() => {
+    if (meals.length === 0) {
+        return { chartData: [], summaryData: { calories: 0, protein: 0, carbs: 0, fat: 0 }, totalDays: 0 };
+    }
+
+    const sortedMeals = [...meals].sort((a, b) => a.timestamp - b.timestamp);
+    const firstMealDate = new Date(sortedMeals[0].timestamp);
+    const today = new Date();
+    
+    const days = differenceInDays(today, firstMealDate) + 1;
+    const endDate = today;
     const startDate = subDays(endDate, days - 1);
     
     const dateMap = new Map<string, ChartDataPoint>();
@@ -115,10 +123,12 @@ export function NutritionChart({ meals }: NutritionChartProps) {
         return acc;
     }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
 
-    return { chartData: finalChartData, summaryData: totalSummary };
-  }, [meals, timeRange]);
+    return { chartData: finalChartData, summaryData: totalSummary, totalDays: days };
+  }, [meals]);
   
   const hasData = chartData.some(d => d.calories > 0 || d.protein > 0 || d.carbs > 0 || d.fat > 0);
+  
+  const timeSuffix = `in the last ${totalDays} day${totalDays > 1 ? 's' : ''}`;
 
   return (
     <div className="space-y-8">
@@ -130,7 +140,7 @@ export function NutritionChart({ meals }: NutritionChartProps) {
                     </CardHeader>
                     <CardContent>
                         <div className="text-4xl font-bold tracking-tight">{Math.round(summaryData.calories)}</div>
-                        <p className="text-xs text-muted-foreground">in the last {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '3 months'}</p>
+                        <p className="text-xs text-muted-foreground">{timeSuffix}</p>
                     </CardContent>
                 </Card>
                  <Card>
@@ -139,7 +149,7 @@ export function NutritionChart({ meals }: NutritionChartProps) {
                     </CardHeader>
                     <CardContent>
                         <div className="text-4xl font-bold tracking-tight">{Math.round(summaryData.protein)}g</div>
-                        <p className="text-xs text-muted-foreground">in the last {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '3 months'}</p>
+                        <p className="text-xs text-muted-foreground">{timeSuffix}</p>
                     </CardContent>
                 </Card>
                  <Card>
@@ -148,7 +158,7 @@ export function NutritionChart({ meals }: NutritionChartProps) {
                     </CardHeader>
                     <CardContent>
                         <div className="text-4xl font-bold tracking-tight">{Math.round(summaryData.carbs)}g</div>
-                        <p className="text-xs text-muted-foreground">in the last {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '3 months'}</p>
+                        <p className="text-xs text-muted-foreground">{timeSuffix}</p>
                     </CardContent>
                 </Card>
                  <Card>
@@ -157,7 +167,7 @@ export function NutritionChart({ meals }: NutritionChartProps) {
                     </CardHeader>
                     <CardContent>
                         <div className="text-4xl font-bold tracking-tight">{Math.round(summaryData.fat)}g</div>
-                        <p className="text-xs text-muted-foreground">in the last {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : '3 months'}</p>
+                        <p className="text-xs text-muted-foreground">{timeSuffix}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -170,13 +180,6 @@ export function NutritionChart({ meals }: NutritionChartProps) {
                     <CardTitle>Nutrition Breakdown</CardTitle>
                     <CardDescription>Your daily nutrition summary.</CardDescription>
                 </div>
-                <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as any)} className="w-full sm:w-auto">
-                    <TabsList>
-                        <TabsTrigger value="7d">Last 7 Days</TabsTrigger>
-                        <TabsTrigger value="30d">Last 30 Days</TabsTrigger>
-                        <TabsTrigger value="90d">Last 3 Months</TabsTrigger>
-                    </TabsList>
-                </Tabs>
             </div>
         </CardHeader>
         <CardContent className="space-y-6">
