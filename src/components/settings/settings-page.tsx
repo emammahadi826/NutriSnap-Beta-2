@@ -61,10 +61,6 @@ export function SettingsPage({ onBack }: { onBack: () => void }) {
     return (
         <div>
             <header className="mb-8 max-w-2xl mx-auto">
-                <Button variant="ghost" onClick={onBack} className="mb-4 -ml-4">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Dashboard
-                </Button>
                 <h1 className="text-3xl font-bold">Settings</h1>
                 <p className="text-muted-foreground">Manage your account and profile settings.</p>
             </header>
