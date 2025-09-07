@@ -112,7 +112,7 @@ export default function SettingsForm({ onSaveSuccess }: SettingsFormProps) {
                 />
             </div>
 
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                     <Label>Gender <span className="text-destructive">*</span></Label>
                     <Select onValueChange={(value) => setGender(value as 'male' | 'female' | 'other')} value={gender}>
@@ -142,7 +142,7 @@ export default function SettingsForm({ onSaveSuccess }: SettingsFormProps) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                     <Label htmlFor="weight">Weight (kg)</Label>
                     <Input
@@ -182,5 +182,3 @@ export default function SettingsForm({ onSaveSuccess }: SettingsFormProps) {
       </Card>
   );
 }
-
-    
