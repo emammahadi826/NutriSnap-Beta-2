@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
@@ -97,88 +96,84 @@ export default function SettingsForm({ onSaveSuccess }: SettingsFormProps) {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-        <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-6 pt-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="space-y-2">
+            <Label htmlFor="name">Full Name <span className="text-destructive">*</span></Label>
+            <Input
+            id="name"
+            type="text"
+            placeholder="e.g., John Doe"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            />
+        </div>
+
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
-                <Label htmlFor="name">Full Name <span className="text-destructive">*</span></Label>
+                <Label>Gender <span className="text-destructive">*</span></Label>
+                <Select onValueChange={(value) => setGender(value as 'male' | 'female' | 'other')} value={gender}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="age">Age <span className="text-destructive">*</span></Label>
                 <Input
-                id="name"
-                type="text"
-                placeholder="e.g., John Doe"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                    id="age"
+                    type="number"
+                    placeholder="e.g., 25"
+                    required
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    min="1"
+                    max="150"
                 />
             </div>
+        </div>
 
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                    <Label>Gender <span className="text-destructive">*</span></Label>
-                    <Select onValueChange={(value) => setGender(value as 'male' | 'female' | 'other')} value={gender}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="male">Male</SelectItem>
-                            <SelectItem value="female">Female</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div className="space-y-2">
-                    <Label htmlFor="age">Age <span className="text-destructive">*</span></Label>
-                    <Input
-                        id="age"
-                        type="number"
-                        placeholder="e.g., 25"
-                        required
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                        min="1"
-                        max="150"
-                    />
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-2">
+                <Label htmlFor="weight">Weight (kg)</Label>
+                <Input
+                    id="weight"
+                    type="number"
+                    placeholder="e.g., 70"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
+                    inputMode="decimal"
+                    min="1"
+                    max="500"
+                />
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                    <Label htmlFor="weight">Weight (kg)</Label>
-                    <Input
-                        id="weight"
-                        type="number"
-                        placeholder="e.g., 70"
-                        value={weight}
-                        onChange={(e) => setWeight(e.target.value)}
-                        inputMode="decimal"
-                        min="1"
-                        max="500"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="height">Height (ft)</Label>
-                    <Input
-                        id="height"
-                        type="number"
-                        placeholder="e.g., 5.9"
-                        value={height}
-                        onChange={(e) => setHeight(e.target.value)}
-                        inputMode="decimal"
-                        min="2"
-                        max="9"
-                        step="0.1"
-                    />
-                </div>
+            <div className="space-y-2">
+                <Label htmlFor="height">Height (ft)</Label>
+                <Input
+                    id="height"
+                    type="number"
+                    placeholder="e.g., 5.9"
+                    value={height}
+                    onChange={(e) => setHeight(e.target.value)}
+                    inputMode="decimal"
+                    min="2"
+                    max="9"
+                    step="0.1"
+                />
             </div>
-            
-            </CardContent>
-             <CardFooter>
-                 <Button type="submit" className="h-11 font-semibold text-base" disabled={isSubmitting || authLoading}>
-                    {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save Changes'}
-                </Button>
-            </CardFooter>
-        </form>
-      </Card>
+        </div>
+        
+        <div className="pt-2">
+             <Button type="submit" className="h-11 font-semibold text-base" disabled={isSubmitting || authLoading}>
+                {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save Changes'}
+            </Button>
+        </div>
+    </form>
   );
 }

@@ -43,8 +43,8 @@ export function SettingsPage({ onBack }: { onBack: () => void }) {
     const { user, loading } = useAuth();
 
     return (
-        <div>
-            <header className="mb-8 max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto">
+            <header className="mb-8">
                 <h1 className="text-3xl font-bold">Settings</h1>
                 <p className="text-muted-foreground">Manage your account and profile settings.</p>
             </header>
