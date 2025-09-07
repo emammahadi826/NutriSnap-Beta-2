@@ -20,6 +20,7 @@ import {
   useSidebar,
   SidebarTrigger,
   SidebarProvider,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
@@ -67,12 +68,6 @@ export function NutriSnapApp() {
                     <span className={cn(state === 'collapsed' && 'hidden')}>Chat</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
-                <SidebarMenuButton variant={'ghost'} size="lg" className="h-12">
-                    <Settings className="h-6 w-6"/>
-                    <span className={cn(state === 'collapsed' && 'hidden')}>Settings</span>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
@@ -86,6 +81,17 @@ export function NutriSnapApp() {
                 <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
               </div>
             )}
+            
+            <SidebarMenu>
+                <SidebarMenuItem>
+                    <SidebarMenuButton variant={'ghost'} size="lg" className="h-12 w-full">
+                        <Settings className="h-6 w-6"/>
+                        <span className="truncate">Settings</span>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
+
+            <SidebarSeparator />
 
             {user ? (
               <DropdownMenu>
@@ -146,12 +152,6 @@ export function NutriSnapApp() {
                         <span className="truncate">Chat</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
-                <SidebarMenuItem>
-                    <SidebarMenuButton variant={'ghost'} size="lg" className="h-12 w-full">
-                        <Settings className="h-6 w-6"/>
-                        <span className="truncate">Settings</span>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
               </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
@@ -165,6 +165,17 @@ export function NutriSnapApp() {
                         <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
                         </div>
                     )}
+
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton variant={'ghost'} size="lg" className="h-12 w-full">
+                                <Settings className="h-6 w-6"/>
+                                <span className="truncate">Settings</span>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+
+                    <SidebarSeparator />
 
                     {user ? (
                         <DropdownMenu>
