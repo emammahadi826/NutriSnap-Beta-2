@@ -9,11 +9,6 @@ export function ReportPage() {
 
     return (
         <div>
-            <header className="mb-8">
-                <h1 className="text-3xl font-bold">Reports</h1>
-                <p className="text-muted-foreground">View your nutrition reports.</p>
-            </header>
-            
             {isLoaded ? (
                 <NutritionChart meals={meals} />
             ) : (
