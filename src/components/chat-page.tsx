@@ -59,7 +59,7 @@ setInput('');
 
         } catch (error) {
             console.error("Error calling chat flow:", error);
-            const errorMessage: Message = { role: 'model', content: "দুঃখিত, আমি সংযোগ করতে পারছি না। অনুগ্রহ করে পরে আবার চেষ্টা করুন।" };
+            const errorMessage: Message = { role: 'model', content: "Sorry, I couldn't connect. Please try again later." };
             setMessages(prev => [...prev, errorMessage]);
         } finally {
             setIsLoading(false);
@@ -82,8 +82,8 @@ setInput('');
                     {messages.length === 0 && (
                         <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
                             <Bot className="w-16 h-16 mb-4" />
-                            <h2 className="text-2xl font-bold">নিউট্রিস্ন্যাপ বট</h2>
-                            <p>পুষ্টি, ফিটনেস বা আপনার খাবার সম্পর্কে আমাকে কিছু জিজ্ঞাসা করুন!</p>
+                            <h2 className="text-2xl font-bold">NutriSnap Bot</h2>
+                            <p>Ask me anything about nutrition, fitness, or your meals!</p>
                         </div>
                     )}
                     {messages.map((message, index) => (
@@ -137,7 +137,7 @@ setInput('');
                                 trigger={
                                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                         <Upload className="mr-2 h-4 w-4" />
-                                        খাবার আপলোড করুন
+                                        Upload Meal
                                     </DropdownMenuItem>
                                 }
                             />
@@ -149,7 +149,7 @@ setInput('');
                                 trigger={
                                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                         <Camera className="mr-2 h-4 w-4" />
-                                        ছবি তুলুন
+                                        Use Camera
                                     </DropdownMenuItem>
                                 }
                             />
@@ -158,7 +158,7 @@ setInput('');
                     <Textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        placeholder="কিছু জিজ্ঞাসা করুন..."
+                        placeholder="Ask anything..."
                         className="flex-1 resize-none bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0"
                         rows={1}
                         onKeyDown={(e) => {

@@ -91,8 +91,8 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
             setHasCameraPermission(false);
             toast({
               variant: 'destructive',
-              title: 'ক্যামেরা অ্যাক্সেস अस्वीकार করা হয়েছে',
-              description: 'এই অ্যাপটি ব্যবহার করতে দয়া করে আপনার ব্রাউজার সেটিংসে ক্যামেরার অনুমতি সক্ষম করুন।',
+              title: 'Camera Access Denied',
+              description: 'Please enable camera permissions in your browser settings to use this app.',
             });
         }
       }
@@ -150,8 +150,8 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
     if (!imageData) {
       toast({
         variant: "destructive",
-        title: "কোনো ছবি নির্বাচন করা হয়নি",
-        description: "বিশ্লেষণ করার জন্য অনুগ্রহ করে একটি ছবি নির্বাচন করুন।",
+        title: "No image selected",
+        description: "Please select an image to analyze.",
       });
       return;
     }
@@ -161,7 +161,7 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
       const aiResult: IdentifyFoodFromImageOutput = await identifyFoodFromImage({ photoDataUri: imageData });
       
       if (!aiResult.foodItems || aiResult.foodItems.length === 0) {
-        setError("আমরা আপনার ছবিতে কোনো খাবার শনাক্ত করতে পারিনি। অনুগ্রহ করে অন্য একটি ছবি চেষ্টা করুন।");
+        setError("We couldn't identify any food in your image. Please try another one.");
         setView('error');
         return;
       }
@@ -183,7 +183,7 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
         .filter((item): item is FoodResult => item !== null);
 
       if (processedResults.length === 0) {
-        setError("আমরা আইটেমগুলি শনাক্ত করেছি, কিন্তু সেগুলি আমাদের পুষ্টি ডাটাবেসে নেই। একটি সহজ খাবার চেষ্টা করুন বা ম্যানুয়ালি আইটেম যোগ করুন (বৈশিষ্ট্য শীঘ্রই আসছে!)");
+        setError("We identified items, but they're not in our nutrition database. Try a simpler meal or add items manually (feature coming soon!)");
         setView('error');
         return;
       }
@@ -193,7 +193,7 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
 
     } catch (e) {
       console.error(e);
-      setError("একটি অপ্রত্যাশিত ত্রুটি ঘটেছে। আমাদের AI व्यस्त থাকতে পারে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      setError("An unexpected error occurred. Our AI might be busy. Please try again.");
       setView('error');
     }
   };
@@ -231,21 +231,21 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
     if (results.length === 0) {
         toast({
             variant: "destructive",
-            title: "লগ করার জন্য কোনো আইটেম নেই",
-            description: "অনুগ্রহ করে একটি ছবি বিশ্লেষণ করুন এবং প্রথমে আইটেমগুলি নিশ্চিত করুন।",
+            title: "No items to log",
+            description: "Please analyze an image and confirm items first.",
         });
         return;
     }
     
     const meal: Omit<Meal, 'id' | 'timestamp'> = {
-      name: results.length > 1 ? `${results[0].food.name} এবং আরও` : results[0].food.name,
+      name: results.length > 1 ? `${results[0].food.name} and more` : results[0].food.name,
       items: results,
       imageUrl: imagePreview ?? undefined,
     };
     onMealLog(meal);
     toast({
-      title: "খাবার লগ করা হয়েছে!",
-      description: `আপনার খাবারটি আপনার ${isGuest ? 'অতিথি' : 'দৈনিক'} লগে যোগ করা হয়েছে।`,
+      title: "Meal Logged!",
+      description: `Your meal has been added to your ${isGuest ? 'guest' : 'daily'} log.`,
       className: "bg-primary text-primary-foreground"
     });
     handleOpenChange(false);
@@ -253,7 +253,7 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
   
   const defaultTrigger = (
       <Button size="lg" className="font-bold text-base">
-          <Camera className="mr-2 h-5 w-5" /> একটি খাবার লগ করুন
+          <Camera className="mr-2 h-5 w-5" /> Log a Meal
       </Button>
   );
 
@@ -271,24 +271,24 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
                          <ArrowLeft className="h-5 w-5" />
                      </Button>
                  )}
-                 <DialogTitle className="font-headline text-2xl">একটি নতুন খাবার লগ করুন</DialogTitle>
+                 <DialogTitle className="font-headline text-2xl">Log a New Meal</DialogTitle>
               </div>
           </div>
           {view !== 'limit' && <DialogDescription>
-            আপনার খাবারের একটি ছবি তুলুন এবং আমাদের AI-কে বাকিটা করতে দিন।
+            Snap a picture of your meal and let our AI do the rest.
           </DialogDescription>}
         </DialogHeader>
 
         {view === 'limit' && (
            <div className="flex flex-col items-center justify-center text-center min-h-[20rem] gap-4">
             <Info className="h-12 w-12 text-primary" />
-            <h3 className="text-xl font-bold">আপনি আপনার অতিথি সীমা পৌঁছেছেন!</h3>
+            <h3 className="text-xl font-bold">You've reached your guest limit!</h3>
             <p className="text-muted-foreground">
-                আপনি অতিথি হিসাবে {GUEST_LIMIT} টি খাবার লগ করেছেন। আপনার অগ্রগতি সংরক্ষণ করতে এবং সীমাহীন খাবার লগ করতে অনুগ্রহ করে একটি অ্যাকাউন্ট তৈরি করুন।
+                You've logged {GUEST_LIMIT} meals as a guest. To save your progress and log unlimited meals, please create an account.
             </p>
             <div className="flex flex-col gap-2 w-full">
-                <Button asChild size="lg"><Link href="/login">লগইন বা সাইন আপ করুন</Link></Button>
-                <Button variant="ghost" onClick={() => handleOpenChange(false)}>হয়তো পরে</Button>
+                <Button asChild size="lg"><Link href="/login">Login or Sign Up</Link></Button>
+                <Button variant="ghost" onClick={() => handleOpenChange(false)}>Maybe Later</Button>
             </div>
           </div>
         )}
@@ -296,7 +296,7 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
         {view === 'loading' && (
           <div className="flex flex-col items-center justify-center h-64 gap-4">
             <Loader2 className="h-16 w-16 animate-spin text-primary" />
-            <p className="text-muted-foreground">আপনার খাবার বিশ্লেষণ করা হচ্ছে...</p>
+            <p className="text-muted-foreground">Analyzing your meal...</p>
           </div>
         )}
 
@@ -304,10 +304,10 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
            <div className="flex flex-col items-center justify-center min-h-[20rem] gap-4">
             <Alert variant="destructive">
               <Info className="h-4 w-4" />
-              <AlertTitle>বিশ্লেষণ ব্যর্থ হয়েছে</AlertTitle>
+              <AlertTitle>Analysis Failed</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
-            <Button variant="outline" onClick={resetState}>আবার চেষ্টা করুন</Button>
+            <Button variant="outline" onClick={resetState}>Try Again</Button>
           </div>
         )}
         
@@ -318,18 +318,18 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
               onClick={() => fileInputRef.current?.click()}
             >
               {imagePreview ? (
-                <Image src={imagePreview} alt="Meal preview" fill className="object-cover rounded-md" />
+                <Image src={imagePreview} alt="Meal preview" layout="fill" className="object-cover rounded-md" />
               ) : (
                 <div className="text-center text-muted-foreground">
                   <Upload className="mx-auto h-12 w-12 mb-2" />
-                  <p>একটি ছবি আপলোড করতে ক্লিক করুন</p>
-                  <p className="text-xs">অথবা টেনে আনুন</p>
+                  <p>Click to upload an image</p>
+                  <p className="text-xs">or drag and drop</p>
                 </div>
               )}
             </div>
             <Input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageChange} className="hidden" />
              <Button onClick={handleAnalyze} disabled={!imagePreview} className="w-full font-bold text-base py-6">
-              খাবার বিশ্লেষণ করুন
+              Analyze Image
             </Button>
           </div>
         )}
@@ -342,15 +342,15 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
                 </div>
                  {hasCameraPermission === false && (
                     <Alert variant="destructive">
-                      <AlertTitle>ক্যামেরা অ্যাক্সেস প্রয়োজন</AlertTitle>
+                      <AlertTitle>Camera Access Required</AlertTitle>
                       <AlertDescription>
-                        এই বৈশিষ্ট্যটি ব্যবহার করতে দয়া করে ক্যামেরা অ্যাক্সেসের অনুমতি দিন। আপনাকে আপনার ব্রাউজার সেটিংসে অনুমতি পরিবর্তন করতে হতে পারে।
+                        Please allow camera access to use this feature. You may need to change permissions in your browser settings.
                       </AlertDescription>
                     </Alert>
                 )}
                 <DialogFooter>
                     <Button onClick={handleTakePhoto} disabled={hasCameraPermission === false} className="w-full">
-                        <Camera className="mr-2 h-5 w-5" /> ছবি তুলুন
+                        <Camera className="mr-2 h-5 w-5" /> Take Photo
                     </Button>
                 </DialogFooter>
             </div>
@@ -364,7 +364,7 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
                        <div className="flex-grow">
                             <p className="font-semibold">{item.food.name}</p>
                             <p className="text-sm text-muted-foreground">
-                                {Math.round(item.food.calories)} ক্যালোরি প্রতি {item.food.unit}
+                                {Math.round(item.food.calories)} calories per {item.food.unit}
                             </p>
                        </div>
                        <div className="flex items-center gap-2">
@@ -380,8 +380,8 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
                 ))}
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={resetState}>আবার শুরু করুন</Button>
-              <Button onClick={handleLogMeal} className="font-bold">খাবার লগ করুন</Button>
+              <Button variant="outline" onClick={resetState}>Start Over</Button>
+              <Button onClick={handleLogMeal} className="font-bold">Log Meal</Button>
             </DialogFooter>
           </div>
         )}
