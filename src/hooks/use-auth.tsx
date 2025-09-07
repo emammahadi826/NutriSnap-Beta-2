@@ -20,6 +20,7 @@ import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import type { UserProfile } from "@/lib/types";
 import { useRouter } from 'next/navigation';
+import { useToast } from "./use-toast";
 
 
 interface AuthContextType {
@@ -50,6 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { toast } = useToast();
 
   const fetchUserProfile = useCallback(async (user: User) => {
     const userDocRef = doc(db, "users", user.uid);
@@ -68,8 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(user);
         const profile = await fetchUserProfile(user);
         setUserProfile(profile);
-         if (!profile?.displayName && window.location.pathname !== '/complete-profile') {
-           // This case should ideally not happen with the new flow, but as a fallback
+         if (!profile?.displayName && window.location.pathname !== '/complete-profile' && window.location.pathname !== '/login') {
            router.push('/complete-profile');
          }
       } else {
@@ -102,6 +103,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       return true;
     } catch (e: any) {
+       if (e.code === 'auth/email-already-in-use') {
+            setError('This email is already registered. Please log in.');
+             toast({
+                variant: 'destructive',
+                title: 'Email Already Registered',
+                description: 'This email address is already in use. Please log in instead.',
+            });
+            router.push('/login');
+            return false;
+        }
       setError(e.message);
       console.error("Sign up failed:", e.message);
       return false;

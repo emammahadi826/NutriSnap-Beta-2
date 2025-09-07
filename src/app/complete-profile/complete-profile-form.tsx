@@ -44,6 +44,19 @@ export default function CompleteProfileForm() {
       setPassword(passwordParam);
     }
   }, [searchParams, router, toast]);
+  
+    useEffect(() => {
+        if (authError && !isSubmitting) {
+             if (!authError.includes('already registered')) {
+                toast({
+                    variant: 'destructive',
+                    title: 'Sign-up Failed',
+                    description: authError,
+                });
+            }
+        }
+    }, [authError, isSubmitting, toast]);
+
 
   if (authLoading && !isSubmitting) {
       return (
@@ -86,13 +99,8 @@ export default function CompleteProfileForm() {
             className: 'bg-primary text-primary-foreground'
         });
         router.push('/');
-    } else {
-        toast({
-            variant: 'destructive',
-            title: 'Sign-up Failed',
-            description: authError || 'Could not create your account. Please try again.'
-        });
     }
+    // Error handling is now managed by the useEffect hook or redirects in useAuth
     setIsSubmitting(false);
   };
 
