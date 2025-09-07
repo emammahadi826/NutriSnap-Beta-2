@@ -36,8 +36,7 @@ import { ReportPage } from './report/report-page';
 
 const AnalyticsIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor" {...props}>
-        <path d="M45.27 44.87H1.73V4.13a1 1 0 0 1 2 0v38.74h41.54a1 1 0 0 1 0 2z"/>
-        <path d="M15.53 41.42H5.07v-29.6h10.46zm-8.46-2h6.46v-25.6H7.07zM28.21 41.42H17.75V19.67h10.46zm-8.46-2h6.46V21.67h-6.46zM40.9 41.42H30.44V28.63H40.9zm-8.46-2h6.46v-8.79h-6.46z"/>
+        <path d="M5.67 36.68a4.23 4.23 0 1 1 4.22-4.22 4.24 4.24 0 0 1-4.22 4.22zm0-6.46a2.23 2.23 0 1 0 2.22 2.24 2.24 2.24 0 0 0-2.22-2.24z"/><path d="M6.77 30.42A1 1 0 0 1 6 28.85l8.09-11.65a1 1 0 0 1 1.39-.2 1 1 0 0 1 .25 1.39L7.59 30a1 1 0 0 1-.82.42z"/><path d="M17.37 19.18A4.23 4.23 0 1 1 21.6 15a4.23 4.23 0 0 1-4.23 4.18zm0-6.45A2.23 2.23 0 1 0 19.6 15a2.23 2.23 0 0 0-2.23-2.27z"/><path d="M26.49 27.27a1 1 0 0 1-.77-.36l-7.27-8.66a1 1 0 0 1 .12-1.41A1 1 0 0 1 20 17l7.27 8.65a1 1 0 0 1-.76 1.65z"/><path d="M29.07 32.42a4.23 4.23 0 1 1 4.23-4.22 4.22 4.22 0 0 1-4.23 4.22zm0-6.45a2.23 2.23 0 1 0 2.23 2.23 2.22 2.22 0 0 0-2.23-2.2z"/><path d="M39.13 33.62a1.15 1.15 0 0 1-.35-.07l-7.28-2.78a1 1 0 0 1-.58-1.29 1 1 0 0 1 1.29-.58l7.28 2.78a1 1 0 0 1-.36 1.94z"/><path d="M42.34 37.27A4.23 4.23 0 1 1 46.56 33a4.23 4.23 0 0 1-4.22 4.27zm0-6.45A2.23 2.23 0 1 0 44.56 33a2.23 2.23 0 0 0-2.22-2.18z"/>
     </svg>
 );
 
@@ -120,7 +119,7 @@ export function NutriSnapApp() {
                           {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                         </AvatarFallback>
                       </Avatar>
-                      <div className={cn("flex-1 flex items-center justify-between", state === 'collapsed' && 'hidden')}>
+                      <div className={cn("flex-1 flex items-center", state === 'collapsed' && 'hidden')}>
                           <span className="truncate ml-1">{userProfile?.displayName || user.email}</span>
                           <ChevronUp className="ml-auto h-4 w-4" />
                       </div>
