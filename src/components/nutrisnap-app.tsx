@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon, FileText } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -33,6 +33,16 @@ import { MealLogDialog } from './meal-log-dialog';
 import { SettingsPage } from '@/components/settings/settings-page';
 import { ClientOnly } from './client-only';
 import { ReportPage } from './report/report-page';
+
+const AnalyticsIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
+        <path d="M4.5 15.5V10.75C4.5 10.4572 4.24279 10.2 3.95 10.2C3.65721 10.2 3.4 10.4572 3.4 10.75V15.5C3.4 16.9652 4.53482 18.1 6 18.1H20C20.3444 18.1 20.6 17.8444 20.6 17.5C20.6 17.1556 20.3444 16.9 20 16.9H6C5.17157 16.9 4.5 16.2284 4.5 15.5Z" />
+        <path d="M7.6 16.9V12.15C7.6 11.8572 7.34279 11.6 7.05 11.6C6.75721 11.6 6.5 11.8572 6.5 12.15V16.9H7.6Z" />
+        <path d="M12.1 16.9V7.95C12.1 7.65721 11.8428 7.4 11.55 7.4C11.2572 7.4 11 7.65721 11 7.95V16.9H12.1Z" />
+        <path d="M16.6 16.9V10.2C16.6 9.90721 16.3428 9.65 16.05 9.65C15.7572 9.65 15.5 9.90721 15.5 10.2V16.9H16.6Z" />
+        <path d="M19.1648 4.43555C19.4939 4.10649 20.0356 4.10649 20.3647 4.43555L22.0647 6.13555C22.3938 6.4646 22.3938 7.00633 22.0647 7.33539C21.7357 7.66444 21.1939 7.66444 20.8649 7.33539L19.55 6.0205L15.3852 10.1853C15.0561 10.5144 14.5144 10.5144 14.1854 10.1853C13.8563 9.85627 13.8563 9.31454 14.1854 8.98549L18.3501 4.8207L17.0353 3.50587C16.7062 3.17681 16.7062 2.63508 17.0353 2.30603C17.3643 1.97697 17.9061 1.97697 18.2351 2.30603L19.1648 3.23567V3.23567L19.55 3.6205L19.1648 4.43555Z" />
+    </svg>
+);
 
 
 export function NutriSnapApp() {
@@ -80,7 +90,7 @@ export function NutriSnapApp() {
             </SidebarMenuItem>
             <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => handleMenuItemClick('report')} isActive={activePage === 'report'} variant={'outline'} size="lg" className="h-12">
-                    <FileText className="h-6 w-6"/>
+                    <AnalyticsIcon className="h-6 w-6"/>
                     <span className={cn(state === 'collapsed' && 'hidden')}>Report</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
@@ -172,7 +182,7 @@ export function NutriSnapApp() {
                 </SidebarMenuItem>
                  <SidebarMenuItem>
                     <SidebarMenuButton onClick={() => handleMenuItemClick('report')} isActive={activePage === 'report'} variant={'outline'} size="lg" className="h-12">
-                        <FileText className="h-6 w-6"/>
+                        <AnalyticsIcon className="h-6 w-6"/>
                         <span className="truncate">Report</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -195,15 +205,17 @@ export function NutriSnapApp() {
                       {user ? (
                           <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
-                              <Avatar className="h-7 w-7 rounded-lg">
+                              <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2", "justify-start")}>
+                              <Avatar className="h-8 w-8 rounded-lg">
                                   <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                                   <AvatarFallback className="rounded-lg">
                                   {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                                   </AvatarFallback>
                               </Avatar>
-                              <span className="truncate">{userProfile?.displayName || user.email}</span>
-                              <ChevronUp className="ml-auto h-4 w-4" />
+                              <div className={cn("flex-1 flex items-center justify-between")}>
+                                  <span className="truncate ml-1">{userProfile?.displayName || user.email}</span>
+                                  <ChevronUp className="ml-auto h-4 w-4" />
+                              </div>
                               </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
