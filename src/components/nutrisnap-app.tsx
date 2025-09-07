@@ -268,7 +268,7 @@ export function NutriSnapApp() {
           <AppSidebar />
            <main className="flex-1 flex flex-col">
             
-            {activePage !== 'chat' && (
+            {activePage !== 'chat' && activePage !== 'report' && (
                  <header className="flex h-[69px] items-center px-4 border-b">
                     <SidebarTrigger />
                     <div className="ml-auto flex items-center gap-2">
@@ -315,7 +315,7 @@ export function NutriSnapApp() {
                 </div>
             ) : (
               <>
-                <div className={cn("overflow-auto", activePage !== 'chat' ? "p-4 md:p-8" : "h-[calc(100vh-0px)]")}>
+                <div className={cn("overflow-auto", activePage !== 'chat' ? "p-4 md:p-8" : "h-full")}>
                   {renderActivePage()}
                 </div>
               </>
@@ -325,5 +325,3 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
-
-    
