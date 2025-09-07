@@ -88,9 +88,9 @@ export function NutriSnapApp() {
         </SidebarContent>
         <SidebarFooter>
           <ClientOnly>
-            <div className={cn("flex flex-col gap-4", state === 'collapsed' && 'hidden')}>
+            <div className={cn("flex flex-col gap-4", state === 'collapsed' && 'p-2 items-center')}>
               {isGuest && (
-                <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
+                <div className={cn("p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border", state === 'collapsed' && 'hidden')}>
                     <div className="text-center text-sm mb-2">
                         <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
                         <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
@@ -99,24 +99,29 @@ export function NutriSnapApp() {
                 </div>
               )}
               
-              <SidebarSeparator />
+              <div className={cn(state === 'collapsed' ? 'hidden' : 'block')}>
+                  <SidebarSeparator />
+              </div>
 
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
-                      <Avatar className="h-7 w-7 rounded-lg">
+                    <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2", state === 'expanded' ? 'justify-start' : 'justify-center')}>
+                      <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                        <AvatarFallback>
+                        <AvatarFallback className="rounded-lg">
                           {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="truncate">{userProfile?.displayName || user.email}</span>
-                      <ChevronUp className="ml-auto h-4 w-4" />
+                      <div className={cn("flex-1 flex items-center justify-between", state === 'collapsed' && 'hidden')}>
+                          <span className="truncate ml-1">{userProfile?.displayName || user.email}</span>
+                          <ChevronUp className="ml-auto h-4 w-4" />
+                      </div>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     side="top"
+                    align={state === 'expanded' ? 'end' : 'center'}
                     className="w-[--radix-popper-anchor-width]"
                   >
                     <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
@@ -130,10 +135,10 @@ export function NutriSnapApp() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button asChild variant="outline" className="w-full justify-center text-base h-12">
+                <Button asChild variant="outline" className={cn("w-full justify-center text-base h-12", state === 'collapsed' && 'h-10 w-10 p-0')}>
                   <Link href="/login">
-                    <LogIn className="h-5 w-5 mr-2" />
-                    <span className="truncate">Login / Sign Up</span>
+                    <LogIn className="h-5 w-5" />
+                    <span className={cn("truncate", state === 'collapsed' && 'hidden')}>Login</span>
                   </Link>
                 </Button>
               )}
@@ -193,7 +198,7 @@ export function NutriSnapApp() {
                               <Button variant="ghost" className="flex items-center justify-start w-full h-12 p-2 gap-2">
                               <Avatar className="h-7 w-7 rounded-lg">
                                   <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                                  <AvatarFallback>
+                                  <AvatarFallback className="rounded-lg">
                                   {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                                   </AvatarFallback>
                               </Avatar>
