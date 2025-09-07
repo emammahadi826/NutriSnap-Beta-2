@@ -151,7 +151,7 @@ export function NutriSnapApp() {
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
-          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
+          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "16rem" } as React.CSSProperties}>
              
             <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
                <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
