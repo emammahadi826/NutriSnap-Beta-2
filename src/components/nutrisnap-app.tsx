@@ -54,8 +54,8 @@ export function NutriSnapApp() {
                 <div className="text-primary font-headline font-bold text-3xl">N</div>
             )}
         </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
+        <SidebarContent className="flex flex-col">
+          <SidebarMenu className="flex-1">
             <SidebarMenuItem>
               <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
                 <Home className="h-6 w-6"/>
@@ -68,8 +68,8 @@ export function NutriSnapApp() {
                     <span className={cn(state === 'collapsed' && 'hidden')}>Chat</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
-                <SidebarMenuButton variant={'ghost'} size="lg" className="h-12 w-full mt-auto">
+            <SidebarMenuItem className="mt-auto">
+                <SidebarMenuButton variant={'outline'} size="lg" className="h-12 w-full">
                     <Settings className="h-6 w-6"/>
                     <span className={cn(state === 'collapsed' && 'hidden', "truncate")}>Settings</span>
                 </SidebarMenuButton>
@@ -135,8 +135,8 @@ export function NutriSnapApp() {
             <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
                <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
             </SidebarHeader>
-            <SidebarContent>
-              <SidebarMenu>
+            <SidebarContent className="flex flex-col">
+              <SidebarMenu className="flex-1">
                 <SidebarMenuItem>
                   <SidebarMenuButton onClick={() => { setActivePage('home'); if (isMobile) setOpenMobile(false); }} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
                     <Home className="h-6 w-6"/>
@@ -149,8 +149,8 @@ export function NutriSnapApp() {
                         <span className="truncate">Chat</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
-                 <SidebarMenuItem>
-                    <SidebarMenuButton variant={'ghost'} size="lg" className="h-12 w-full mt-auto">
+                 <SidebarMenuItem className="mt-auto">
+                    <SidebarMenuButton variant={'outline'} size="lg" className="h-12 w-full">
                         <Settings className="h-6 w-6"/>
                         <span className="truncate">Settings</span>
                     </SidebarMenuButton>
