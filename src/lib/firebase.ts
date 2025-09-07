@@ -8,12 +8,12 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCvN0lANt903JVyT_3HCs_NI2nV4I6af6I",
-  authDomain: "nutrisnap-vdek6.firebaseapp.com",
-  projectId: "nutrisnap-vdek6",
-  storageBucket: "nutrisnap-vdek6.firebasestorage.app",
-  messagingSenderId: "1033925483096",
-  appId: "1:1033925483096:web:d2a77afc87361216bfc82d"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
