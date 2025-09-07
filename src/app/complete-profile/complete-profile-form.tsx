@@ -77,15 +77,12 @@ export default function CompleteProfileForm() {
 
     setIsSubmitting(true);
     
-    // Convert height from feet to cm if provided
-    const heightInCm = height ? Number(height) * 30.48 : undefined;
-
     const profileData: UserProfile = {
         displayName: name,
         gender: gender,
         age: Number(age),
         weight: weight ? Number(weight) : undefined,
-        height: heightInCm,
+        height: height ? Number(height) : undefined,
     };
 
     const success = await signUpAndCreateProfile(email, password, profileData);
@@ -158,16 +155,18 @@ export default function CompleteProfileForm() {
                     placeholder="e.g., 70"
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
+                    inputMode="decimal"
                 />
             </div>
             <div className="space-y-2">
-                <Label htmlFor="height">Height (ft)</Label>
+                <Label htmlFor="height">Height (cm)</Label>
                 <Input
                     id="height"
                     type="number"
-                    placeholder="e.g., 5.9"
+                    placeholder="e.g., 175"
                     value={height}
                     onChange={(e) => setHeight(e.target.value)}
+                    inputMode="decimal"
                 />
             </div>
 
