@@ -69,9 +69,9 @@ export function NutriSnapApp() {
                 </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem className="mt-auto">
-                <SidebarMenuButton variant={'outline'} size="lg" className="h-12 w-full">
+                <SidebarMenuButton variant={'outline'} size="lg" className="h-12">
                     <Settings className="h-6 w-6"/>
-                    <span className={cn(state === 'collapsed' && 'hidden', "truncate")}>Settings</span>
+                    <span className={cn(state === 'collapsed' && 'hidden')}>Settings</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
