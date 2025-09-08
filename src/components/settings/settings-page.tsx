@@ -4,7 +4,8 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Link as LinkIcon, ChevronRight } from "lucide-react";
+import { Separator } from "../ui/separator";
 
 export function SettingsPage() {
     const { user } = useAuth();
@@ -21,13 +22,26 @@ export function SettingsPage() {
     }
 
     return (
-        <div className="flex items-center justify-between p-4 rounded-lg bg-background">
-            <Label htmlFor="theme-switch" className="flex items-center gap-3">
-                <Sun className="h-5 w-5" />
-                <span className="font-semibold">Light / Dark Mode</span>
-                <Moon className="h-5 w-5" />
-            </Label>
-            <Switch id="theme-switch" />
+        <div className="space-y-4">
+            <div className="p-4 rounded-lg bg-background border">
+                 <div className="flex items-center justify-between">
+                    <Label htmlFor="theme-switch" className="flex items-center gap-3 cursor-pointer">
+                        <Sun className="h-5 w-5" />
+                        <span className="font-semibold">Light / Dark Mode</span>
+                        <Moon className="h-5 w-5" />
+                    </Label>
+                    <Switch id="theme-switch" />
+                </div>
+            </div>
+            <div className="p-4 rounded-lg bg-background border">
+                 <button className="flex items-center justify-between w-full">
+                    <div className="flex items-center gap-3">
+                        <LinkIcon className="h-5 w-5" />
+                        <span className="font-semibold">Link device</span>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                </button>
+            </div>
         </div>
     );
 }
