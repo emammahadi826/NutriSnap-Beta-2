@@ -31,10 +31,9 @@ export interface DailySummary {
 }
 
 export interface UserProfile {
-  uid?: string;
   displayName: string;
-  gender: 'male' | 'female' | 'other';
-  age: number;
+  gender: 'male' | 'female' | 'other' | null;
+  age: number | null;
   weight?: number; // in kg
   height?: number; // in cm
 }

@@ -16,7 +16,8 @@ import {
   updateProfile as updateFirebaseProfile,
   User,
   GoogleAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
 } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -83,9 +84,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       setLoading(false);
     });
+    
+    // Handle redirect result
+    const handleRedirect = async () => {
+        try {
+            const result = await getRedirectResult(auth);
+            if (result) {
+                const user = result.user;
+                const userDocRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(userDocRef);
+
+                if (!docSnap.exists()) {
+                    const newUserProfile: UserProfile = {
+                      displayName: user.displayName || '',
+                      age: null,
+                      gender: null,
+                    };
+                    await setDoc(userDocRef, newUserProfile, { merge: true });
+                }
+                router.push('/');
+            }
+        } catch (error: any) {
+            console.error("Google sign-in redirect error:", error);
+            setError(error.message);
+            toast({ variant: 'destructive', title: 'Google Sign-In Failed', description: error.message });
+        }
+    }
+    handleRedirect();
 
     return () => unsubscribe();
-  }, [fetchUserProfile, router]);
+  }, [fetchUserProfile, router, toast]);
 
   const signUpAndCreateProfile = async (email: string, pass: string, profileData: UserProfile) => {
     setLoading(true);
@@ -176,43 +204,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
     try {
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      // Check if user profile already exists
-      const userDocRef = doc(db, "users", user.uid);
-      const docSnap = await getDoc(userDocRef);
-
-      if (!docSnap.exists()) {
-        // Create a new profile for new Google users
-        const newUserProfile: UserProfile = {
-          uid: user.uid,
-          email: user.email || '',
-          displayName: user.displayName || '',
-          // Initialize other fields as needed
-          age: null,
-          gender: null,
-          weight: null,
-          height: null,
-          activityLevel: null,
-          dietaryGoals: null,
-        };
-        await setDoc(userDocRef, newUserProfile);
-        setUserProfile(newUserProfile);
-      } else {
-        setUserProfile(docSnap.data() as UserProfile);
-      }
-
-      setUser(user);
-      router.push('/'); // Redirect to home on successful login
+      await signInWithRedirect(auth, provider);
+      // The redirect will be handled by the useEffect hook
       return true;
     } catch (error: any) {
       console.error("Google sign-in error:", error);
       setError(error.message);
       toast({ variant: 'destructive', title: 'Google Sign-In Failed', description: error.message });
-      return false;
-    } finally {
       setLoading(false);
+      return false;
     }
   };
 
