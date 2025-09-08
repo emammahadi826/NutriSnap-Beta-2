@@ -41,13 +41,13 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
 
-    --sidebar-background: hsl(var(--background));
+    --sidebar-background: hsl(60 50% 98%);
     --sidebar-foreground: hsl(var(--foreground));
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
-    --sidebar-accent: hsl(var(--secondary));
-    --sidebar-accent-foreground: hsl(var(--secondary-foreground));
-    --sidebar-border: hsl(var(--border));
+    --sidebar-accent: hsl(var(--muted));
+    --sidebar-accent-foreground: hsl(var(--foreground));
+    --sidebar-border: hsl(var(--input));
     --sidebar-ring: hsl(var(--ring));
   }
 
