@@ -26,7 +26,7 @@ export function ProfilePage() {
     }
 
     return (
-        <div className="flex justify-between items-center w-full">
+        <div className="flex justify-between items-center">
             <div className="flex items-center gap-6">
                 <Avatar className="h-20 w-20 border-2 border-primary rounded-full">
                     <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
@@ -47,7 +47,7 @@ export function ProfilePage() {
 
 function ProfilePageSkeleton() {
     return (
-         <div className="flex items-center justify-between w-full">
+         <div className="flex items-center justify-between">
             <div className="flex items-center gap-6">
                 <Skeleton className="h-20 w-20 rounded-full" />
                 <div className="space-y-2">
