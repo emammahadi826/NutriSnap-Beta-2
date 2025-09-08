@@ -8,6 +8,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Utensils } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface NutritionChartProps {
   meals: Meal[];
@@ -72,6 +73,7 @@ const CustomLegend = (props: any) => {
 
 export function NutritionChart({ meals }: NutritionChartProps) {
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const isMobile = useIsMobile();
 
   const { chartData, summaryData, totalDays } = useMemo(() => {
     if (meals.length === 0) {
@@ -129,6 +131,13 @@ export function NutritionChart({ meals }: NutritionChartProps) {
   const hasData = chartData.some(d => d.calories > 0 || d.protein > 0 || d.carbs > 0 || d.fat > 0);
   
   const timeSuffix = `in the last ${totalDays} day${totalDays > 1 ? 's' : ''}`;
+  
+  const xAxisFormatter = (tick: string) => {
+    if (isMobile) {
+        return format(new Date(tick), "d");
+    }
+    return tick;
+  };
 
   return (
     <div className="space-y-8">
@@ -188,9 +197,36 @@ export function NutritionChart({ meals }: NutritionChartProps) {
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={chartData}>
                             <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.5}/>
-                            <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={8} />
-                            <YAxis yAxisId="left" orientation="left" stroke="hsl(var(--chart-1))" tickLine={false} axisLine={false} tickMargin={8} unit="kcal" />
-                            <YAxis yAxisId="right" orientation="right" stroke="hsl(var(--chart-2))" tickLine={false} axisLine={false} tickMargin={8} unit="g"/>
+                            <XAxis 
+                                dataKey="date" 
+                                tickLine={false} 
+                                axisLine={false} 
+                                tickMargin={8} 
+                                tickFormatter={xAxisFormatter}
+                                style={{ fontSize: '0.75rem' }} 
+                            />
+                            <YAxis 
+                                yAxisId="left" 
+                                orientation="left" 
+                                stroke="hsl(var(--chart-1))" 
+                                tickLine={false} 
+                                axisLine={false} 
+                                tickMargin={8} 
+                                unit="kcal"
+                                tickCount={isMobile ? 4 : 5}
+                                style={{ fontSize: '0.75rem' }} 
+                            />
+                            <YAxis 
+                                yAxisId="right" 
+                                orientation="right" 
+                                stroke="hsl(var(--chart-2))" 
+                                tickLine={false} 
+                                axisLine={false} 
+                                tickMargin={8} 
+                                unit="g"
+                                tickCount={isMobile ? 4 : 5}
+                                style={{ fontSize: '0.75rem' }} 
+                            />
                             <Tooltip 
                                 cursor={{ fill: 'hsl(var(--accent) / 0.2)' }}
                                 content={<CustomTooltip />}
