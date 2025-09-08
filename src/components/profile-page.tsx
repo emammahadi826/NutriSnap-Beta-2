@@ -26,10 +26,10 @@ export function ProfilePage() {
     }
 
     return (
-        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-            <Avatar className="h-20 w-20 border-2 border-primary rounded-full">
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+            <Avatar className="h-20 w-20 border-2 border-primary">
                 <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                <AvatarFallback className="text-3xl rounded-full">
+                <AvatarFallback className="text-3xl">
                     {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <User />}
                 </AvatarFallback>
             </Avatar>
@@ -44,9 +44,9 @@ export function ProfilePage() {
 
 function ProfilePageSkeleton() {
     return (
-         <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
             <Skeleton className="h-20 w-20 rounded-full" />
-            <div className="space-y-2 text-center md:text-left">
+            <div className="space-y-2">
                 <Skeleton className="h-7 w-40" />
                 <Skeleton className="h-5 w-56" />
             </div>
