@@ -6,11 +6,19 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Sun, Moon, Link as LinkIcon, ChevronRight } from "lucide-react";
 import { Separator } from "../ui/separator";
+import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
 
 export function SettingsPage() {
     const { user } = useAuth();
+    const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
 
-     if (!user) {
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!user) {
         return (
              <div className="flex flex-col items-center justify-center text-center p-8">
                 <h2 className="text-xl font-semibold">Please log in</h2>
@@ -19,6 +27,11 @@ export function SettingsPage() {
                 </p>
             </div>
         )
+    }
+
+    if (!mounted) {
+        // Prevent hydration mismatch by not rendering the switch until the client has mounted
+        return null;
     }
 
     return (
@@ -30,7 +43,11 @@ export function SettingsPage() {
                         <span className="font-semibold">Light / Dark Mode</span>
                         <Moon className="h-5 w-5" />
                     </Label>
-                    <Switch id="theme-switch" />
+                    <Switch
+                        id="theme-switch"
+                        checked={theme === 'dark'}
+                        onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                    />
                 </div>
             </div>
             <div className="p-4 rounded-lg bg-background border">
