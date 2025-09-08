@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 
 export default function CompleteProfileForm() {
-  const { signUpAndCreateProfile, loading: authLoading, error: authError } = useAuth();
+  const { signUpAndCreateProfile, loading: authLoading, error: authError, user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -32,18 +32,16 @@ export default function CompleteProfileForm() {
   useEffect(() => {
     const emailParam = searchParams.get('email');
     const passwordParam = searchParams.get('password');
-    if (!emailParam || !passwordParam) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Sign-up information is missing. Please start over.',
-      });
-      router.push('/login');
-    } else {
+    // Only set credentials if they exist, don't redirect if they don't
+    if (emailParam && passwordParam) {
       setEmail(emailParam);
       setPassword(passwordParam);
+    } else if (!user) {
+        // If there are no params and the user is not logged in, they shouldn't be here.
+        // useAuth will handle redirects for logged in users without profiles.
+        router.push('/login');
     }
-  }, [searchParams, router, toast]);
+  }, [searchParams, router, user]);
   
     useEffect(() => {
         if (authError && isSubmitting) {
@@ -92,6 +90,15 @@ export default function CompleteProfileForm() {
         return;
     }
 
+    if (!email || !password) {
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Sign-up information is missing. Please start over from the sign-up page.',
+        });
+        router.push('/login');
+        return;
+    }
 
     setIsSubmitting(true);
     

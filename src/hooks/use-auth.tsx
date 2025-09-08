@@ -22,7 +22,7 @@ import {
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import type { UserProfile } from "@/lib/types";
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useToast } from "./use-toast";
 
 
@@ -56,6 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
   const { toast } = useToast();
 
   const fetchUserProfile = useCallback(async (user: User) => {
@@ -75,7 +76,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(user);
         const profile = await fetchUserProfile(user);
         setUserProfile(profile);
-         if (!profile?.displayName && window.location.pathname !== '/complete-profile' && window.location.pathname !== '/login') {
+         const isProfileIncomplete = !profile?.displayName || !profile.age || !profile.gender;
+         const isAuthPage = pathname === '/login' || pathname === '/complete-profile';
+
+         if (isProfileIncomplete && !isAuthPage) {
            router.push('/complete-profile');
          }
       } else {
@@ -113,7 +117,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     handleRedirect();
 
     return () => unsubscribe();
-  }, [fetchUserProfile, router, toast]);
+  }, [fetchUserProfile, router, toast, pathname]);
 
   const signUpAndCreateProfile = async (email: string, pass: string, profileData: UserProfile) => {
     setLoading(true);
