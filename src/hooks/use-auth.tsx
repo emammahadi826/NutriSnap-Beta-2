@@ -15,6 +15,8 @@ import {
   signOut,
   updateProfile as updateFirebaseProfile,
   User,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -32,6 +34,7 @@ interface AuthContextType {
   logIn: (email: string, pass: string) => Promise<boolean>;
   logOut: () => void;
   updateUserProfile: (profileData: Partial<UserProfile>) => Promise<boolean>;
+  signInWithGoogle: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -43,6 +46,7 @@ const AuthContext = createContext<AuthContextType>({
   logIn: async () => false,
   logOut: () => {},
   updateUserProfile: async () => false,
+  signInWithGoogle: async () => false,
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -167,6 +171,51 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Check if user profile already exists
+      const userDocRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(userDocRef);
+
+      if (!docSnap.exists()) {
+        // Create a new profile for new Google users
+        const newUserProfile: UserProfile = {
+          uid: user.uid,
+          email: user.email || '',
+          displayName: user.displayName || '',
+          // Initialize other fields as needed
+          age: null,
+          gender: null,
+          weight: null,
+          height: null,
+          activityLevel: null,
+          dietaryGoals: null,
+        };
+        await setDoc(userDocRef, newUserProfile);
+        setUserProfile(newUserProfile);
+      } else {
+        setUserProfile(docSnap.data() as UserProfile);
+      }
+
+      setUser(user);
+      router.push('/'); // Redirect to home on successful login
+      return true;
+    } catch (error: any) {
+      console.error("Google sign-in error:", error);
+      setError(error.message);
+      toast({ variant: 'destructive', title: 'Google Sign-In Failed', description: error.message });
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const value = {
     user,
@@ -177,6 +226,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     logIn,
     logOut,
     updateUserProfile,
+    signInWithGoogle,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

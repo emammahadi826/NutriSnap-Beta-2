@@ -25,7 +25,7 @@ export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { logIn, loading, error } = useAuth();
+  const { logIn, signInWithGoogle, loading, error } = useAuth();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -161,7 +161,18 @@ export default function Login() {
               </div>
             </div>
 
-            <Button variant="outline" className="w-full" type="button" disabled={loading}>
+            <Button 
+              variant="outline" 
+              className="w-full" 
+              type="button" 
+              disabled={loading}
+              onClick={async () => {
+                const success = await signInWithGoogle();
+                if (success) {
+                  router.push('/');
+                } 
+              }}
+            >
                 <GoogleIcon className="mr-2 h-4 w-4" />
                 Sign in with Google
             </Button>
