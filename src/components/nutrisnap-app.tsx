@@ -72,7 +72,7 @@ export function NutriSnapApp() {
 
     const sidebarContent = (
       <>
-        <SidebarHeader className="p-4 flex items-center justify-center h-[69px]">
+        <SidebarHeader className="p-4 flex items-center justify-center h-20">
             {state === 'expanded' ? (
                 <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
             ) : (
@@ -163,7 +163,7 @@ export function NutriSnapApp() {
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
           <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "16rem" } as React.CSSProperties}>
               <SheetTitle>Sidebar Menu</SheetTitle>
-              <SidebarHeader className="p-4 flex items-center justify-center h-[69px] border-b">
+              <SidebarHeader className="p-4 flex items-center justify-center h-20 border-b">
                 <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
               </SidebarHeader>
               <SidebarContent className="flex flex-col">
@@ -267,7 +267,7 @@ export function NutriSnapApp() {
         case 'settings':
             return (
                 <React.Suspense fallback={<SettingsPageSkeleton />}>
-                    <SettingsPageDynamic onBack={() => setActivePage('home')} />
+                    <SettingsPageDynamic />
                 </React.Suspense>
             );
         case 'report':
@@ -313,7 +313,7 @@ export function NutriSnapApp() {
          <div className="flex h-screen bg-background">
           <AppSidebar />
            <main className="flex-1 flex flex-col">
-            <header className="flex h-[69px] items-center px-4 border-b">
+            <header className="flex h-20 items-center px-4 border-b">
                 <SidebarTrigger />
                 <div className="flex items-center gap-2 ml-auto">
                     {activePage === 'home' && (
@@ -368,3 +368,5 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
+    
