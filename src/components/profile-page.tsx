@@ -3,7 +3,7 @@
 
 import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User } from "lucide-react";
+import { User, QrCode } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 import { cn } from "@/lib/utils";
 
@@ -26,17 +26,20 @@ export function ProfilePage() {
     }
 
     return (
-        <div className="flex items-center gap-6">
-            <Avatar className="h-20 w-20 border-2 border-primary rounded-full">
-                <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                <AvatarFallback className="text-3xl">
-                    {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <User />}
-                </AvatarFallback>
-            </Avatar>
-            <div className="text-left">
-                <h2 className="text-2xl font-bold">{userProfile?.displayName || 'User'}</h2>
-                <p className="text-muted-foreground">{user.email}</p>
+        <div className="flex justify-between items-center w-full">
+            <div className="flex items-center gap-6">
+                <Avatar className="h-20 w-20 border-2 border-primary rounded-full">
+                    <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
+                    <AvatarFallback className="text-3xl">
+                        {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <User />}
+                    </AvatarFallback>
+                </Avatar>
+                <div className="text-left">
+                    <h2 className="text-2xl font-bold">{userProfile?.displayName || 'User'}</h2>
+                    <p className="text-muted-foreground">{user.email}</p>
+                </div>
             </div>
+            <QrCode className="h-8 w-8 text-muted-foreground" />
         </div>
     );
 }
@@ -44,12 +47,15 @@ export function ProfilePage() {
 
 function ProfilePageSkeleton() {
     return (
-         <div className="flex items-center gap-6">
-            <Skeleton className="h-20 w-20 rounded-full" />
-            <div className="space-y-2">
-                <Skeleton className="h-7 w-40" />
-                <Skeleton className="h-5 w-56" />
+         <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-6">
+                <Skeleton className="h-20 w-20 rounded-full" />
+                <div className="space-y-2">
+                    <Skeleton className="h-7 w-40" />
+                    <Skeleton className="h-5 w-56" />
+                </div>
             </div>
+            <Skeleton className="h-8 w-8" />
         </div>
     )
 }
