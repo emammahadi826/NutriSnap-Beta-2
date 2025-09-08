@@ -1,4 +1,5 @@
 
+
 export interface Food {
   name: string;
   calories: number;
@@ -30,6 +31,7 @@ export interface DailySummary {
 }
 
 export interface UserProfile {
+  uid?: string;
   displayName: string;
   gender: 'male' | 'female' | 'other';
   age: number;
