@@ -1,12 +1,11 @@
 
 "use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { Meal } from '@/lib/types';
-import { subDays, format, isWithinInterval, startOfDay, endOfDay } from 'date-fns';
+import { differenceInDays, format, isWithinInterval, startOfDay, endOfDay, eachDayOfInterval, min, max } from 'date-fns';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from '@/components/chart-wrapper';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Utensils } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -21,13 +20,6 @@ type ChartDataPoint = {
   carbs: number;
   fat: number;
 };
-
-type SummaryData = {
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-}
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -72,28 +64,32 @@ const CustomLegend = (props: any) => {
 }
 
 export function NutritionChart({ meals }: NutritionChartProps) {
-  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
   const isMobile = useIsMobile();
 
-  const { chartData, summaryData } = useMemo(() => {
-    const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
-    const endDate = endOfDay(new Date());
-    const startDate = startOfDay(subDays(endDate, days - 1));
-
-    const filteredMeals = meals.filter(meal => 
-        isWithinInterval(new Date(meal.timestamp), { start: startDate, end: endDate })
-    );
+  const { chartData, summaryData, timeSuffix } = useMemo(() => {
+    if (meals.length === 0) {
+        return { chartData: [], summaryData: { calories: 0, protein: 0, carbs: 0, fat: 0 }, timeSuffix: 'overall' };
+    }
+    
+    const mealTimestamps = meals.map(m => new Date(m.timestamp));
+    const firstDate = startOfDay(min(mealTimestamps));
+    const lastDate = endOfDay(max(mealTimestamps));
+    
+    const daysInRange = differenceInDays(lastDate, firstDate) + 1;
+    const interval = { start: firstDate, end: lastDate };
+    
+    const allDates = eachDayOfInterval(interval);
 
     const dateMap = new Map<string, ChartDataPoint>();
 
     // Initialize map with all dates in the range
-    for (let i = 0; i < days; i++) {
-        const date = format(subDays(endDate, i), 'MMM d');
-        dateMap.set(date, { date, calories: 0, protein: 0, carbs: 0, fat: 0 });
-    }
+    allDates.forEach(date => {
+        const dateKey = format(date, 'MMM d');
+        dateMap.set(dateKey, { date: dateKey, calories: 0, protein: 0, carbs: 0, fat: 0 });
+    });
 
     // Populate with meal data
-    filteredMeals.forEach(meal => {
+    meals.forEach(meal => {
       const dateKey = format(new Date(meal.timestamp), 'MMM d');
       let dayData = dateMap.get(dateKey);
       if (dayData) {
@@ -107,7 +103,7 @@ export function NutritionChart({ meals }: NutritionChartProps) {
       }
     });
 
-    const finalChartData = Array.from(dateMap.values()).reverse();
+    const finalChartData = Array.from(dateMap.values());
     
     const totalSummary = finalChartData.reduce((acc, day) => {
         acc.calories += day.calories;
@@ -117,16 +113,17 @@ export function NutritionChart({ meals }: NutritionChartProps) {
         return acc;
     }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
 
-    return { chartData: finalChartData, summaryData: totalSummary };
-  }, [meals, timeRange]);
+    return { 
+        chartData: finalChartData, 
+        summaryData: totalSummary,
+        timeSuffix: `in the last ${daysInRange} days`
+    };
+  }, [meals]);
   
   const hasData = chartData.some(d => d.calories > 0 || d.protein > 0 || d.carbs > 0 || d.fat > 0);
   
-  const timeSuffix = `in the last ${timeRange === '7d' ? '7' : timeRange === '30d' ? '30' : '90'} days`;
-  
   const xAxisFormatter = (tick: string) => {
     if (isMobile) {
-        if (timeRange === '7d') return format(new Date(tick), "E"); // Mon, Tue
         return format(new Date(tick), "d"); // 1, 2, 3
     }
     return tick;
@@ -182,13 +179,6 @@ export function NutritionChart({ meals }: NutritionChartProps) {
                     <CardTitle>Nutrition Breakdown</CardTitle>
                     <CardDescription>Your daily nutrition summary.</CardDescription>
                 </div>
-                 <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as '7d' | '30d' | '90d')}>
-                    <TabsList>
-                        <TabsTrigger value="7d">7 Days</TabsTrigger>
-                        <TabsTrigger value="30d">30 Days</TabsTrigger>
-                        <TabsTrigger value="90d">90 Days</TabsTrigger>
-                    </TabsList>
-                </Tabs>
             </div>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -204,6 +194,7 @@ export function NutritionChart({ meals }: NutritionChartProps) {
                                 tickMargin={8} 
                                 tickFormatter={xAxisFormatter}
                                 style={{ fontSize: '0.75rem' }} 
+                                interval={'preserveStartEnd'}
                             />
                             <YAxis 
                                 yAxisId="left" 
@@ -251,5 +242,3 @@ export function NutritionChart({ meals }: NutritionChartProps) {
     </div>
   );
 }
-
-    
