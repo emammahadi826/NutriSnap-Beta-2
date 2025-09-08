@@ -129,6 +129,10 @@ export function NutriSnapApp() {
                     className="w-[--radix-popper-anchor-width]"
                   >
                     <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
+                      <UserIcon className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
                       <SettingsIcon className="mr-2 h-4 w-4" />
                       <span>Settings</span>
                     </DropdownMenuItem>
@@ -207,6 +211,10 @@ export function NutriSnapApp() {
                               side="top"
                               className="w-[--radix-popper-anchor-width]"
                           >
+                            <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
+                                  <UserIcon className="mr-2 h-4 w-4" />
+                                  <span>Profile</span>
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
                                   <SettingsIcon className="mr-2 h-4 w-4" />
                                   <span>Settings</span>
