@@ -26,7 +26,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ChatPage } from './chat-page';
 import { cn } from '@/lib/utils';
 import { MealLogDialog } from './meal-log-dialog';
@@ -35,8 +35,12 @@ import { ClientOnly } from './client-only';
 import { ReportPage } from '@/components/report/report-page';
 import { BarChart2 } from 'lucide-react';
 
+const ReportPageDynamic = React.lazy(() => import('@/components/report/report-page').then(module => ({ default: module.ReportPage })));
+const SettingsPageDynamic = React.lazy(() => import('@/components/settings/settings-page').then(module => ({ default: module.SettingsPage })));
+
+
 export function NutriSnapApp() {
-  const { isLoaded, meals, guestMealCount, addMeal } = useMealLogger();
+  const { isLoaded, meals, guestMealCount, addMeal, getTodaysSummary } = useMealLogger();
   const { user, userProfile, logOut, loading: authLoading } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
@@ -245,7 +249,7 @@ export function NutriSnapApp() {
     );
   };
 
-  const summary = useMealLogger().getTodaysSummary();
+  const summary = getTodaysSummary();
   
   const renderActivePage = () => {
     switch (activePage) {
@@ -254,13 +258,47 @@ export function NutriSnapApp() {
         case 'chat':
             return <ChatPage />;
         case 'settings':
-            return <SettingsPage onBack={() => setActivePage('home')} />;
+            return (
+                <React.Suspense fallback={<SettingsPageSkeleton />}>
+                    <SettingsPageDynamic onBack={() => setActivePage('home')} />
+                </React.Suspense>
+            );
         case 'report':
-            return <ReportPage />;
+            return (
+                <React.Suspense fallback={<div className="p-8">Loading report...</div>}>
+                    <ReportPageDynamic meals={meals} />
+                </React.Suspense>
+            );
         default:
             return <Dashboard meals={meals} summary={summary} />;
     }
   }
+
+  function SettingsPageSkeleton() {
+    return (
+        <div className="space-y-8">
+            <div className="space-y-2">
+                <Skeleton className="h-8 w-48" />
+                <Skeleton className="h-6 w-80" />
+            </div>
+             <div className="space-y-2">
+                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-10 w-full max-w-sm" />
+            </div>
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div className="space-y-2">
+                    <Skeleton className="h-6 w-16" />
+                    <Skeleton className="h-10 w-full" />
+                </div>
+                 <div className="space-y-2">
+                    <Skeleton className="h-6 w-16" />
+                    <Skeleton className="h-10 w-full" />
+                </div>
+            </div>
+            <Skeleton className="h-11 w-32" />
+        </div>
+    )
+}
 
 
   return (
@@ -268,49 +306,51 @@ export function NutriSnapApp() {
          <div className="flex h-screen bg-background">
           <AppSidebar />
            <main className="flex-1 flex flex-col">
-            <header className="flex h-[69px] items-center px-4 border-b justify-between">
+            <header className="flex h-[69px] items-center px-4 border-b">
                 <SidebarTrigger />
-                {activePage === 'home' && (
-                    <div className="flex items-center gap-2">
-                        <MealLogDialog
-                            onMealLog={addMeal}
-                            isGuest={isGuest}
-                            guestMealCount={guestMealCount}
-                            trigger={
-                                <Button variant="ghost" size="icon">
-                                    <Upload className="h-5 w-5" />
-                                    <span className="sr-only">Upload Meal</span>
-                                </Button>
-                            }
-                        />
-                        <MealLogDialog
-                            onMealLog={addMeal}
-                            isGuest={isGuest}
-                            guestMealCount={guestMealCount}
-                            startWithCamera={true}
-                            trigger={
-                                <Button variant="ghost" size="icon">
-                                    <Camera className="h-5 w-5" />
-                                    <span className="sr-only">Use Camera</span>
-                                </Button>
-                            }
-                        />
-                    </div>
-                )}
+                <div className="flex items-center gap-2 ml-auto">
+                    {activePage === 'home' && (
+                        <>
+                            <MealLogDialog
+                                onMealLog={addMeal}
+                                isGuest={isGuest}
+                                guestMealCount={guestMealCount}
+                                trigger={
+                                    <Button variant="ghost" size="icon">
+                                        <Upload className="h-5 w-5" />
+                                        <span className="sr-only">Upload Meal</span>
+                                    </Button>
+                                }
+                            />
+                            <MealLogDialog
+                                onMealLog={addMeal}
+                                isGuest={isGuest}
+                                guestMealCount={guestMealCount}
+                                startWithCamera={true}
+                                trigger={
+                                    <Button variant="ghost" size="icon">
+                                        <Camera className="h-5 w-5" />
+                                        <span className="sr-only">Use Camera</span>
+                                    </Button>
+                                }
+                            />
+                        </>
+                    )}
+                 </div>
             </header>
            
 
             {isLoading ? (
                 <div className="flex-1 p-4 md:p-8 overflow-auto">
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+                    <div className="grid gap-4 grid-cols-2 xl:grid-cols-4 mb-8">
                         <Skeleton className="h-32 rounded-lg" />
                         <Skeleton className="h-32 rounded-lg" />
                         <Skeleton className="h-32 rounded-lg" />
                         <Skeleton className="h-32 rounded-lg" />
                     </div>
-                    <div className="grid gap-8 md:grid-cols-5">
-                        <Skeleton className="h-80 rounded-lg md:col-span-3" />
-                        <Skeleton className="h-80 rounded-lg md:col-span-2" />
+                    <div className="grid gap-8 lg:grid-cols-5">
+                        <Skeleton className="h-80 rounded-lg lg:col-span-3" />
+                        <Skeleton className="h-80 rounded-lg lg:col-span-2" />
                     </div>
                 </div>
             ) : (
