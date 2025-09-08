@@ -26,14 +26,14 @@ export function ProfilePage() {
     }
 
     return (
-        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
-            <Avatar className="h-20 w-20 border-2 border-primary">
+        <div className="flex items-center gap-6">
+            <Avatar className="h-20 w-20 border-2 border-primary rounded-full">
                 <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                 <AvatarFallback className="text-3xl">
                     {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <User />}
                 </AvatarFallback>
             </Avatar>
-            <div className="text-center md:text-left">
+            <div className="text-left">
                 <h2 className="text-2xl font-bold">{userProfile?.displayName || 'User'}</h2>
                 <p className="text-muted-foreground">{user.email}</p>
             </div>
@@ -44,7 +44,7 @@ export function ProfilePage() {
 
 function ProfilePageSkeleton() {
     return (
-         <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+         <div className="flex items-center gap-6">
             <Skeleton className="h-20 w-20 rounded-full" />
             <div className="space-y-2">
                 <Skeleton className="h-7 w-40" />
