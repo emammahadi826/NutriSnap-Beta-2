@@ -45,8 +45,8 @@
     --sidebar-foreground: 20 14% 10%;
     --sidebar-primary: hsl(var(--primary));
     --sidebar-primary-foreground: hsl(var(--primary-foreground));
-    --sidebar-accent: 60 40% 93%;
-    --sidebar-accent-foreground: 20 14% 10%;
+    --sidebar-accent: hsl(var(--secondary));
+    --sidebar-accent-foreground: hsl(var(--secondary-foreground));
     --sidebar-border: 60 10% 90%;
     --sidebar-ring: hsl(var(--ring));
   }
