@@ -40,12 +40,11 @@ const SettingsPageDynamic = React.lazy(() => import('@/components/settings/setti
 
 
 export function NutriSnapApp() {
-  const { isLoaded, meals, guestMealCount, addMeal, getTodaysSummary } = useMealLogger();
+  const { isLoaded, meals, addMeal, getTodaysSummary } = useMealLogger();
   const { user, userProfile, logOut, loading: authLoading } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
   const [activePage, setActivePage] = useState<'home' | 'chat' | 'settings' | 'report'>('home');
-  const GUEST_LIMIT = 3;
   
   const isLoading = authLoading || !isLoaded;
 
@@ -64,7 +63,7 @@ export function NutriSnapApp() {
             return userProfile.displayName;
         }
         if (user?.email) {
-            return user.email.length > 15 ? `${user.email.substring(0, 15)}...` : user.email;
+            return user.email.length > 10 ? `${user.email.substring(0, 10)}...` : user.email;
         }
         return 'User';
     };
@@ -103,15 +102,6 @@ export function NutriSnapApp() {
         <SidebarFooter>
           <ClientOnly>
             <div className={cn("flex flex-col gap-4", state === 'collapsed' && 'p-2 items-center')}>
-              {isGuest && (
-                <div className={cn("p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border", state === 'collapsed' && 'hidden')}>
-                    <div className="text-center text-sm mb-2">
-                        <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
-                        <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                    </div>
-                  <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
-                </div>
-              )}
               
               <div className={cn(state === 'collapsed' ? 'hidden' : 'block')}>
                   <SidebarSeparator />
@@ -195,15 +185,6 @@ export function NutriSnapApp() {
             <SidebarFooter>
               <ClientOnly>
                   <div className="flex flex-col gap-4">
-                      {isGuest && (
-                          <div className="p-3 rounded-lg bg-sidebar-accent/20 border border-sidebar-border">
-                              <div className="text-center text-sm mb-2">
-                                  <p className="font-bold">{GUEST_LIMIT - guestMealCount} credits left</p>
-                                  <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                              </div>
-                          <Progress value={((GUEST_LIMIT - guestMealCount) / GUEST_LIMIT) * 100} className="h-2 bg-sidebar-accent/20" />
-                          </div>
-                      )}
                       <SidebarSeparator />
 
                       {user ? (
@@ -323,8 +304,6 @@ export function NutriSnapApp() {
                         <>
                             <MealLogDialog
                                 onMealLog={addMeal}
-                                isGuest={isGuest}
-                                guestMealCount={guestMealCount}
                                 trigger={
                                     <Button variant="ghost" size="icon">
                                         <Upload className="h-5 w-5" />
@@ -334,8 +313,6 @@ export function NutriSnapApp() {
                             />
                             <MealLogDialog
                                 onMealLog={addMeal}
-                                isGuest={isGuest}
-                                guestMealCount={guestMealCount}
                                 startWithCamera={true}
                                 trigger={
                                     <Button variant="ghost" size="icon">

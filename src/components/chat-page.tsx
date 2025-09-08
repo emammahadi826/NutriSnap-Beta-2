@@ -31,10 +31,9 @@ export function ChatPage() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { user } = useAuth();
+    const { user, userProfile } = useAuth();
     const scrollAreaRef = useRef<HTMLDivElement>(null);
-    const { addMeal, guestMealCount } = useMealLogger();
-    const isGuest = !user;
+    const { addMeal } = useMealLogger();
 
 
     const handleSendMessage = async (e: React.FormEvent) => {
@@ -47,12 +46,15 @@ setInput('');
         setIsLoading(true);
         
         try {
-             const chatHistory: NutrisnapChatInput['history'] = [...messages, userMessage].map(msg => ({
+            const chatHistory: NutrisnapChatInput['history'] = [...messages, userMessage].map(msg => ({
                 role: msg.role,
                 content: [{ text: msg.content }]
             }));
 
-            const result = await nutrisnapChat({ history: chatHistory });
+            const result = await nutrisnapChat({ 
+                history: chatHistory,
+                userProfile: userProfile 
+            });
             
             const botMessage: Message = { role: 'model', content: result.response };
             setMessages(prev => [...prev, botMessage]);
@@ -116,8 +118,6 @@ setInput('');
                             <DropdownMenuContent side="top" align="start">
                                 <MealLogDialog 
                                     onMealLog={addMeal} 
-                                    isGuest={isGuest} 
-                                    guestMealCount={guestMealCount}
                                     trigger={
                                         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                             <Upload className="mr-2 h-4 w-4" />
@@ -127,8 +127,6 @@ setInput('');
                                 />
                                 <MealLogDialog 
                                     onMealLog={addMeal} 
-                                    isGuest={isGuest} 
-                                    guestMealCount={guestMealCount}
                                     startWithCamera={true}
                                     trigger={
                                         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>

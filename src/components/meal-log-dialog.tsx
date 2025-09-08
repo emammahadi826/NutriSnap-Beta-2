@@ -3,7 +3,7 @@
 
 import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import Image from 'next/image';
-import { Camera, Loader2, Plus, Minus, X, Info, Upload, ArrowLeft } from 'lucide-react';
+import { Camera, Loader2, Plus, Minus, X, Info, Upload, ArrowLeft, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -22,20 +22,20 @@ import { findFood } from '@/lib/nutrition-data';
 import type { Meal, LoggedItem } from '@/lib/types';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from 'next/link';
+import { useAuth } from '@/hooks/use-auth';
 
 interface MealLogDialogProps {
   onMealLog: (meal: Omit<Meal, 'id' | 'timestamp'>) => void;
-  isGuest: boolean;
-  guestMealCount: number;
   trigger?: React.ReactNode;
   startWithCamera?: boolean;
 }
 
 type FoodResult = LoggedItem & { originalName: string; confidence: number };
 
-export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, startWithCamera = false }: MealLogDialogProps) {
+export function MealLogDialog({ onMealLog, trigger, startWithCamera = false }: MealLogDialogProps) {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error' | 'limit'>('upload');
+  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error' | 'auth_required'>('upload');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [results, setResults] = useState<FoodResult[]>([]);
@@ -46,12 +46,10 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
   
-  const GUEST_LIMIT = 3;
-
   const handleDialogOpen = (open: boolean) => {
     if (open) {
-        if (isGuest && guestMealCount >= GUEST_LIMIT) {
-            setView('limit');
+        if (!user) {
+            setView('auth_required');
         } else if(startWithCamera) {
             setView('camera');
         } else {
@@ -143,8 +141,8 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
   }
 
   const handleAnalyze = async () => {
-    if (isGuest && guestMealCount >= GUEST_LIMIT) {
-        setView('limit');
+    if (!user) {
+        setView('auth_required');
         return;
     }
     if (!imageData) {
@@ -228,6 +226,10 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
 
 
   const handleLogMeal = () => {
+    if (!user) {
+        setView('auth_required');
+        return;
+    }
     if (results.length === 0) {
         toast({
             variant: "destructive",
@@ -245,7 +247,7 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
     onMealLog(meal);
     toast({
       title: "Meal Logged!",
-      description: `Your meal has been added to your ${isGuest ? 'guest' : 'daily'} log.`,
+      description: `Your meal has been added to your daily log.`,
       className: "bg-primary text-primary-foreground"
     });
     handleOpenChange(false);
@@ -274,17 +276,17 @@ export function MealLogDialog({ onMealLog, isGuest, guestMealCount, trigger, sta
                  <DialogTitle className="font-headline text-2xl">Log a New Meal</DialogTitle>
               </div>
           </div>
-          {view !== 'limit' && <DialogDescription>
+          {view !== 'auth_required' && <DialogDescription>
             Snap a picture of your meal and let our AI do the rest.
           </DialogDescription>}
         </DialogHeader>
 
-        {view === 'limit' && (
+        {view === 'auth_required' && (
            <div className="flex flex-col items-center justify-center text-center min-h-[20rem] gap-4">
-            <Info className="h-12 w-12 text-primary" />
-            <h3 className="text-xl font-bold">You've reached your guest limit!</h3>
+            <User className="h-12 w-12 text-primary" />
+            <h3 className="text-xl font-bold">Authentication Required</h3>
             <p className="text-muted-foreground">
-                You've logged {GUEST_LIMIT} meals as a guest. To save your progress and log unlimited meals, please create an account.
+                Please log in or create an account to save your meal data securely.
             </p>
             <div className="flex flex-col gap-2 w-full">
                 <Button asChild size="lg"><Link href="/login">Login or Sign Up</Link></Button>
