@@ -2,7 +2,6 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Sun, Moon } from "lucide-react";
@@ -22,23 +21,13 @@ export function SettingsPage() {
     }
 
     return (
-        <div className="space-y-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Appearance</CardTitle>
-                    <CardDescription>Customize the look and feel of the app.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex items-center justify-between p-4 rounded-lg bg-background border">
-                        <Label htmlFor="theme-switch" className="flex items-center gap-3">
-                            <Sun className="h-5 w-5" />
-                            <span className="font-semibold">Light / Dark Mode</span>
-                            <Moon className="h-5 w-5" />
-                        </Label>
-                        <Switch id="theme-switch" />
-                    </div>
-                </CardContent>
-            </Card>
+        <div className="flex items-center justify-between p-4 rounded-lg bg-card border">
+            <Label htmlFor="theme-switch" className="flex items-center gap-3">
+                <Sun className="h-5 w-5" />
+                <span className="font-semibold">Light / Dark Mode</span>
+                <Moon className="h-5 w-5" />
+            </Label>
+            <Switch id="theme-switch" />
         </div>
     );
 }
