@@ -110,7 +110,7 @@ export function ProfilePage() {
         <div className="space-y-8">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-6">
-                    <Avatar className="h-20 w-20">
+                    <Avatar className="h-20 w-20 rounded-full">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback className="text-3xl">
                             {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <User />}
