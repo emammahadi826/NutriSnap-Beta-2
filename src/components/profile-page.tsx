@@ -71,9 +71,9 @@ function ProfilePageSkeleton() {
                 <Skeleton className="h-5 w-80 mt-2" />
             </header>
 
-            <div className="flex items-center space-x-6 p-8 border rounded-lg bg-card">
+            <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 p-8 border rounded-lg bg-card">
                 <Skeleton className="h-24 w-24 rounded-full" />
-                <div className="space-y-2">
+                <div className="space-y-2 text-center md:text-left">
                     <Skeleton className="h-7 w-40" />
                     <Skeleton className="h-5 w-56" />
                 </div>
