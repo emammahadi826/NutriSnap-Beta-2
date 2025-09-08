@@ -21,7 +21,7 @@ export function SettingsPage() {
     }
 
     return (
-        <div className="flex items-center justify-between p-4 rounded-lg bg-card border">
+        <div className="flex items-center justify-between p-4 rounded-lg bg-background">
             <Label htmlFor="theme-switch" className="flex items-center gap-3">
                 <Sun className="h-5 w-5" />
                 <span className="font-semibold">Light / Dark Mode</span>
