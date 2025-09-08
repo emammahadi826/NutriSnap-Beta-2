@@ -76,12 +76,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(user);
         const profile = await fetchUserProfile(user);
         setUserProfile(profile);
-         const isProfileIncomplete = !profile?.displayName || !profile.age || !profile.gender;
+         
          const isCompletingProfile = pathname === '/complete-profile';
+         const isLoginPage = pathname === '/login';
 
-         if (isProfileIncomplete && !isCompletingProfile) {
-           router.push('/complete-profile');
+         if (!isLoginPage && !isCompletingProfile) {
+            const isProfileIncomplete = !profile?.displayName || !profile.age || !profile.gender;
+            if (isProfileIncomplete) {
+                router.push('/complete-profile');
+            }
          }
+
       } else {
         setUser(null);
         setUserProfile(null);
@@ -105,6 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                       gender: null,
                     };
                     await setDoc(userDocRef, newUserProfile, { merge: true });
+                    // No need to set user/profile here, onAuthStateChanged will handle it
                 }
                 router.push('/');
             }
@@ -117,7 +123,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     handleRedirect();
 
     return () => unsubscribe();
-  }, [fetchUserProfile, router, toast, pathname]);
+  }, []); // IMPORTANT: Removed pathname, router, fetchUserProfile from dependencies to prevent re-running on navigation
 
   const signUpAndCreateProfile = async (email: string, pass: string, profileData: UserProfile) => {
     setLoading(true);
