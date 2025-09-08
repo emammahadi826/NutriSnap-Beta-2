@@ -82,7 +82,7 @@ setInput('');
             <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
                  <div className="space-y-6">
                     {messages.length === 0 && (
-                        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] text-center text-muted-foreground">
+                        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-250px)] text-center text-muted-foreground">
                             <Bot className="w-16 h-16 mb-4" />
                             <h2 className="text-2xl font-bold">NutriSnap Bot</h2>
                             <p>Ask me anything about nutrition, fitness, or your meals!</p>
@@ -106,7 +106,7 @@ setInput('');
                     )}
                 </div>
             </ScrollArea>
-             <div className="p-4 bg-background">
+             <div className="p-4 bg-background border-t">
                 <div className="max-w-2xl mx-auto w-full">
                     <form onSubmit={handleSendMessage} className="flex items-center gap-2 bg-muted p-2 rounded-full">
                         <DropdownMenu>
