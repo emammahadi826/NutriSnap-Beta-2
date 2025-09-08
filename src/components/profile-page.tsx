@@ -26,7 +26,7 @@ export function ProfilePage() {
     }
 
     return (
-        <div className="flex justify-between items-center">
+        <div className="flex items-center">
             <div className="flex items-center gap-6">
                 <Avatar className="h-20 w-20 rounded-full">
                     <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
@@ -39,7 +39,7 @@ export function ProfilePage() {
                     <p className="text-muted-foreground">{user.email}</p>
                 </div>
             </div>
-            <QrCode className="h-8 w-8 text-muted-foreground" />
+            {/* The QR code icon is now part of the main flex container and will be positioned next to the user info */}
         </div>
     );
 }
