@@ -77,9 +77,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const profile = await fetchUserProfile(user);
         setUserProfile(profile);
          const isProfileIncomplete = !profile?.displayName || !profile.age || !profile.gender;
-         const isAuthPage = pathname === '/login' || pathname === '/complete-profile';
+         const isCompletingProfile = pathname === '/complete-profile';
 
-         if (isProfileIncomplete && !isAuthPage) {
+         if (isProfileIncomplete && !isCompletingProfile) {
            router.push('/complete-profile');
          }
       } else {
@@ -165,7 +165,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await signInWithEmailAndPassword(auth, email, pass);
       return true;
     } catch (e: any) {
-      setError(e.message);
+      if (e.code === 'auth/invalid-credential' || e.code === 'auth/user-not-found') {
+        setError('auth/user-not-found');
+      } else {
+        setError(e.message);
+      }
       return false;
     } finally {
       setLoading(false);

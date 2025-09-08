@@ -46,7 +46,11 @@ export default function Login() {
     } else {
       const success = await logIn(email, password);
       if (!success) {
-        toast({ variant: 'destructive', title: 'Login failed', description: error });
+        if (error === 'auth/user-not-found') {
+            toast({ variant: 'destructive', title: 'Login Failed', description: "Sir, please sign up first." });
+        } else {
+            toast({ variant: 'destructive', title: 'Login failed', description: error || "An unknown error occurred." });
+        }
       } else {
         router.push('/');
       }
