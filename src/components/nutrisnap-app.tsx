@@ -34,9 +34,11 @@ import { SettingsPage } from '@/components/settings/settings-page';
 import { ClientOnly } from './client-only';
 import { ReportPage } from '@/components/report/report-page';
 import { BarChart2 } from 'lucide-react';
+import { ProfilePage } from './profile-page';
 
 const ReportPageDynamic = React.lazy(() => import('@/components/report/report-page').then(module => ({ default: module.ReportPage })));
 const SettingsPageDynamic = React.lazy(() => import('@/components/settings/settings-page').then(module => ({ default: module.SettingsPage })));
+const ProfilePageDynamic = React.lazy(() => import('@/components/profile-page').then(module => ({ default: module.ProfilePage })));
 
 
 export function NutriSnapApp() {
@@ -44,14 +46,14 @@ export function NutriSnapApp() {
   const { user, userProfile, logOut, loading: authLoading } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
-  const [activePage, setActivePage] = useState<'home' | 'chat' | 'settings' | 'report'>('home');
+  const [activePage, setActivePage] = useState<'home' | 'chat' | 'settings' | 'report' | 'profile'>('home');
   
   const isLoading = authLoading || !isLoaded;
 
   const AppSidebar = () => {
     const { openMobile, setOpenMobile, state } = useSidebar();
   
-    const handleMenuItemClick = (page: 'home' | 'chat' | 'settings' | 'report') => {
+    const handleMenuItemClick = (page: 'home' | 'chat' | 'settings' | 'report' | 'profile') => {
         setActivePage(page);
         if (isMobile) {
             setOpenMobile(false);
@@ -128,7 +130,7 @@ export function NutriSnapApp() {
                     align={state === 'expanded' ? 'end' : 'center'}
                     className="w-[--radix-popper-anchor-width]"
                   >
-                    <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
+                    <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                       <UserIcon className="mr-2 h-4 w-4" />
                       <span>Profile</span>
                     </DropdownMenuItem>
@@ -211,7 +213,7 @@ export function NutriSnapApp() {
                               side="top"
                               className="w-[--radix-popper-anchor-width]"
                           >
-                            <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
+                            <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                                   <UserIcon className="mr-2 h-4 w-4" />
                                   <span>Profile</span>
                             </DropdownMenuItem>
@@ -256,6 +258,12 @@ export function NutriSnapApp() {
             return <Dashboard meals={meals} summary={summary} />;
         case 'chat':
             return <ChatPage />;
+        case 'profile':
+             return (
+                <React.Suspense fallback={<SettingsPageSkeleton />}>
+                    <ProfilePageDynamic />
+                </React.Suspense>
+            );
         case 'settings':
             return (
                 <React.Suspense fallback={<SettingsPageSkeleton />}>
