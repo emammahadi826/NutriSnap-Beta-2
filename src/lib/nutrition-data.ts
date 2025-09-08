@@ -19,6 +19,10 @@ export const nutritionData: Map<string, Food> = new Map([
     'rice',
     { name: 'Rice', calories: 205, protein: 4.3, carbs: 45, fat: 0.4, unit: '1 cup cooked' },
   ],
+   [
+    'puffed rice',
+    { name: 'Puffed Rice', calories: 56, protein: 1, carbs: 12.5, fat: 0.1, unit: '1 cup' },
+  ],
   [
     'broccoli',
     { name: 'Broccoli', calories: 55, protein: 3.7, carbs: 11, fat: 0.6, unit: '1 cup' },

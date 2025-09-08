@@ -23,7 +23,7 @@ export type IdentifyFoodFromImageInput = z.infer<typeof IdentifyFoodFromImageInp
 const IdentifyFoodFromImageOutputSchema = z.object({
   foodItems: z.array(
     z.object({
-      name: z.string().describe('The name of the identified food item.'),
+      name: z.string().describe('The specific name of the identified food item (e.g., "Puffed Rice" instead of just "Rice").'),
       portionEstimate: z
         .string()
         .describe('An estimate of the portion size of the food item.'),
@@ -41,9 +41,9 @@ const identifyFoodFromImagePrompt = ai.definePrompt({
   name: 'identifyFoodFromImagePrompt',
   input: {schema: IdentifyFoodFromImageInputSchema},
   output: {schema: IdentifyFoodFromImageOutputSchema},
-  prompt: `You are an AI trained to identify food items in images and estimate their portion sizes.
+  prompt: `You are an expert AI trained to identify food items in images with high precision and estimate their portion sizes.
 
-  Analyze the image and identify all the visible food items. Provide an estimate of the portion size for each item.
+  Analyze the image and identify all the visible food items. Be as specific as possible with the names. For example, if you see puffed rice, identify it as "Puffed Rice", not just "Rice".
 
   Return the identified food items and portion sizes in JSON format.
 
