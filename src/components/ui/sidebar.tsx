@@ -245,7 +245,12 @@ const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, children, ...props }, ref) => {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, isMobile } = useSidebar();
+
+  // Render nothing until we know if it's mobile or not to prevent hydration mismatch
+  if (isMobile === undefined) {
+    return <div className="h-10 w-10" />;
+  }
 
   return (
     <Button
@@ -255,16 +260,16 @@ const SidebarTrigger = React.forwardRef<
       size="icon"
       className={cn("h-10 w-10", className)}
       onClick={(event) => {
-        onClick?.(event)
-        toggleSidebar()
+        onClick?.(event);
+        toggleSidebar();
       }}
       {...props}
     >
       {children || <PanelLeft className="h-5 w-5" />}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
-  )
-})
+  );
+});
 SidebarTrigger.displayName = "SidebarTrigger"
 
 const SidebarRail = React.forwardRef<
