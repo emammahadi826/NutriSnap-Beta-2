@@ -134,10 +134,6 @@ export function NutriSnapApp() {
                       <UserIcon className="mr-2 h-4 w-4" />
                       <span>Profile</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
-                      <SettingsIcon className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
-                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={logOut}>
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>Sign Out</span>
@@ -217,10 +213,6 @@ export function NutriSnapApp() {
                                   <UserIcon className="mr-2 h-4 w-4" />
                                   <span>Profile</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleMenuItemClick('settings')}>
-                                  <SettingsIcon className="mr-2 h-4 w-4" />
-                                  <span>Settings</span>
-                              </DropdownMenuItem>
                               <DropdownMenuItem onClick={logOut}>
                                   <LogOut className="mr-2 h-4 w-4" />
                                   <span>Sign Out</span>

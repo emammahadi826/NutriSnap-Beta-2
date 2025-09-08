@@ -2,7 +2,6 @@
 "use client";
 
 import { Suspense } from 'react';
-import SettingsForm from './settings-form';
 import { useAuth } from '@/hooks/use-auth';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -53,7 +52,7 @@ export function SettingsPage({ onBack }: { onBack: () => void }) {
                  <SettingsSkeleton />
             ) : (
                 <Suspense fallback={<SettingsSkeleton />}>
-                    <SettingsForm onSaveSuccess={onBack} />
+                    {/* The form is now in ProfilePage.tsx */}
                 </Suspense>
             )}
         </div>
