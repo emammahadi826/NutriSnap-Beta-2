@@ -58,6 +58,16 @@ export function NutriSnapApp() {
             setOpenMobile(false);
         }
     }
+    
+    const getUserDisplayName = () => {
+        if (userProfile?.displayName) {
+            return userProfile.displayName;
+        }
+        if (user?.email) {
+            return user.email.length > 15 ? `${user.email.substring(0, 15)}...` : user.email;
+        }
+        return 'User';
+    };
 
     const sidebarContent = (
       <>
@@ -118,7 +128,7 @@ export function NutriSnapApp() {
                         </AvatarFallback>
                       </Avatar>
                       <div className={cn("flex-1 flex items-center", state === 'collapsed' && 'hidden')}>
-                          <span className="truncate ml-1">{userProfile?.displayName || user.email}</span>
+                          <span className="truncate ml-1">{getUserDisplayName()}</span>
                           <ChevronUp className="ml-auto h-4 w-4" />
                       </div>
                     </Button>
@@ -207,7 +217,7 @@ export function NutriSnapApp() {
                                   </AvatarFallback>
                               </Avatar>
                               <div className={cn("flex-1 flex items-center justify-between")}>
-                                  <span className="truncate ml-1">{userProfile?.displayName || user.email}</span>
+                                  <span className="truncate ml-1">{getUserDisplayName()}</span>
                                   <ChevronUp className="ml-auto h-4 w-4" />
                               </div>
                               </Button>
