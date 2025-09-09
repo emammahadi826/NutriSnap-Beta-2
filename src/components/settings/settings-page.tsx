@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -9,7 +10,7 @@ import { useTheme } from "@/components/theme-provider";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { Html5QrcodeScanner, Html5QrcodeError, Html5QrcodeResult } from "html5-qrcode";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
@@ -30,25 +31,24 @@ export function SettingsPage() {
     useEffect(() => {
         if (isScannerOpen) {
             const scanner = new Html5QrcodeScanner(
-                "qr-reader",
+                "qr-reader-settings",
                 { fps: 10, qrbox: { width: 250, height: 250 } },
                 false // verbose
             );
 
-            const onScanSuccess = async (decodedText: string, decodedResult: Html5QrcodeResult) => {
+            const onScanSuccess = async (decodedText: string) => {
                 scanner.clear();
                 setIsLinking(true);
                 try {
                     const { uid } = JSON.parse(decodedText);
                     if (uid) {
                         toast({ title: "QR Code Scanned!", description: "Attempting to link device..." });
-                        // In a real app, you would securely get a custom token for this UID
-                        // For this demo, we are unsafely creating it on the client
-                        // This is a major security risk and should NOT be done in production.
-                        if (logOut) await logOut(true); // Log out without redirect
+                        // Log out of current account without redirecting
+                        if (logOut) await logOut(true); 
+                        // Sign in with the new account's UID
                         const success = await signInWithCustomToken(uid);
                         if(success) {
-                            toast({ title: "Device Linked Successfully!", className: "bg-primary text-primary-foreground" });
+                            toast({ title: "Account Switched Successfully!", className: "bg-primary text-primary-foreground" });
                             router.push('/');
                         } else {
                              toast({ variant: 'destructive', title: "Linking Failed", description: "Could not sign in with the scanned code." });
@@ -66,16 +66,17 @@ export function SettingsPage() {
             };
             
             const onScanFailure = (error: string) => {
-                // This will be called frequently, so we don't want to show a toast.
-                // console.warn(`QR error = ${error}`);
+                // Ignore frequent "no QR code found" errors
             };
 
             scanner.render(onScanSuccess, onScanFailure);
 
             return () => {
-                scanner.clear().catch(error => {
-                    console.error("Failed to clear scanner on unmount", error);
-                });
+                if (document.getElementById('qr-reader-settings')) {
+                    scanner.clear().catch(error => {
+                        console.error("Failed to clear scanner on unmount", error);
+                    });
+                }
             };
         }
     }, [isScannerOpen, toast, logOut, signInWithCustomToken, router]);
@@ -114,30 +115,28 @@ export function SettingsPage() {
 
             <Dialog open={isScannerOpen} onOpenChange={setIsScannerOpen}>
                 <DialogTrigger asChild>
-                    <div className="p-4 rounded-lg bg-background border cursor-pointer">
-                         <button className="flex items-center justify-between w-full">
-                            <div className="flex items-center gap-3">
-                                <LinkIcon className="h-5 w-5" />
-                                <span className="font-semibold">Link device</span>
-                            </div>
-                            <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                        </button>
-                    </div>
+                    <button className="flex items-center justify-between w-full p-4 rounded-lg bg-background border cursor-pointer">
+                        <div className="flex items-center gap-3">
+                            <LinkIcon className="h-5 w-5" />
+                            <span className="font-semibold">Link device / Switch account</span>
+                        </div>
+                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                    </button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Scan QR Code</DialogTitle>
                         <DialogDescription>
-                            Point your camera at the QR code displayed on another device to link your account.
+                            Point your camera at the QR code displayed on another device to switch accounts.
                         </DialogDescription>
                     </DialogHeader>
                     {isLinking ? (
                         <div className="flex flex-col items-center justify-center h-64">
                             <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                            <p className="mt-4 text-muted-foreground">Linking device, please wait...</p>
+                            <p className="mt-4 text-muted-foreground">Switching account, please wait...</p>
                         </div>
                     ) : (
-                        <div id="qr-reader" className="w-full"></div>
+                        <div id="qr-reader-settings" className="w-full"></div>
                     )}
                 </DialogContent>
             </Dialog>

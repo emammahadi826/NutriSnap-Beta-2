@@ -1,16 +1,18 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Flame, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Flame, Eye, EyeOff, Loader2, QrCode } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" {...props}>
@@ -25,11 +27,64 @@ export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { logIn, signInWithGoogle, error } = useAuth();
+  const { logIn, signInWithGoogle, error, signInWithCustomToken } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isLinking, setIsLinking] = useState(false);
+
+  useEffect(() => {
+        if (isScannerOpen) {
+            const scanner = new Html5QrcodeScanner(
+                "qr-reader-login",
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                false // verbose
+            );
+
+            const onScanSuccess = async (decodedText: string) => {
+                scanner.clear();
+                setIsLinking(true);
+                try {
+                    const { uid } = JSON.parse(decodedText);
+                    if (uid) {
+                        toast({ title: "QR Code Scanned!", description: "Attempting to sign you in..." });
+                        const success = await signInWithCustomToken(uid);
+                        if(success) {
+                            toast({ title: "Logged In Successfully!", className: "bg-primary text-primary-foreground" });
+                            router.push('/');
+                        } else {
+                             toast({ variant: 'destructive', title: "Login Failed", description: "Could not sign in with the scanned code." });
+                             setIsLinking(false);
+                        }
+
+                    } else {
+                        throw new Error("Invalid QR code format.");
+                    }
+                } catch (error) {
+                    toast({ variant: 'destructive', title: "Scan Error", description: "The QR code is not valid for NutriSnap." });
+                    setIsLinking(false);
+                } finally {
+                    setIsScannerOpen(false);
+                }
+            };
+            
+            const onScanFailure = (error: string) => {
+                // Ignore frequent "no QR code found" errors
+            };
+
+            scanner.render(onScanSuccess, onScanFailure);
+
+            return () => {
+                if (document.getElementById("qr-reader-login")) {
+                    scanner.clear().catch(error => {
+                        console.error("Failed to clear scanner on unmount", error);
+                    });
+                }
+            };
+        }
+    }, [isScannerOpen, toast, signInWithCustomToken, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -174,23 +229,49 @@ export default function Login() {
                 </span>
               </div>
             </div>
-
-            <Button 
-              variant="outline" 
-              className="w-full" 
-              type="button" 
-              disabled={isSubmitting}
-              onClick={async () => {
-                setIsSubmitting(true);
-                const success = await signInWithGoogle();
-                if (!success) {
-                    setIsSubmitting(false);
-                }
-              }}
-            >
-                {isSubmitting ? <Loader2 className="animate-spin mr-2" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
-                Sign in with Google
-            </Button>
+            
+            <div className="grid grid-cols-2 gap-2">
+                 <Button 
+                    variant="outline" 
+                    className="w-full" 
+                    type="button" 
+                    disabled={isSubmitting}
+                    onClick={async () => {
+                        setIsSubmitting(true);
+                        const success = await signInWithGoogle();
+                        if (!success) {
+                            setIsSubmitting(false);
+                        }
+                    }}
+                    >
+                    {isSubmitting ? <Loader2 className="animate-spin mr-2" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
+                    Google
+                </Button>
+                 <Dialog open={isScannerOpen} onOpenChange={setIsScannerOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline" className="w-full" type="button" disabled={isSubmitting}>
+                            <QrCode className="mr-2 h-4 w-4" />
+                            Scan QR
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Scan to Login</DialogTitle>
+                            <DialogDescription>
+                                Point your camera at a NutriSnap QR code to log in instantly.
+                            </DialogDescription>
+                        </DialogHeader>
+                        {isLinking ? (
+                            <div className="flex flex-col items-center justify-center h-64">
+                                <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                                <p className="mt-4 text-muted-foreground">Signing you in...</p>
+                            </div>
+                        ) : (
+                            <div id="qr-reader-login" className="w-full"></div>
+                        )}
+                    </DialogContent>
+                </Dialog>
+            </div>
           </CardContent>
         </form>
         <CardFooter className="flex justify-center text-sm">
@@ -216,5 +297,3 @@ export default function Login() {
     </div>
   );
 }
-
-    
