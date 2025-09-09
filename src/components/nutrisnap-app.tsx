@@ -72,10 +72,10 @@ export function NutriSnapApp() {
     };
     
     const UserProfileButtonSkeleton = () => (
-      <div className={cn("flex items-center w-full p-2 gap-2", state === 'expanded' ? 'justify-start' : 'justify-center')}>
+      <div className={cn("flex w-full p-2 gap-2", state === 'expanded' ? 'justify-start items-center' : 'justify-center flex-col')}>
         <Skeleton className="h-10 w-10 rounded-lg" />
-        <div className={cn("flex-1", state === 'collapsed' && 'hidden')}>
-          <Skeleton className="h-4 w-24" />
+        <div className={cn("flex-1", state === 'collapsed' ? "mt-1" : "")}>
+          <Skeleton className={cn("h-4", state === 'expanded' ? "w-24" : "w-10")} />
         </div>
       </div>
     );
@@ -132,23 +132,24 @@ export function NutriSnapApp() {
               ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" className="flex items-center w-full h-auto p-2 gap-2 justify-start hover:bg-transparent hover:text-current focus-visible:ring-0 focus-visible:ring-offset-0" >
+                     <Button variant="ghost" className={cn("flex w-full h-auto p-2 gap-2 hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0", state === 'expanded' ? 'justify-start items-center' : 'justify-center flex-col')} >
                       <Avatar className="h-10 w-10 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
                           {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                         </AvatarFallback>
                       </Avatar>
-                      <div className={cn("flex-1 flex items-center justify-between w-full", state === 'collapsed' && 'hidden')}>
-                          <span className="truncate ml-1">{getUserDisplayName()}</span>
-                          <ChevronUp className="h-4 w-4 ml-auto" />
+                      <div className={cn("flex-1 flex items-center justify-between w-full", state === 'collapsed' ? 'justify-center' : 'ml-1')}>
+                          <span className="truncate text-xs">{getUserDisplayName()}</span>
+                          <ChevronUp className={cn("h-4 w-4", state === 'expanded' ? 'ml-auto' : 'hidden')} />
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     side="top"
                     align="start"
-                    className="w-56"
+                    className={cn("w-56", state === 'collapsed' && 'w-auto')}
+                    sideOffset={10}
                   >
                     <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                       <UserIcon className="mr-2 h-4 w-4" />
