@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon } from 'lucide-react';
+import { LogOut, LogIn, Home, User as UserIcon, ChevronUp, MessageCircle, Upload, Camera, Settings as SettingsIcon, Coins } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Sidebar,
@@ -43,7 +43,7 @@ const ProfilePageDynamic = React.lazy(() => import('@/components/profile-page').
 
 export function NutriSnapApp() {
   const { isLoaded, meals, addMeal, getTodaysSummary } = useMealLogger();
-  const { user, userProfile, logOut, loading: authLoading } = useAuth();
+  const { user, userProfile, logOut, loading: authLoading, guestCredits } = useAuth();
   const isGuest = !user;
   const isMobile = useIsMobile();
   const [activePage, setActivePage] = useState<'home' | 'chat' | 'settings' | 'report' | 'profile'>('home');
@@ -67,7 +67,7 @@ export function NutriSnapApp() {
         if (user?.email) {
             return user.email.length > 10 ? `${user.email.substring(0, 10)}...` : user.email;
         }
-        return 'User';
+        return 'Guest';
     };
 
     const sidebarContent = (
@@ -100,6 +100,19 @@ export function NutriSnapApp() {
                 </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
+          
+            {isGuest && (
+                <div className={cn("px-4 pb-4", state === 'collapsed' && 'hidden')}>
+                    <div className="bg-muted p-3 rounded-lg text-center">
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                           <Coins className="h-5 w-5 text-primary" />
+                           <p className="font-bold text-lg">{guestCredits} / 3</p>
+                        </div>
+                         <p className="text-xs text-muted-foreground">Free credits remaining</p>
+                    </div>
+                </div>
+            )}
+
         </SidebarContent>
         <SidebarFooter>
           <ClientOnly>
@@ -187,6 +200,17 @@ export function NutriSnapApp() {
                     </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
+               {isGuest && (
+                <div className="px-4 pb-4">
+                    <div className="bg-muted p-3 rounded-lg text-center">
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                           <Coins className="h-5 w-5 text-primary" />
+                           <p className="font-bold text-lg">{guestCredits} / 3</p>
+                        </div>
+                         <p className="text-xs text-muted-foreground">Free credits remaining</p>
+                    </div>
+                </div>
+            )}
             </SidebarContent>
             <SidebarFooter>
               <ClientOnly>
@@ -369,5 +393,3 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
-
-    

@@ -31,6 +31,8 @@ interface AuthContextType {
   userProfile: UserProfile | null;
   loading: boolean;
   error: string | null;
+  guestCredits: number;
+  useGuestCredit: () => void;
   signUpAndCreateProfile: (email: string, pass: string, profileData: UserProfile) => Promise<boolean>;
   logIn: (email: string, pass: string) => Promise<boolean>;
   logOut: () => void;
@@ -43,6 +45,8 @@ const AuthContext = createContext<AuthContextType>({
   userProfile: null,
   loading: true,
   error: null,
+  guestCredits: 3,
+  useGuestCredit: () => {},
   signUpAndCreateProfile: async () => false,
   logIn: async () => false,
   logOut: () => {},
@@ -55,6 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [guestCredits, setGuestCredits] = useState(3);
   const router = useRouter();
   const pathname = usePathname();
   const { toast } = useToast();
@@ -67,6 +72,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     return null;
   }, []);
+
+  const useGuestCredit = () => {
+    setGuestCredits(prev => Math.max(0, prev - 1));
+  };
 
 
   useEffect(() => {
@@ -86,7 +95,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 router.push('/complete-profile');
             }
          }
-
+         // Reset guest credits when a user logs in
+         setGuestCredits(3);
       } else {
         setUser(null);
         setUserProfile(null);
@@ -241,6 +251,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     logOut,
     updateUserProfile,
     signInWithGoogle,
+    guestCredits,
+    useGuestCredit,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

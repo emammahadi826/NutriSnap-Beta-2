@@ -3,7 +3,7 @@
 
 import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import Image from 'next/image';
-import { Camera, Loader2, Plus, Minus, X, Info, Upload, ArrowLeft, User } from 'lucide-react';
+import { Camera, Loader2, Plus, Minus, X, Info, Upload, ArrowLeft, User, Coins } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -33,9 +33,9 @@ interface MealLogDialogProps {
 type FoodResult = LoggedItem & { originalName: string; confidence: number };
 
 export function MealLogDialog({ onMealLog, trigger, startWithCamera = false }: MealLogDialogProps) {
-  const { user } = useAuth();
+  const { user, guestCredits, useGuestCredit } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error' | 'auth_required'>('upload');
+  const [view, setView] = useState<'upload' | 'camera' | 'result' | 'loading' | 'error' | 'auth_required' | 'no_credits'>('upload');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageData, setImageData] = useState<string | null>(null);
   const [results, setResults] = useState<FoodResult[]>([]);
@@ -48,8 +48,8 @@ export function MealLogDialog({ onMealLog, trigger, startWithCamera = false }: M
   
   const handleDialogOpen = (open: boolean) => {
     if (open) {
-        if (!user) {
-            setView('auth_required');
+        if (!user && guestCredits <= 0) {
+            setView('no_credits');
         } else if(startWithCamera) {
             setView('camera');
         } else {
@@ -141,8 +141,8 @@ export function MealLogDialog({ onMealLog, trigger, startWithCamera = false }: M
   }
 
   const handleAnalyze = async () => {
-    if (!user) {
-        setView('auth_required');
+    if (!user && guestCredits <= 0) {
+        setView('no_credits');
         return;
     }
     if (!imageData) {
@@ -155,6 +155,11 @@ export function MealLogDialog({ onMealLog, trigger, startWithCamera = false }: M
     }
     setView('loading');
     setError(null);
+
+    if (!user) {
+        useGuestCredit();
+    }
+
     try {
       const aiResult: IdentifyFoodFromImageOutput = await identifyFoodFromImage({ photoDataUri: imageData });
       
@@ -276,10 +281,24 @@ export function MealLogDialog({ onMealLog, trigger, startWithCamera = false }: M
                  <DialogTitle className="font-headline text-2xl">Log a New Meal</DialogTitle>
               </div>
           </div>
-          {view !== 'auth_required' && <DialogDescription>
+          {view !== 'auth_required' && view !== 'no_credits' && <DialogDescription>
             Snap a picture of your meal and let our AI do the rest.
           </DialogDescription>}
         </DialogHeader>
+
+        {view === 'no_credits' && (
+           <div className="flex flex-col items-center justify-center text-center min-h-[20rem] gap-4">
+            <Coins className="h-12 w-12 text-primary" />
+            <h3 className="text-xl font-bold">Out of Credits</h3>
+            <p className="text-muted-foreground">
+                You've used all your free meal scans. Please sign up to continue logging meals and get unlimited access.
+            </p>
+            <div className="flex flex-col gap-2 w-full">
+                <Button asChild size="lg"><Link href="/login">Login or Sign Up</Link></Button>
+                <Button variant="ghost" onClick={() => handleOpenChange(false)}>Maybe Later</Button>
+            </div>
+          </div>
+        )}
 
         {view === 'auth_required' && (
            <div className="flex flex-col items-center justify-center text-center min-h-[20rem] gap-4">
