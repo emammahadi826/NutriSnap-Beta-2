@@ -67,8 +67,8 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4 text-foreground">
-      <div className="flex items-center gap-2 mb-8">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4 sm:p-6 md:p-8 text-foreground">
+      <div className="flex items-center gap-2 mb-6 sm:mb-8">
         <Flame className="w-8 h-8 text-primary" />
         <h1 className="text-2xl font-bold font-headline">NutriSnap</h1>
       </div>
@@ -191,7 +191,7 @@ export default function Login() {
             </p>
         </CardFooter>
       </Card>
-      <p className="px-8 text-center text-xs text-muted-foreground mt-8 max-w-sm">
+      <p className="px-4 sm:px-8 text-center text-xs text-muted-foreground mt-8 max-w-sm">
         By clicking continue, you agree to our{' '}
         <Link href="#" className="underline underline-offset-4 hover:text-primary">
           Terms of Service
