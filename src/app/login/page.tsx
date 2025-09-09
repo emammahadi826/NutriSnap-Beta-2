@@ -34,12 +34,11 @@ export default function Login() {
 
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isLinking, setIsLinking] = useState(false);
-  const [isScannerInitializing, setIsScannerInitializing] = useState(true);
+  const [isScannerInitializing, setIsScannerInitializing] = useState(false);
 
   useEffect(() => {
     let scanner: any;
-    if (isScannerOpen) {
-        setIsScannerInitializing(true);
+    if (isScannerOpen && !isScannerInitializing) {
         // Dynamically import the library only on the client-side
         import("html5-qrcode").then(({ Html5QrcodeScanner }) => {
             scanner = new Html5QrcodeScanner(
@@ -80,12 +79,11 @@ export default function Login() {
             };
 
             scanner.render(onScanSuccess, onScanFailure);
-            setIsScannerInitializing(false);
 
         }).catch(err => {
             console.error("Failed to load Html5QrcodeScanner", err);
             toast({ variant: 'destructive', title: "Scanner Error", description: "Could not initialize the QR code scanner." });
-            setIsScannerInitializing(false);
+            setIsScannerInitializing(true); // Reset on error
         });
     }
 
@@ -96,7 +94,7 @@ export default function Login() {
             });
         }
     };
-}, [isScannerOpen, toast, signInWithCustomToken, router]);
+}, [isScannerOpen, isScannerInitializing, toast, signInWithCustomToken, router]);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -142,6 +140,15 @@ export default function Login() {
     setConfirmPassword('');
     setShowPassword(false);
     setShowConfirmPassword(false);
+  }
+
+  const handleScannerOpen = (open: boolean) => {
+      setIsScannerOpen(open);
+      if (open) {
+          setIsScannerInitializing(false); // allow useEffect to run
+      } else {
+          setIsScannerInitializing(true);
+      }
   }
 
   return (
@@ -260,7 +267,7 @@ export default function Login() {
                     {isSubmitting ? <Loader2 className="animate-spin mr-2" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
                     Google
                 </Button>
-                 <Dialog open={isScannerOpen} onOpenChange={setIsScannerOpen}>
+                 <Dialog open={isScannerOpen} onOpenChange={handleScannerOpen}>
                     <DialogTrigger asChild>
                         <Button variant="outline" className="w-full" type="button" disabled={isSubmitting}>
                             <QrCode className="mr-2 h-4 w-4" />
@@ -312,3 +319,5 @@ export default function Login() {
     </div>
   );
 }
+
+    

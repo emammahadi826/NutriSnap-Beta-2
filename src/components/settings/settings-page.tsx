@@ -30,8 +30,7 @@ export function SettingsPage() {
 
     useEffect(() => {
         let scanner: any;
-        if (isScannerOpen) {
-            setIsScannerInitializing(true);
+        if (isScannerOpen && !isScannerInitializing) {
             // Dynamically import the library only on the client-side
             import("html5-qrcode").then(({ Html5QrcodeScanner }) => {
                 scanner = new Html5QrcodeScanner(
@@ -74,12 +73,11 @@ export function SettingsPage() {
                 };
 
                 scanner.render(onScanSuccess, onScanFailure);
-                setIsScannerInitializing(false);
 
             }).catch(err => {
                 console.error("Failed to load Html5QrcodeScanner", err);
                 toast({ variant: 'destructive', title: "Scanner Error", description: "Could not initialize the QR code scanner." });
-                setIsScannerInitializing(false);
+                setIsScannerInitializing(true);
             });
         }
 
@@ -90,7 +88,7 @@ export function SettingsPage() {
                 });
             }
         };
-    }, [isScannerOpen, toast, logOut, signInWithCustomToken, router]);
+    }, [isScannerOpen, isScannerInitializing, toast, logOut, signInWithCustomToken, router]);
 
 
     if (!user) {
@@ -108,6 +106,15 @@ export function SettingsPage() {
         // Prevent hydration mismatch by not rendering the switch until the client has mounted
         return null;
     }
+    
+    const handleScannerOpen = (open: boolean) => {
+        setIsScannerOpen(open);
+        if (open) {
+            setIsScannerInitializing(false);
+        } else {
+            setIsScannerInitializing(true);
+        }
+    }
 
     return (
         <div className="space-y-4">
@@ -124,7 +131,7 @@ export function SettingsPage() {
                 />
             </div>
 
-            <Dialog open={isScannerOpen} onOpenChange={setIsScannerOpen}>
+            <Dialog open={isScannerOpen} onOpenChange={handleScannerOpen}>
                 <DialogTrigger asChild>
                     <button className="flex items-center justify-between w-full p-4 rounded-lg bg-background border cursor-pointer">
                         <div className="flex items-center gap-3">
@@ -156,3 +163,5 @@ export function SettingsPage() {
         </div>
     );
 }
+
+    
