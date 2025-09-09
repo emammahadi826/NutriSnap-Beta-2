@@ -10,7 +10,6 @@ import { useTheme } from "@/components/theme-provider";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { Html5QrcodeScanner } from "html5-qrcode";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
@@ -23,62 +22,74 @@ export function SettingsPage() {
     const [mounted, setMounted] = useState(false);
     const [isScannerOpen, setIsScannerOpen] = useState(false);
     const [isLinking, setIsLinking] = useState(false);
+    const [isScannerInitializing, setIsScannerInitializing] = useState(true);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
     useEffect(() => {
+        let scanner: any;
         if (isScannerOpen) {
-            const scanner = new Html5QrcodeScanner(
-                "qr-reader-settings",
-                { fps: 10, qrbox: { width: 250, height: 250 } },
-                false // verbose
-            );
+            setIsScannerInitializing(true);
+            // Dynamically import the library only on the client-side
+            import("html5-qrcode").then(({ Html5QrcodeScanner }) => {
+                scanner = new Html5QrcodeScanner(
+                    "qr-reader-settings",
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    false // verbose
+                );
 
-            const onScanSuccess = async (decodedText: string) => {
-                scanner.clear();
-                setIsLinking(true);
-                try {
-                    const { uid } = JSON.parse(decodedText);
-                    if (uid) {
-                        toast({ title: "QR Code Scanned!", description: "Attempting to link device..." });
-                        // Log out of current account without redirecting
-                        if (logOut) await logOut(true); 
-                        // Sign in with the new account's UID
-                        const success = await signInWithCustomToken(uid);
-                        if(success) {
-                            toast({ title: "Account Switched Successfully!", className: "bg-primary text-primary-foreground" });
-                            router.push('/');
+                const onScanSuccess = async (decodedText: string) => {
+                    scanner.clear();
+                    setIsLinking(true);
+                    try {
+                        const { uid } = JSON.parse(decodedText);
+                        if (uid) {
+                            toast({ title: "QR Code Scanned!", description: "Attempting to link device..." });
+                            // Log out of current account without redirecting
+                            if (logOut) await logOut(true); 
+                            // Sign in with the new account's UID
+                            const success = await signInWithCustomToken(uid);
+                            if(success) {
+                                toast({ title: "Account Switched Successfully!", className: "bg-primary text-primary-foreground" });
+                                router.push('/');
+                            } else {
+                                toast({ variant: 'destructive', title: "Linking Failed", description: "Could not sign in with the scanned code." });
+                            }
+
                         } else {
-                             toast({ variant: 'destructive', title: "Linking Failed", description: "Could not sign in with the scanned code." });
+                            throw new Error("Invalid QR code format.");
                         }
-
-                    } else {
-                        throw new Error("Invalid QR code format.");
+                    } catch (error) {
+                        toast({ variant: 'destructive', title: "Scan Error", description: "The QR code is not valid for NutriSnap." });
+                    } finally {
+                        setIsScannerOpen(false);
+                        setIsLinking(false);
                     }
-                } catch (error) {
-                    toast({ variant: 'destructive', title: "Scan Error", description: "The QR code is not valid for NutriSnap." });
-                } finally {
-                    setIsScannerOpen(false);
-                    setIsLinking(false);
-                }
-            };
-            
-            const onScanFailure = (error: string) => {
-                // Ignore frequent "no QR code found" errors
-            };
+                };
+                
+                const onScanFailure = (error: string) => {
+                    // Ignore frequent "no QR code found" errors
+                };
 
-            scanner.render(onScanSuccess, onScanFailure);
+                scanner.render(onScanSuccess, onScanFailure);
+                setIsScannerInitializing(false);
 
-            return () => {
-                if (document.getElementById('qr-reader-settings')) {
-                    scanner.clear().catch(error => {
-                        console.error("Failed to clear scanner on unmount", error);
-                    });
-                }
-            };
+            }).catch(err => {
+                console.error("Failed to load Html5QrcodeScanner", err);
+                toast({ variant: 'destructive', title: "Scanner Error", description: "Could not initialize the QR code scanner." });
+                setIsScannerInitializing(false);
+            });
         }
+
+        return () => {
+            if (scanner && scanner.getState() !== 3 /* SCANNING_STATE.NOT_STARTED */) {
+                scanner.clear().catch((error: any) => {
+                    console.error("Failed to clear scanner on unmount", error);
+                });
+            }
+        };
     }, [isScannerOpen, toast, logOut, signInWithCustomToken, router]);
 
 
@@ -130,10 +141,12 @@ export function SettingsPage() {
                             Point your camera at the QR code displayed on another device to switch accounts.
                         </DialogDescription>
                     </DialogHeader>
-                    {isLinking ? (
+                    {isLinking || isScannerInitializing ? (
                         <div className="flex flex-col items-center justify-center h-64">
                             <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                            <p className="mt-4 text-muted-foreground">Switching account, please wait...</p>
+                            <p className="mt-4 text-muted-foreground">
+                                {isLinking ? "Switching account, please wait..." : "Initializing scanner..."}
+                            </p>
                         </div>
                     ) : (
                         <div id="qr-reader-settings" className="w-full"></div>

@@ -12,7 +12,7 @@ import { Flame, Eye, EyeOff, Loader2, QrCode } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" {...props}>
@@ -34,10 +34,15 @@ export default function Login() {
 
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isLinking, setIsLinking] = useState(false);
+  const [isScannerInitializing, setIsScannerInitializing] = useState(true);
 
   useEffect(() => {
-        if (isScannerOpen) {
-            const scanner = new Html5QrcodeScanner(
+    let scanner: any;
+    if (isScannerOpen) {
+        setIsScannerInitializing(true);
+        // Dynamically import the library only on the client-side
+        import("html5-qrcode").then(({ Html5QrcodeScanner }) => {
+            scanner = new Html5QrcodeScanner(
                 "qr-reader-login",
                 { fps: 10, qrbox: { width: 250, height: 250 } },
                 false // verbose
@@ -75,16 +80,24 @@ export default function Login() {
             };
 
             scanner.render(onScanSuccess, onScanFailure);
+            setIsScannerInitializing(false);
 
-            return () => {
-                if (document.getElementById("qr-reader-login")) {
-                    scanner.clear().catch(error => {
-                        console.error("Failed to clear scanner on unmount", error);
-                    });
-                }
-            };
+        }).catch(err => {
+            console.error("Failed to load Html5QrcodeScanner", err);
+            toast({ variant: 'destructive', title: "Scanner Error", description: "Could not initialize the QR code scanner." });
+            setIsScannerInitializing(false);
+        });
+    }
+
+    return () => {
+        if (scanner && scanner.getState() !== 3 /* SCANNING_STATE.NOT_STARTED */) {
+            scanner.clear().catch((error: any) => {
+                console.error("Failed to clear scanner on unmount", error);
+            });
         }
-    }, [isScannerOpen, toast, signInWithCustomToken, router]);
+    };
+}, [isScannerOpen, toast, signInWithCustomToken, router]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -261,10 +274,12 @@ export default function Login() {
                                 Point your camera at a NutriSnap QR code to log in instantly.
                             </DialogDescription>
                         </DialogHeader>
-                        {isLinking ? (
+                        {isLinking || isScannerInitializing ? (
                             <div className="flex flex-col items-center justify-center h-64">
                                 <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                                <p className="mt-4 text-muted-foreground">Signing you in...</p>
+                                <p className="mt-4 text-muted-foreground">
+                                    {isLinking ? "Signing you in..." : "Initializing scanner..."}
+                                </p>
                             </div>
                         ) : (
                             <div id="qr-reader-login" className="w-full"></div>
