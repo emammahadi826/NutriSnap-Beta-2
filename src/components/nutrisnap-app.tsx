@@ -155,12 +155,23 @@ export function NutriSnapApp() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button asChild variant="outline" className={cn("w-full justify-center text-base h-12", state === 'collapsed' && 'h-10 w-10 p-0')}>
-                  <Link href="/login">
-                    <LogIn className="h-5 w-5" />
-                    <span className={cn("truncate", state === 'collapsed' && 'hidden')}>Login</span>
-                  </Link>
-                </Button>
+                 <>
+                    {state === 'expanded' && (
+                        <div className="px-2 pb-2">
+                            <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+                                <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
+                                <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                                <Progress value={(guestCredits / 3) * 100} className="h-2" />
+                            </div>
+                        </div>
+                    )}
+                    <Button asChild variant="outline" className={cn("w-full justify-center text-base h-12", state === 'collapsed' && 'h-10 w-10 p-0')}>
+                        <Link href="/login">
+                            <LogIn className="h-5 w-5" />
+                            <span className={cn("truncate", state === 'collapsed' && 'hidden')}>Login</span>
+                        </Link>
+                    </Button>
+                </>
               )}
             </div>
           </ClientOnly>
@@ -171,7 +182,7 @@ export function NutriSnapApp() {
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
-          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "16rem" } as React.CSSProperties}>
+          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "20rem" } as React.CSSProperties}>
               <SheetTitle>Sidebar Menu</SheetTitle>
               <SidebarHeader className="p-4 flex items-center justify-center h-16 border-b">
                 <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
@@ -247,12 +258,21 @@ export function NutriSnapApp() {
                           </DropdownMenuContent>
                           </DropdownMenu>
                       ) : (
-                          <Button asChild variant="outline" className="w-full justify-center text-base h-12">
-                          <Link href="/login">
-                              <LogIn className="h-5 w-5 mr-2" />
-                              <span className="truncate">Login / Sign Up</span>
-                          </Link>
-                          </Button>
+                           <>
+                                <div className="px-2 pb-2">
+                                    <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+                                        <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
+                                        <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                                        <Progress value={(guestCredits / 3) * 100} className="h-2" />
+                                    </div>
+                                </div>
+                                <Button asChild variant="outline" className="w-full justify-center text-base h-12">
+                                <Link href="/login">
+                                    <LogIn className="h-5 w-5 mr-2" />
+                                    <span className="truncate">Login / Sign Up</span>
+                                </Link>
+                                </Button>
+                           </>
                       )}
                   </div>
               </ClientOnly>
