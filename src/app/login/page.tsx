@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Flame, Eye, EyeOff } from 'lucide-react';
+import { Flame, Eye, EyeOff, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -25,16 +25,19 @@ export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { logIn, signInWithGoogle, loading, error } = useAuth();
+  const { logIn, signInWithGoogle, error } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     if (isSignUp) {
       if (password !== confirmPassword) {
         toast({ variant: 'destructive', title: 'Sign-up failed', description: "Passwords do not match." });
+        setIsSubmitting(false);
         return;
       }
       // Redirect to complete profile page with credentials
@@ -42,18 +45,25 @@ export default function Login() {
       params.set('email', email);
       params.set('password', password);
       router.push(`/complete-profile?${params.toString()}`);
+      // No need to set isSubmitting to false here as we are navigating away
 
     } else {
       const success = await logIn(email, password);
       if (!success) {
-        if (error === 'auth/user-not-found') {
-            toast({ variant: 'destructive', title: 'Login Failed', description: "Sir, please sign up first." });
+        // useAuth's `error` state might be more reliable
+        const currentError = error; 
+        if (currentError === 'auth/user-not-found' || currentError === 'auth/invalid-credential') {
+            toast({ variant: 'destructive', title: 'Login Failed', description: "Invalid email or password." });
         } else {
-            toast({ variant: 'destructive', title: 'Login failed', description: error || "An unknown error occurred." });
+            toast({ variant: 'destructive', title: 'Login failed', description: currentError || "An unknown error occurred." });
         }
       } else {
         router.push('/');
       }
+    }
+    // Only set submitting to false if we are not navigating away or if login fails
+    if (!isSignUp) {
+        setIsSubmitting(false);
     }
   };
   
@@ -150,8 +160,8 @@ export default function Login() {
                 </div>
               </div>
             )}
-            <Button type="submit" className="w-full h-10 font-semibold" disabled={loading}>
-              {loading ? (isSignUp ? 'Signing up...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
+            <Button type="submit" className="w-full h-10 font-semibold" disabled={isSubmitting}>
+              {isSubmitting ? <Loader2 className="animate-spin" /> : (isSignUp ? 'Sign Up' : 'Login')}
             </Button>
 
             <div className="relative my-4">
@@ -169,15 +179,16 @@ export default function Login() {
               variant="outline" 
               className="w-full" 
               type="button" 
-              disabled={loading}
+              disabled={isSubmitting}
               onClick={async () => {
+                setIsSubmitting(true);
                 const success = await signInWithGoogle();
-                if (success) {
-                  router.push('/');
-                } 
+                if (!success) {
+                    setIsSubmitting(false);
+                }
               }}
             >
-                <GoogleIcon className="mr-2 h-4 w-4" />
+                {isSubmitting ? <Loader2 className="animate-spin mr-2" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
                 Sign in with Google
             </Button>
           </CardContent>
@@ -205,3 +216,5 @@ export default function Login() {
     </div>
   );
 }
+
+    
