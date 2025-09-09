@@ -132,7 +132,7 @@ export function NutriSnapApp() {
               ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" className="flex items-center w-full h-auto p-2 gap-2 justify-start hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0" >
+                     <Button variant="ghost" className="flex items-center w-full h-auto p-2 gap-2 justify-start hover:bg-transparent hover:text-current focus-visible:ring-0 focus-visible:ring-offset-0" >
                       <Avatar className="h-10 w-10 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
@@ -418,6 +418,8 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
+    
 
     
 
