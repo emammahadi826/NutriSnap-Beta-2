@@ -112,21 +112,22 @@ export function NutriSnapApp() {
         </SidebarContent>
         <SidebarFooter>
           <ClientOnly>
-            <div className={cn("flex flex-col gap-4 p-4", state === 'collapsed' && 'p-2 items-center')}>
+            <div className={cn("flex flex-col gap-4", state === 'collapsed' ? 'p-2 items-center' : 'p-4')}>
               
-              <div className={cn(state === 'expanded' ? 'block' : 'hidden')}>
-                 {!isLoading && isGuest && (
-                    <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+              {!isLoading && isGuest && (
+                <div className={cn("transition-opacity duration-300", state === 'expanded' ? 'opacity-100' : 'opacity-0 h-0')}>
+                    <div className="bg-muted p-4 rounded-lg text-center space-y-2">
                         <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                         <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                         <Progress value={(guestCredits / 3) * 100} className="h-2" />
                     </div>
-                )}
-              </div>
+                </div>
+              )}
               
               <div className={cn(state === 'collapsed' ? 'hidden' : 'block')}>
                   <SidebarSeparator />
               </div>
+
               {isLoading ? (
                   <UserProfileButtonSkeleton />
               ) : user ? (
@@ -167,11 +168,10 @@ export function NutriSnapApp() {
               ) : (
                  <>
                   {!isLoading && isGuest && (
-                    <div className={cn("px-4 pb-2", state === 'expanded' ? 'hidden' : 'block')}>
-                       <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
-                            <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
-                            <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                            <Progress value={(guestCredits / 3) * 100} className="h-2" />
+                    <div className={cn("pb-2", state === 'expanded' ? 'hidden' : 'block')}>
+                       <div className="bg-muted p-2 rounded-lg text-center space-y-1">
+                            <p className="font-bold text-sm text-foreground">{guestCredits}</p>
+                            <p className="text-[10px] leading-tight text-muted-foreground">credits left</p>
                         </div>
                     </div>
                   )}
@@ -224,7 +224,7 @@ export function NutriSnapApp() {
                   <div className="flex flex-col gap-4 p-4">
                       
                       {!isLoading && isGuest && (
-                          <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+                          <div className="bg-muted p-4 rounded-lg text-center space-y-2">
                               <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                               <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                               <Progress value={(guestCredits / 3) * 100} className="h-2" />
@@ -411,3 +411,5 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
+    
