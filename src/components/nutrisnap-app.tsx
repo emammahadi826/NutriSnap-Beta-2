@@ -114,7 +114,7 @@ export function NutriSnapApp() {
           <ClientOnly>
             <div className={cn("flex flex-col gap-4", state === 'collapsed' ? 'p-2 items-center' : 'p-4')}>
               
-              {!isLoading && isGuest && (
+              {!user && !authLoading && (
                 <div className={cn("transition-opacity duration-300", state === 'expanded' ? 'opacity-100' : 'opacity-0 h-0')}>
                     <div className="bg-muted p-4 rounded-lg text-center space-y-2">
                         <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
@@ -128,12 +128,12 @@ export function NutriSnapApp() {
                   <SidebarSeparator />
               </div>
 
-              {isLoading ? (
+              {authLoading ? (
                   <UserProfileButtonSkeleton />
               ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2 hover:bg-transparent", state === 'expanded' ? 'justify-start' : 'justify-center')}>
+                     <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2 hover:bg-transparent hover:text-current", state === 'expanded' ? 'justify-start' : 'justify-center')}>
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
@@ -167,7 +167,7 @@ export function NutriSnapApp() {
                 </DropdownMenu>
               ) : (
                  <>
-                  {!isLoading && isGuest && (
+                  {!authLoading && isGuest && (
                     <div className={cn("pb-2", state === 'expanded' ? 'hidden' : 'block')}>
                        <div className="bg-muted p-2 rounded-lg text-center space-y-1">
                             <p className="font-bold text-sm text-foreground">{guestCredits}</p>
@@ -223,7 +223,7 @@ export function NutriSnapApp() {
               <ClientOnly>
                   <div className="flex flex-col gap-4 p-4">
                       
-                      {!isLoading && isGuest && (
+                      {!user && !authLoading && (
                           <div className="bg-muted p-4 rounded-lg text-center space-y-2">
                               <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                               <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
@@ -234,7 +234,7 @@ export function NutriSnapApp() {
                       {user ? (
                           <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="flex items-center w-full h-12 p-2 gap-2 justify-start hover:bg-transparent">
+                              <Button variant="ghost" className="flex items-center w-full h-12 p-2 gap-2 justify-start hover:bg-transparent hover:text-current">
                               <Avatar className="h-8 w-8 rounded-lg">
                                   <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                                   <AvatarFallback>
@@ -411,5 +411,7 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
+    
 
     
