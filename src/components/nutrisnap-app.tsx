@@ -137,7 +137,7 @@ export function NutriSnapApp() {
               ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" className="flex w-full h-auto p-2 gap-2 hover:bg-transparent hover:text-current focus-visible:ring-0 focus-visible:ring-offset-0 justify-start items-center">
+                     <Button variant="ghost" className={cn("flex w-full h-auto p-2 gap-2 hover:bg-transparent hover:text-current focus-visible:ring-0 focus-visible:ring-offset-0 items-center", state === 'expanded' ? 'justify-start' : 'justify-center')}>
                       <Avatar className="h-10 w-10 rounded-lg shrink-0">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
@@ -152,7 +152,7 @@ export function NutriSnapApp() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     side="top"
-                    align="start"
+                    align={state === 'expanded' ? 'start' : 'center'}
                     className={cn(state === 'expanded' ? "w-[calc(var(--sidebar-width)_-_2rem)]" : "w-auto")}
                     sideOffset={10}
                   >
@@ -226,7 +226,7 @@ export function NutriSnapApp() {
             </SidebarContent>
             <SidebarFooter>
               <ClientOnly>
-                  <div className="flex flex-col gap-4 p-4 items-center">
+                  <div className="flex flex-col gap-4 p-4">
                       
                       {!user && !authLoading && (
                           <div className="bg-muted/10 border p-3 rounded-lg text-center space-y-2 w-full">
@@ -246,7 +246,7 @@ export function NutriSnapApp() {
                       ) : user ? (
                           <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="flex items-center w-full h-auto p-2 gap-2 justify-start hover:bg-transparent hover:text-current">
+                              <Button variant="ghost" className="flex items-center w-full h-auto p-2 gap-2 justify-start hover:bg-transparent hover:text-current focus-visible:ring-0 focus-visible:ring-offset-0">
                               <Avatar className="h-10 w-10 rounded-lg">
                                   <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                                   <AvatarFallback>
@@ -262,8 +262,8 @@ export function NutriSnapApp() {
                           <DropdownMenuContent
                               side="top"
                               align="start"
-                              className="w-56"
-                               sideOffset={10}
+                              className="w-[calc(var(--sidebar-width)_-_2rem)]"
+                              sideOffset={10}
                           >
                             <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                                   <UserIcon className="mr-2 h-4 w-4" />
