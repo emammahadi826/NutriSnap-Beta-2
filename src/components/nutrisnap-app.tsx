@@ -156,6 +156,15 @@ export function NutriSnapApp() {
                 </DropdownMenu>
               ) : (
                  <>
+                  {isGuest && (
+                    <div className={cn("px-4 pb-2", state === 'expanded' ? 'hidden' : 'block')}>
+                      <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+                          <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
+                          <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                          <Progress value={(guestCredits / 3) * 100} className="h-2" />
+                      </div>
+                    </div>
+                  )}
                     <Button asChild variant="outline" className={cn("w-full justify-center text-base h-12", state === 'collapsed' && 'h-10 w-10 p-0')}>
                         <Link href="/login">
                             <LogIn className="h-5 w-5" />
@@ -250,6 +259,15 @@ export function NutriSnapApp() {
                           </DropdownMenu>
                       ) : (
                            <>
+                              {isGuest && (
+                                <div className="px-4 pb-2">
+                                  <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+                                      <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
+                                      <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                                      <Progress value={(guestCredits / 3) * 100} className="h-2" />
+                                  </div>
+                                </div>
+                              )}
                                 <Button asChild variant="outline" className="w-full justify-center text-base h-12">
                                 <Link href="/login">
                                     <LogIn className="h-5 w-5 mr-2" />
@@ -267,11 +285,9 @@ export function NutriSnapApp() {
     }
   
     return (
-      <div className="hidden md:block">
-          <Sidebar>
-            {sidebarContent}
-          </Sidebar>
-      </div>
+      <Sidebar>
+        {sidebarContent}
+      </Sidebar>
     );
   };
 
@@ -337,9 +353,11 @@ export function NutriSnapApp() {
       <SidebarProvider>
          <div className="flex h-screen bg-background">
           <AppSidebar />
-           <main className="flex-1 flex flex-col">
-             <header className="flex h-16 items-center justify-between px-4 border-b">
-                <SidebarTrigger />
+           <main className="flex-1 flex flex-col h-screen">
+             <header className="flex h-16 items-center justify-between px-4 border-b shrink-0 md:justify-end">
+                <div className="md:hidden">
+                    <SidebarTrigger />
+                </div>
                 <div className="flex items-center gap-2">
                     {activePage === 'home' && (
                         <>
@@ -394,3 +412,4 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
