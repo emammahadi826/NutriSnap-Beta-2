@@ -72,8 +72,8 @@ export function NutriSnapApp() {
     };
     
     const UserProfileButtonSkeleton = () => (
-      <div className={cn("flex items-center w-full h-12 p-2 gap-2", state === 'expanded' ? 'justify-start' : 'justify-center')}>
-        <Skeleton className="h-8 w-8 rounded-lg" />
+      <div className={cn("flex items-center w-full p-2 gap-2", state === 'expanded' ? 'justify-start' : 'justify-center')}>
+        <Skeleton className="h-10 w-10 rounded-lg" />
         <div className={cn("flex-1", state === 'collapsed' && 'hidden')}>
           <Skeleton className="h-4 w-24" />
         </div>
@@ -133,13 +133,13 @@ export function NutriSnapApp() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                      <Button variant="ghost" className="flex items-center w-full h-auto p-2 gap-2 justify-start hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0" >
-                      <Avatar className="h-8 w-8 rounded-lg">
+                      <Avatar className="h-10 w-10 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
                           {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="flex-1 flex items-center justify-between w-full">
+                      <div className={cn("flex-1 flex items-center justify-between w-full", state === 'collapsed' && 'hidden')}>
                           <span className="truncate ml-1">{getUserDisplayName()}</span>
                           <ChevronUp className="h-4 w-4 ml-auto" />
                       </div>
@@ -148,7 +148,7 @@ export function NutriSnapApp() {
                   <DropdownMenuContent
                     side="top"
                     align="start"
-                    className="w-full"
+                    className="w-56"
                   >
                     <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                       <UserIcon className="mr-2 h-4 w-4" />
@@ -191,7 +191,7 @@ export function NutriSnapApp() {
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
-          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "22rem" } as React.CSSProperties}>
+          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "18rem" } as React.CSSProperties}>
               <SheetTitle>Sidebar Menu</SheetTitle>
               <SidebarHeader className="p-4 flex items-center justify-center h-16 border-b">
                 <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
@@ -220,7 +220,7 @@ export function NutriSnapApp() {
             </SidebarContent>
             <SidebarFooter>
               <ClientOnly>
-                  <div className="flex flex-col gap-4 p-4">
+                  <div className="flex flex-col gap-4 p-4 items-center">
                       
                       {!user && !authLoading && (
                           <div className="bg-muted/10 border p-3 rounded-lg text-center space-y-2">
@@ -232,7 +232,7 @@ export function NutriSnapApp() {
 
                       {authLoading ? (
                          <div className="flex items-center w-full h-12 p-2 gap-2 justify-start">
-                            <Skeleton className="h-8 w-8 rounded-lg" />
+                            <Skeleton className="h-10 w-10 rounded-lg" />
                             <div className="flex-1">
                                 <Skeleton className="h-4 w-24" />
                             </div>
@@ -240,14 +240,14 @@ export function NutriSnapApp() {
                       ) : user ? (
                           <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="flex items-center w-full h-12 p-2 gap-2 justify-start hover:bg-transparent hover:text-current">
-                              <Avatar className="h-8 w-8 rounded-lg">
+                              <Button variant="ghost" className="flex items-center w-full h-auto p-2 gap-2 justify-start hover:bg-transparent hover:text-current">
+                              <Avatar className="h-10 w-10 rounded-lg">
                                   <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                                   <AvatarFallback>
                                   {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                                   </AvatarFallback>
                               </Avatar>
-                              <div className={"flex-1 flex items-center justify-between"}>
+                              <div className={"flex-1 flex items-center justify-between w-full"}>
                                   <span className="truncate ml-1">{getUserDisplayName()}</span>
                                   <ChevronUp className="ml-auto h-4 w-4" />
                               </div>
