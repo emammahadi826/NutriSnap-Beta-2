@@ -100,21 +100,20 @@ export function NutriSnapApp() {
                 </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-          
-            {isGuest && (
-                 <div className={cn("px-2 pb-4", state === 'collapsed' && 'hidden')}>
+        </SidebarContent>
+        <SidebarFooter>
+          <ClientOnly>
+            <div className={cn("flex flex-col gap-4", state === 'collapsed' && 'p-2 items-center')}>
+              
+              {isGuest && (
+                 <div className={cn("px-2 pb-2", state === 'collapsed' && 'hidden')}>
                     <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
                         <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                         <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                         <Progress value={(guestCredits / 3) * 100} className="h-2" />
                     </div>
                 </div>
-            )}
-
-        </SidebarContent>
-        <SidebarFooter>
-          <ClientOnly>
-            <div className={cn("flex flex-col gap-4", state === 'collapsed' && 'p-2 items-center')}>
+              )}
               
               <div className={cn(state === 'collapsed' ? 'hidden' : 'block')}>
                   <SidebarSeparator />
@@ -198,19 +197,19 @@ export function NutriSnapApp() {
                     </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
-               {isGuest && (
-                 <div className="px-2 pb-4">
-                    <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
-                        <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
-                        <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                        <Progress value={(guestCredits / 3) * 100} className="h-2" />
-                    </div>
-                </div>
-            )}
             </SidebarContent>
             <SidebarFooter>
               <ClientOnly>
                   <div className="flex flex-col gap-4">
+                      {isGuest && (
+                        <div className="px-2 pb-2">
+                            <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+                                <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
+                                <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                                <Progress value={(guestCredits / 3) * 100} className="h-2" />
+                            </div>
+                        </div>
+                      )}
                       <SidebarSeparator />
 
                       {user ? (
