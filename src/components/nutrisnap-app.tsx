@@ -65,10 +65,19 @@ export function NutriSnapApp() {
             return userProfile.displayName;
         }
         if (user?.email) {
-            return user.email.length > 10 ? `${user.email.substring(0, 10)}...` : user.email;
+            return user.email.length > 20 ? `${user.email.substring(0, 20)}...` : user.email;
         }
         return 'Guest';
     };
+    
+    const UserProfileButtonSkeleton = () => (
+      <div className={cn("flex items-center w-full h-12 p-2 gap-2", state === 'expanded' ? 'justify-start' : 'justify-center')}>
+        <Skeleton className="h-8 w-8 rounded-lg" />
+        <div className={cn("flex-1", state === 'collapsed' && 'hidden')}>
+          <Skeleton className="h-4 w-24" />
+        </div>
+      </div>
+    );
 
     const sidebarContent = (
       <>
@@ -107,7 +116,7 @@ export function NutriSnapApp() {
               
               <div className={cn(state === 'expanded' ? 'block' : 'hidden')}>
                  {!isLoading && isGuest && (
-                    <div className="bg-muted p-4 rounded-lg text-center space-y-2">
+                    <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
                         <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                         <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                         <Progress value={(guestCredits / 3) * 100} className="h-2" />
@@ -118,11 +127,12 @@ export function NutriSnapApp() {
               <div className={cn(state === 'collapsed' ? 'hidden' : 'block')}>
                   <SidebarSeparator />
               </div>
-
-              {user ? (
+              {isLoading ? (
+                  <UserProfileButtonSkeleton />
+              ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2", state === 'expanded' ? 'justify-start' : 'justify-center')}>
+                     <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2 hover:bg-transparent", state === 'expanded' ? 'justify-start' : 'justify-center')}>
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
@@ -182,7 +192,7 @@ export function NutriSnapApp() {
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
-          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "20rem" } as React.CSSProperties}>
+          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "22rem" } as React.CSSProperties}>
               <SheetTitle>Sidebar Menu</SheetTitle>
               <SidebarHeader className="p-4 flex items-center justify-center h-16 border-b">
                 <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
@@ -213,20 +223,18 @@ export function NutriSnapApp() {
               <ClientOnly>
                   <div className="flex flex-col gap-4 p-4">
                       
-                      <div className="px-4 pb-4">
-                        {!isLoading && isGuest && (
-                            <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
-                                <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
-                                <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                                <Progress value={(guestCredits / 3) * 100} className="h-2" />
-                            </div>
-                        )}
-                      </div>
+                      {!isLoading && isGuest && (
+                          <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+                              <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
+                              <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                              <Progress value={(guestCredits / 3) * 100} className="h-2" />
+                          </div>
+                      )}
 
                       {user ? (
                           <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2", "justify-start")}>
+                              <Button variant="ghost" className="flex items-center w-full h-12 p-2 gap-2 justify-start hover:bg-transparent">
                               <Avatar className="h-8 w-8 rounded-lg">
                                   <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                                   <AvatarFallback>
@@ -403,10 +411,3 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
-
-
-
-
-    
-
-    
