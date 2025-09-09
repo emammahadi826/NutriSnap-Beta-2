@@ -107,7 +107,7 @@ export function NutriSnapApp() {
               
               <div className={cn(state === 'expanded' ? 'block' : 'hidden')}>
                  {!isLoading && isGuest && (
-                    <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+                    <div className="bg-muted p-4 rounded-lg text-center space-y-2">
                         <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                         <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                         <Progress value={(guestCredits / 3) * 100} className="h-2" />
@@ -138,7 +138,7 @@ export function NutriSnapApp() {
                   <DropdownMenuContent
                     side="top"
                     align={state === 'expanded' ? 'end' : 'center'}
-                    className="w-[--radix-popper-anchor-width]"
+                    className="w-56"
                   >
                     <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                       <UserIcon className="mr-2 h-4 w-4" />
@@ -158,7 +158,7 @@ export function NutriSnapApp() {
                  <>
                   {!isLoading && isGuest && (
                     <div className={cn("px-4 pb-2", state === 'expanded' ? 'hidden' : 'block')}>
-                       <div className="bg-muted p-4 rounded-lg text-center space-y-2">
+                       <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
                             <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                             <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                             <Progress value={(guestCredits / 3) * 100} className="h-2" />
@@ -241,7 +241,7 @@ export function NutriSnapApp() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                               side="top"
-                              className="w-[--radix-popper-anchor-width]"
+                              className="w-56"
                           >
                             <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                                   <UserIcon className="mr-2 h-4 w-4" />
@@ -406,5 +406,7 @@ export function NutriSnapApp() {
 
 
 
+
+    
 
     
