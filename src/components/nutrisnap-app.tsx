@@ -103,12 +103,12 @@ export function NutriSnapApp() {
           
             {isGuest && (
                 <div className={cn("px-4 pb-4", state === 'collapsed' && 'hidden')}>
-                    <div className="bg-muted p-3 rounded-lg text-center">
-                        <div className="flex items-center justify-center gap-2 mb-2">
-                           <Coins className="h-5 w-5 text-primary" />
-                           <p className="font-bold text-lg">{guestCredits} / 3</p>
+                    <div className="bg-muted p-3 rounded-lg text-left space-y-2">
+                         <div className="flex items-center justify-between text-xs">
+                           <p className="font-semibold flex items-center gap-1.5"><Coins className="h-4 w-4 text-primary" /> Guest Credits</p>
+                           <p className="font-mono font-bold">{guestCredits} / 3</p>
                         </div>
-                         <p className="text-xs text-muted-foreground">Free credits remaining</p>
+                        <Progress value={(guestCredits / 3) * 100} className="h-2" />
                     </div>
                 </div>
             )}
@@ -202,12 +202,12 @@ export function NutriSnapApp() {
               </SidebarMenu>
                {isGuest && (
                 <div className="px-4 pb-4">
-                    <div className="bg-muted p-3 rounded-lg text-center">
-                        <div className="flex items-center justify-center gap-2 mb-2">
-                           <Coins className="h-5 w-5 text-primary" />
-                           <p className="font-bold text-lg">{guestCredits} / 3</p>
+                     <div className="bg-muted p-3 rounded-lg text-left space-y-2">
+                         <div className="flex items-center justify-between text-xs">
+                           <p className="font-semibold flex items-center gap-1.5"><Coins className="h-4 w-4 text-primary" /> Guest Credits</p>
+                           <p className="font-mono font-bold">{guestCredits} / 3</p>
                         </div>
-                         <p className="text-xs text-muted-foreground">Free credits remaining</p>
+                        <Progress value={(guestCredits / 3) * 100} className="h-2" />
                     </div>
                 </div>
             )}
