@@ -115,7 +115,7 @@ export function NutriSnapApp() {
           <ClientOnly>
             <div className={cn("flex flex-col gap-4 p-4 items-center")}>
               
-              {!user && !authLoading && state === 'expanded' && (
+              {isGuest && !authLoading && state === 'expanded' && (
                 <div className="bg-muted/10 border p-3 rounded-lg text-center space-y-2 mb-2 w-full">
                     <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                     <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
@@ -132,23 +132,23 @@ export function NutriSnapApp() {
               ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2 hover:bg-transparent justify-start", state === 'collapsed' ? 'flex-col h-auto' : '')}>
+                     <Button variant="ghost" className="flex items-center w-full h-auto p-2 gap-2 justify-start hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0" >
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
                           {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                         </AvatarFallback>
                       </Avatar>
-                      <div className={cn("flex-1 flex items-center justify-between w-full", state === 'collapsed' ? 'justify-center mt-2' : '')}>
-                          <span className={cn("truncate", state === 'expanded' ? 'ml-1' : 'text-xs')}>{getUserDisplayName()}</span>
-                          <ChevronUp className={cn("h-4 w-4", state === 'expanded' ? 'ml-auto' : 'hidden')} />
+                      <div className="flex-1 flex items-center justify-between w-full">
+                          <span className="truncate ml-1">{getUserDisplayName()}</span>
+                          <ChevronUp className="h-4 w-4 ml-auto" />
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     side="top"
-                    align={state === 'expanded' ? 'start' : 'center'}
-                    className="w-56"
+                    align="start"
+                    className="w-full"
                   >
                     <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                       <UserIcon className="mr-2 h-4 w-4" />
@@ -166,7 +166,7 @@ export function NutriSnapApp() {
                 </DropdownMenu>
               ) : (
                  <>
-                  {!authLoading && isGuest && (
+                  {isGuest && (
                     <div className={cn("pb-2", state === 'expanded' ? 'hidden' : 'block')}>
                        <div className="bg-muted p-2 rounded-lg text-center space-y-1">
                             <p className="font-bold text-sm text-foreground">{guestCredits}</p>
