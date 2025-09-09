@@ -13,6 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import type { UserProfile } from '@/lib/types';
 import { Separator } from './ui/separator';
+import QRCode from 'qrcode';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import Image from 'next/image';
 
 export function ProfilePage() {
     const { user, userProfile, loading: authLoading, updateUserProfile } = useAuth();
@@ -24,6 +27,8 @@ export function ProfilePage() {
     const [weight, setWeight] = useState<number | string>('');
     const [height, setHeight] = useState<number | string>('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [qrCodeUrl, setQrCodeUrl] = useState('');
+    const [isQrDialogOpen, setIsQrDialogOpen] = useState(false);
 
     useEffect(() => {
         if (userProfile) {
@@ -35,6 +40,19 @@ export function ProfilePage() {
             setHeight(userProfile.height ? (userProfile.height / 30.48).toFixed(1) : '');
         }
     }, [userProfile]);
+
+    useEffect(() => {
+        if (user) {
+            const qrData = JSON.stringify({ uid: user.uid });
+            QRCode.toDataURL(qrData)
+                .then(url => {
+                    setQrCodeUrl(url);
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        }
+    }, [user]);
     
     if (authLoading && !isSubmitting) {
         return <ProfilePageSkeleton />;
@@ -123,7 +141,28 @@ export function ProfilePage() {
                         <p className="text-muted-foreground">{user.email}</p>
                     </div>
                 </div>
-                <QrCode className="h-8 w-8 text-muted-foreground" />
+                <Dialog open={isQrDialogOpen} onOpenChange={setIsQrDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <QrCode className="h-8 w-8 text-muted-foreground" />
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-sm">
+                        <DialogHeader>
+                            <DialogTitle>Link Your Device</DialogTitle>
+                        </DialogHeader>
+                        <div className="flex flex-col items-center justify-center p-4">
+                            {qrCodeUrl ? (
+                                <>
+                                    <Image src={qrCodeUrl} alt="Your personal QR code" width={256} height={256} />
+                                    <p className="mt-4 text-center text-muted-foreground">Scan this QR code from another device to log in instantly.</p>
+                                </>
+                            ) : (
+                                <Loader2 className="h-8 w-8 animate-spin" />
+                            )}
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <Separator />

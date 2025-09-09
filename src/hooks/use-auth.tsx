@@ -18,6 +18,7 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
   getRedirectResult,
+  signInWithCustomToken as firebaseSignInWithCustomToken,
 } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -35,9 +36,10 @@ interface AuthContextType {
   useGuestCredit: () => void;
   signUpAndCreateProfile: (email: string, pass: string, profileData: UserProfile) => Promise<boolean>;
   logIn: (email: string, pass: string) => Promise<boolean>;
-  logOut: () => void;
+  logOut: (preventRedirect?: boolean) => void;
   updateUserProfile: (profileData: Partial<UserProfile>) => Promise<boolean>;
   signInWithGoogle: () => Promise<boolean>;
+  signInWithCustomToken: (uid: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -52,6 +54,7 @@ const AuthContext = createContext<AuthContextType>({
   logOut: () => {},
   updateUserProfile: async () => false,
   signInWithGoogle: async () => false,
+  signInWithCustomToken: async () => false,
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -192,9 +195,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logOut = () => {
+  const logOut = (preventRedirect = false) => {
     signOut(auth);
-    router.push('/login');
+    if (!preventRedirect) {
+        router.push('/login');
+    }
   };
   
   const updateUserProfile = async (profileData: Partial<UserProfile>) => {
@@ -239,6 +244,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     }
   };
+  
+  const signInWithCustomToken = async (uid: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      // In a real app, this token would be generated on a secure server and sent to the client.
+      // We are creating a mock token here for demonstration purposes. This is insecure.
+      // A real token is a JWT signed by a service account.
+      // This is a placeholder for that logic.
+      const isDevelopment = process.env.NODE_ENV === 'development';
+      if (!isDevelopment) {
+          throw new Error("Custom token sign in is only available in development environment for this demo.");
+      }
+      
+      // This is a simplified, insecure method. A real app MUST use a secure backend to create tokens.
+      // To make this work with Firebase Auth Emulator, we can just use the UID as the token.
+      // For a real Firebase backend, you need the Admin SDK.
+      const mockToken = uid;
+      
+      // The following will only work with the Firebase Auth Emulator configured to accept UIDs as tokens.
+      // It will FAIL with a real Firebase backend.
+      await firebaseSignInWithCustomToken(auth, mockToken);
+
+      return true;
+    } catch (error: any) {
+        console.error("Custom token sign-in error:", error);
+        setError(error.message);
+        toast({ variant: 'destructive', title: 'Linking Failed', description: "Could not sign in. Ensure you're running in a development environment with the Auth emulator." });
+        setLoading(false);
+        return false;
+    }
+    // setLoading(false) is handled by onAuthStateChanged
+  }
 
 
   const value = {
@@ -251,6 +289,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     logOut,
     updateUserProfile,
     signInWithGoogle,
+    signInWithCustomToken,
     guestCredits,
     useGuestCredit,
   };
