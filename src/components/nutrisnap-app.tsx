@@ -105,15 +105,15 @@ export function NutriSnapApp() {
           <ClientOnly>
             <div className={cn("flex flex-col gap-4", state === 'collapsed' && 'p-2 items-center')}>
               
-              {isGuest && (
-                 <div className={cn("px-2 pb-2", state === 'collapsed' ? 'hidden' : 'block')}>
-                    <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+              <div className={cn("px-4 pb-4", state === 'expanded' ? 'block' : 'hidden')}>
+                 {isGuest && (
+                    <div className="bg-muted p-4 rounded-lg text-center space-y-2">
                         <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                         <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                         <Progress value={(guestCredits / 3) * 100} className="h-2" />
                     </div>
-                </div>
-              )}
+                )}
+              </div>
               
               <div className={cn(state === 'collapsed' ? 'hidden' : 'block')}>
                   <SidebarSeparator />
@@ -158,11 +158,11 @@ export function NutriSnapApp() {
                  <>
                   {isGuest && (
                     <div className={cn("px-4 pb-2", state === 'expanded' ? 'hidden' : 'block')}>
-                      <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
-                          <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
-                          <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                          <Progress value={(guestCredits / 3) * 100} className="h-2" />
-                      </div>
+                       <div className="bg-muted p-4 rounded-lg text-center space-y-2">
+                            <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
+                            <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                            <Progress value={(guestCredits / 3) * 100} className="h-2" />
+                        </div>
                     </div>
                   )}
                     <Button asChild variant="outline" className={cn("w-full justify-center text-base h-12", state === 'collapsed' && 'h-10 w-10 p-0')}>
@@ -182,7 +182,7 @@ export function NutriSnapApp() {
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile}>
-          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "24rem" } as React.CSSProperties}>
+          <SheetContent side="left" className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground flex flex-col border-r" style={{ "--sidebar-width": "20rem" } as React.CSSProperties}>
               <SheetTitle>Sidebar Menu</SheetTitle>
               <SidebarHeader className="p-4 flex items-center justify-center h-16 border-b">
                 <h1 className="text-primary font-headline text-2xl">NutriSnap</h1>
@@ -213,15 +213,15 @@ export function NutriSnapApp() {
               <ClientOnly>
                   <div className="flex flex-col gap-4 p-4">
                       
-                      {isGuest && (
-                        <div className="px-2 pb-2">
-                            <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
+                      <div className="px-4 pb-4">
+                        {isGuest && (
+                            <div className="bg-muted p-4 rounded-lg text-center space-y-2">
                                 <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                                 <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                                 <Progress value={(guestCredits / 3) * 100} className="h-2" />
                             </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
 
                       {user ? (
                           <DropdownMenu>
@@ -354,10 +354,8 @@ export function NutriSnapApp() {
          <div className="flex h-screen bg-background">
           <AppSidebar />
            <main className="flex-1 flex flex-col h-screen">
-             <header className="flex h-16 items-center justify-between px-4 border-b shrink-0 md:justify-end">
-                <div className="md:hidden">
-                    <SidebarTrigger />
-                </div>
+             <header className="flex h-16 items-center justify-between px-4 border-b shrink-0">
+                <SidebarTrigger />
                 <div className="flex items-center gap-2">
                     {activePage === 'home' && (
                         <>
@@ -412,4 +410,5 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
 

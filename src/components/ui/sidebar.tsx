@@ -220,7 +220,7 @@ const Sidebar = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-            "group hidden md:flex text-sidebar-foreground transition-all duration-200 ease-in-out",
+            "group hidden md:flex text-sidebar-foreground transition-all duration-200 ease-in-out shrink-0",
             state === 'collapsed' ? 'w-[var(--sidebar-width-icon)]' : 'w-[var(--sidebar-width)]'
         )}
         data-state={state}
