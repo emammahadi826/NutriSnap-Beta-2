@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useMealLogger } from '@/hooks/use-meal-logger';
@@ -112,17 +113,17 @@ export function NutriSnapApp() {
         </SidebarContent>
         <SidebarFooter>
           <ClientOnly>
-            <div className={cn("flex flex-col gap-4", state === 'collapsed' ? 'p-2 items-center' : 'p-4')}>
+            <div className={cn("flex flex-col gap-4 p-4 items-center")}>
               
               {!user && !authLoading && state === 'expanded' && (
-                <div className="bg-muted/10 border p-3 rounded-lg text-center space-y-2 mb-2">
+                <div className="bg-muted/10 border p-3 rounded-lg text-center space-y-2 mb-2 w-full">
                     <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                     <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                     <Progress value={(guestCredits / 3) * 100} className="h-2" />
                 </div>
               )}
               
-              <div className={cn(state === 'collapsed' ? 'hidden' : 'block')}>
+              <div className={cn(state === 'collapsed' ? 'hidden' : 'block w-full')}>
                   <SidebarSeparator />
               </div>
 
@@ -146,7 +147,7 @@ export function NutriSnapApp() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     side="top"
-                    align={state === 'expanded' ? 'end' : 'center'}
+                    align="start"
                     className="w-48"
                   >
                     <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
@@ -230,7 +231,12 @@ export function NutriSnapApp() {
                       )}
 
                       {authLoading ? (
-                         <UserProfileButtonSkeleton />
+                         <div className="flex items-center w-full h-12 p-2 gap-2 justify-start">
+                            <Skeleton className="h-8 w-8 rounded-lg" />
+                            <div className="flex-1">
+                                <Skeleton className="h-4 w-24" />
+                            </div>
+                        </div>
                       ) : user ? (
                           <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -249,6 +255,7 @@ export function NutriSnapApp() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                               side="top"
+                              align="start"
                               className="w-56"
                           >
                             <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
