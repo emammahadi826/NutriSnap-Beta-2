@@ -132,23 +132,23 @@ export function NutriSnapApp() {
               ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2 hover:bg-transparent hover:text-current", state === 'expanded' ? 'justify-start' : 'justify-center')}>
+                     <Button variant="ghost" className={cn("flex items-center w-full h-12 p-2 gap-2 hover:bg-transparent justify-start", state === 'collapsed' ? 'flex-col h-auto' : '')}>
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
                           {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                         </AvatarFallback>
                       </Avatar>
-                      <div className={cn("flex-1 flex items-center", state === 'collapsed' && 'hidden')}>
-                          <span className="truncate ml-1">{getUserDisplayName()}</span>
-                          <ChevronUp className="ml-auto h-4 w-4" />
+                      <div className={cn("flex-1 flex items-center justify-between w-full", state === 'collapsed' ? 'justify-center mt-2' : '')}>
+                          <span className={cn("truncate", state === 'expanded' ? 'ml-1' : 'text-xs')}>{getUserDisplayName()}</span>
+                          <ChevronUp className={cn("h-4 w-4", state === 'expanded' ? 'ml-auto' : 'hidden')} />
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     side="top"
-                    align="start"
-                    className="w-48"
+                    align={state === 'expanded' ? 'start' : 'center'}
+                    className="w-56"
                   >
                     <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                       <UserIcon className="mr-2 h-4 w-4" />
