@@ -114,13 +114,11 @@ export function NutriSnapApp() {
           <ClientOnly>
             <div className={cn("flex flex-col gap-4", state === 'collapsed' ? 'p-2 items-center' : 'p-4')}>
               
-              {!user && !authLoading && (
-                <div className={cn("transition-opacity duration-300", state === 'expanded' ? 'opacity-100' : 'opacity-0 h-0')}>
-                    <div className="bg-muted/10 border p-3 rounded-lg text-center space-y-2 mb-2">
-                        <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
-                        <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
-                        <Progress value={(guestCredits / 3) * 100} className="h-2" />
-                    </div>
+              {!user && !authLoading && state === 'expanded' && (
+                <div className="bg-muted/10 border p-3 rounded-lg text-center space-y-2 mb-2">
+                    <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
+                    <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
+                    <Progress value={(guestCredits / 3) * 100} className="h-2" />
                 </div>
               )}
               
@@ -231,7 +229,9 @@ export function NutriSnapApp() {
                           </div>
                       )}
 
-                      {user ? (
+                      {authLoading ? (
+                         <UserProfileButtonSkeleton />
+                      ) : user ? (
                           <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                               <Button variant="ghost" className="flex items-center w-full h-12 p-2 gap-2 justify-start hover:bg-transparent hover:text-current">
@@ -241,7 +241,7 @@ export function NutriSnapApp() {
                                   {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                                   </AvatarFallback>
                               </Avatar>
-                              <div className={cn("flex-1 flex items-center justify-between")}>
+                              <div className={"flex-1 flex items-center justify-between"}>
                                   <span className="truncate ml-1">{getUserDisplayName()}</span>
                                   <ChevronUp className="ml-auto h-4 w-4" />
                               </div>
@@ -249,7 +249,7 @@ export function NutriSnapApp() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                               side="top"
-                              className="w-48"
+                              className="w-56"
                           >
                             <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                                   <UserIcon className="mr-2 h-4 w-4" />
@@ -411,5 +411,7 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
+    
 
     
