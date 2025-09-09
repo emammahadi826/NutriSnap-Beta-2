@@ -1,12 +1,11 @@
-
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Sun, Moon, Link as LinkIcon, ChevronRight } from "lucide-react";
-import { Separator } from "../ui/separator";
-import { useTheme } from "next-themes";
+import { Separator } from "@/components/ui/separator";
+import { useTheme } from "@/components/theme-provider";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
@@ -47,10 +46,6 @@ export function SettingsPage() {
                     id="theme-switch"
                     checked={theme === 'dark'}
                     onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-                    className={cn(
-                        "data-[state=unchecked]:bg-primary",
-                        "data-[state=checked]:bg-primary-foreground"
-                    )}
                 />
             </div>
             <div className="p-4 rounded-lg bg-background border">
