@@ -280,6 +280,12 @@ export function MealLogDialog({ onMealLog, trigger, startWithCamera = false }: M
                  )}
                  <DialogTitle className="font-headline text-2xl">Log a New Meal</DialogTitle>
               </div>
+              {!user && (
+                <div className="flex items-center gap-1.5 text-sm font-semibold text-primary">
+                    <Coins className="h-4 w-4" />
+                    <span>{guestCredits} Credits Left</span>
+                </div>
+              )}
           </div>
           {view !== 'auth_required' && view !== 'no_credits' && <DialogDescription>
             Snap a picture of your meal and let our AI do the rest.
@@ -410,3 +416,5 @@ export function MealLogDialog({ onMealLog, trigger, startWithCamera = false }: M
     </Dialog>
   );
 }
+
+    

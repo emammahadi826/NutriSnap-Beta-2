@@ -105,7 +105,7 @@ export function NutriSnapApp() {
                 <div className={cn("px-4 pb-4", state === 'collapsed' && 'hidden')}>
                     <div className="bg-transparent border p-4 rounded-lg text-left space-y-3">
                          <div className="flex items-center justify-between text-sm">
-                           <p className="font-semibold flex items-center gap-1.5"><Coins className="h-4 w-4 text-primary" /> Guest Credits</p>
+                           <p className="font-semibold flex items-center gap-1.5"><Coins className="h-4 w-4 text-primary" /> Credits</p>
                            <p className="font-mono font-bold">{guestCredits} / 3</p>
                         </div>
                         <Progress value={(guestCredits / 3) * 100} className="h-2.5" />
@@ -204,7 +204,7 @@ export function NutriSnapApp() {
                 <div className="px-4 pb-4">
                      <div className="bg-transparent border p-4 rounded-lg text-left space-y-3">
                          <div className="flex items-center justify-between text-sm">
-                           <p className="font-semibold flex items-center gap-1.5"><Coins className="h-4 w-4 text-primary" /> Guest Credits</p>
+                           <p className="font-semibold flex items-center gap-1.5"><Coins className="h-4 w-4 text-primary" /> Credits</p>
                            <p className="font-mono font-bold">{guestCredits} / 3</p>
                         </div>
                         <Progress value={(guestCredits / 3) * 100} className="h-2.5" />
@@ -393,3 +393,5 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
+
+    
