@@ -103,7 +103,7 @@ export function NutriSnapApp() {
           
             {isGuest && (
                  <div className={cn("px-2 pb-4", state === 'collapsed' && 'hidden')}>
-                    <div className="bg-muted p-4 rounded-lg text-center space-y-2">
+                    <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
                         <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                         <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                         <Progress value={(guestCredits / 3) * 100} className="h-2" />
@@ -200,7 +200,7 @@ export function NutriSnapApp() {
               </SidebarMenu>
                {isGuest && (
                  <div className="px-2 pb-4">
-                    <div className="bg-muted p-4 rounded-lg text-center space-y-2">
+                    <div className="bg-transparent border p-4 rounded-lg text-center space-y-2">
                         <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                         <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                         <Progress value={(guestCredits / 3) * 100} className="h-2" />
@@ -389,5 +389,3 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
-
-    
