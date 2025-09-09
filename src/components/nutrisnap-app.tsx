@@ -62,20 +62,25 @@ export function NutriSnapApp() {
     }
     
     const getUserDisplayName = () => {
+        if (isGuest) return 'Guest';
         if (userProfile?.displayName) {
-            return userProfile.displayName;
+            return userProfile.displayName.length > 15 && state === 'expanded' ? 
+                   `${userProfile.displayName.substring(0, 15)}...` : 
+                   userProfile.displayName;
         }
         if (user?.email) {
-            return user.email.length > 20 ? `${user.email.substring(0, 20)}...` : user.email;
+            return user.email.length > 20 && state === 'expanded' ? 
+                   `${user.email.substring(0, 20)}...` : 
+                   user.email;
         }
-        return 'Guest';
+        return 'User';
     };
     
     const UserProfileButtonSkeleton = () => (
-      <div className={cn("flex w-full p-2 gap-2", state === 'expanded' ? 'justify-start items-center' : 'justify-center flex-col')}>
+      <div className={cn("flex w-full p-2 gap-2", state === 'expanded' ? 'justify-start items-center' : 'justify-center')}>
         <Skeleton className="h-10 w-10 rounded-lg" />
-        <div className={cn("flex-1", state === 'collapsed' ? "mt-1" : "")}>
-          <Skeleton className={cn("h-4", state === 'expanded' ? "w-24" : "w-10")} />
+        <div className={cn("flex-1", state === 'collapsed' ? "hidden" : "")}>
+          <Skeleton className={"h-4 w-24"} />
         </div>
       </div>
     );
@@ -94,26 +99,26 @@ export function NutriSnapApp() {
             <SidebarMenuItem>
               <SidebarMenuButton onClick={() => handleMenuItemClick('home')} isActive={activePage === 'home'} variant={'outline'} size="lg" className="h-12">
                 <Home className="h-6 w-6"/>
-                <span className={cn(state === 'collapsed' && 'hidden')}>Home</span>
+                <span className={cn("truncate", state === 'collapsed' && 'hidden')}>Home</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => handleMenuItemClick('chat')} isActive={activePage === 'chat'} variant={'outline'} size="lg" className="h-12">
                     <MessageCircle className="h-6 w-6"/>
-                    <span className={cn(state === 'collapsed' && 'hidden')}>Chat</span>
+                    <span className={cn("truncate", state === 'collapsed' && 'hidden')}>Chat</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => handleMenuItemClick('report')} isActive={activePage === 'report'} variant={'outline'} size="lg" className="h-12">
                     <BarChart2 className="h-6 w-6"/>
-                    <span className={cn(state === 'collapsed' && 'hidden')}>Report</span>
+                    <span className={cn("truncate", state === 'collapsed' && 'hidden')}>Report</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
           <ClientOnly>
-            <div className={cn("flex flex-col gap-4 p-4 items-center")}>
+            <div className={cn("flex flex-col gap-4 p-4", state === 'expanded' ? 'items-start' : 'items-center')}>
               
               {isGuest && !authLoading && state === 'expanded' && (
                 <div className="bg-muted/10 border p-3 rounded-lg text-center space-y-2 mb-2 w-full">
@@ -132,23 +137,23 @@ export function NutriSnapApp() {
               ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                     <Button variant="ghost" className={cn("flex w-full h-auto p-2 gap-2 hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0", state === 'expanded' ? 'justify-start items-center' : 'justify-center')} >
-                      <Avatar className="h-10 w-10 rounded-lg">
+                     <Button variant="ghost" className="flex w-full h-auto p-2 gap-2 hover:bg-transparent hover:text-current focus-visible:ring-0 focus-visible:ring-offset-0 justify-start items-center">
+                      <Avatar className="h-10 w-10 rounded-lg shrink-0">
                         <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                         <AvatarFallback>
                           {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                         </AvatarFallback>
                       </Avatar>
-                      <div className={cn("flex-1 flex items-center justify-between w-full", state === 'collapsed' ? 'hidden' : 'ml-1')}>
-                          <span className="truncate text-xs">{getUserDisplayName()}</span>
-                          <ChevronUp className={cn("h-4 w-4", state === 'expanded' ? 'ml-auto' : 'hidden')} />
+                      <div className={cn("flex-1 flex items-center justify-between w-full min-w-0", state === 'collapsed' ? 'hidden' : 'ml-1')}>
+                          <span className="truncate text-sm font-medium">{getUserDisplayName()}</span>
+                          <ChevronUp className={cn("h-4 w-4 shrink-0", state === 'expanded' ? 'ml-auto' : 'hidden')} />
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     side="top"
                     align="start"
-                    className={cn(state === 'expanded' ? "w-56" : "w-auto")}
+                    className={cn(state === 'expanded' ? "w-[calc(var(--sidebar-width)_-_2rem)]" : "w-auto")}
                     sideOffset={10}
                   >
                     <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
@@ -224,7 +229,7 @@ export function NutriSnapApp() {
                   <div className="flex flex-col gap-4 p-4 items-center">
                       
                       {!user && !authLoading && (
-                          <div className="bg-muted/10 border p-3 rounded-lg text-center space-y-2">
+                          <div className="bg-muted/10 border p-3 rounded-lg text-center space-y-2 w-full">
                               <p className="font-bold text-lg text-foreground">{guestCredits} credits left</p>
                               <p className="text-xs text-muted-foreground">Log in for unlimited meals.</p>
                               <Progress value={(guestCredits / 3) * 100} className="h-2" />
@@ -248,9 +253,9 @@ export function NutriSnapApp() {
                                   {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <UserIcon />}
                                   </AvatarFallback>
                               </Avatar>
-                              <div className={"flex-1 flex items-center justify-between w-full"}>
-                                  <span className="truncate ml-1">{getUserDisplayName()}</span>
-                                  <ChevronUp className="ml-auto h-4 w-4" />
+                              <div className={"flex-1 flex items-center justify-between w-full min-w-0"}>
+                                  <span className="truncate ml-1 font-medium">{getUserDisplayName()}</span>
+                                  <ChevronUp className="ml-auto h-4 w-4 shrink-0" />
                               </div>
                               </Button>
                           </DropdownMenuTrigger>
@@ -258,6 +263,7 @@ export function NutriSnapApp() {
                               side="top"
                               align="start"
                               className="w-56"
+                               sideOffset={10}
                           >
                             <DropdownMenuItem onClick={() => handleMenuItemClick('profile')}>
                                   <UserIcon className="mr-2 h-4 w-4" />
@@ -419,10 +425,3 @@ export function NutriSnapApp() {
       </SidebarProvider>
   );
 }
-
-    
-
-    
-
-    
-
