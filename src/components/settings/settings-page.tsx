@@ -4,7 +4,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Sun, Moon, Link as LinkIcon, ChevronRight, Loader2, User, X } from "lucide-react";
+import { Sun, Moon, Link as LinkIcon, ChevronRight, Loader2, User, X, Camera } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/components/theme-provider";
 import { useState, useEffect, useRef } from "react";
