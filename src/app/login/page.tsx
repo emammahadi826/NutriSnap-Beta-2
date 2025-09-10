@@ -72,6 +72,16 @@ export default function Login() {
   const startScanning = async () => {
     setScanError(null);
     scanProcessedRef.current = false; // Reset scan processed flag
+
+    // Wait a moment for the dialog to render the element
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    if (!document.getElementById('qr-reader-login')) {
+        console.error("QR reader element not found after delay.");
+        setScanError("Could not initialize the scanner. Please close and re-open the dialog.");
+        return;
+    }
+    
     const qrCodeSuccessCallback = (decodedText: string, result: Html5QrcodeResult) => {
         handleScanSuccess(decodedText);
     };
