@@ -387,7 +387,7 @@ export default function Login() {
                                         Scan QR
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent className="max-w-[95vw] sm:max-w-sm">
+                                <DialogContent className="max-w-[95vw] sm:max-w-md">
                                     <DialogHeader>
                                         <DialogTitle>Scan to Login</DialogTitle>
                                         <DialogDescription>
@@ -455,5 +455,7 @@ export default function Login() {
     </div>
   );
 }
+
+    
 
     
