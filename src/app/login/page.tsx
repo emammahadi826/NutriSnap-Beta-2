@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import type { Html5Qrcode, Html5QrcodeError, Html5QrcodeResult } from 'html5-qrcode';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { cn } from '@/lib/utils';
 
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -195,7 +196,11 @@ export default function Login() {
             <Flame className="w-8 h-8 text-primary" />
             <h1 className="text-2xl font-bold font-headline">NutriSnap</h1>
         </div>
-        <Card className="w-full max-w-sm border-border/50 bg-card/80 dark:bg-card/50 backdrop-blur-sm">
+        <Card className={cn(
+            "w-full max-w-sm border-border/50 bg-card/80 dark:bg-card/50 backdrop-blur-sm transition-all duration-300 ease-in-out",
+            isSignUp ? "min-h-[550px]" : "min-h-[480px]",
+            "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+            )}>
             <CardHeader className="text-center">
             <CardTitle className="text-2xl font-semibold">
                 {isSignUp ? 'Create an account' : (scannedEmail ? `Welcome Back!` : 'Welcome back')}
@@ -430,3 +435,5 @@ export default function Login() {
     </div>
   );
 }
+
+    
