@@ -18,7 +18,6 @@ export default function WelcomePage() {
                  <Sparkles className="h-4 w-4 text-blue-200 absolute bottom-[10%] right-[5%]" />
                  <Sparkles className="h-8 w-8 text-purple-200 absolute top-[40%] left-[20%]" />
                  <Sparkles className="h-5 w-5 text-blue-400 absolute top-[50%] right-[30%]" />
-                 <Sparkles className="h-3 w-3 text-purple-300 absolute bottom-[30%] left-[40%]" />
                  <Sparkles className="h-6 w-6 text-blue-200 absolute bottom-[25%] right-[20%]" />
                  <Circle className="h-6 w-6 text-blue-200 absolute top-[5%] right-[30%]" />
                  <Square className="h-4 w-4 text-purple-300 absolute top-[15%] left-[45%]" />
