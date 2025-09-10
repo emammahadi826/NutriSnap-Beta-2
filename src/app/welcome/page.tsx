@@ -3,7 +3,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Flame, ChevronRight, Sparkles } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function WelcomePage() {
@@ -24,23 +23,23 @@ export default function WelcomePage() {
                     </div>
                 </header>
 
-                <main className="flex-1 flex flex-col items-center justify-center p-4">
-                    <div className="space-y-8 relative">
+                <main className="flex-1 flex flex-col items-start justify-center p-4 sm:p-8 md:p-12">
+                    <div className="space-y-6 relative max-w-xl">
                         <div className="relative">
                             <Sparkles className="h-6 w-6 text-purple-400 absolute -top-12 left-1/4" />
                             <Sparkles className="h-4 w-4 text-purple-300 absolute -bottom-12 right-1/4" />
-                             <h2 className="text-5xl md:text-7xl font-bold !leading-tight text-foreground">
+                             <h2 className="text-5xl md:text-7xl font-bold !leading-tight text-foreground text-left">
                                 Snap, Track, <br/> & Thrive
                             </h2>
                         </div>
-                        <p className="max-w-md text-lg text-muted-foreground">
+                        <p className="max-w-md text-lg text-muted-foreground text-left">
                            Your AI-powered nutrition coach. Instantly identify food from a photo, track your macros, and get personalized health advice to reach your goals faster.
                         </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-start gap-4 pt-4">
+                        <div className="flex flex-col sm:flex-row items-start justify-start gap-4 pt-4 text-left">
                             <Button asChild size="lg" className="h-12 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-transform hover:scale-105">
                                 <Link href="/login">Get Started <ChevronRight className="h-5 w-5 ml-1" /></Link>
                             </Button>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-muted-foreground sm:self-center">
                                 Already have an account? <Link href="/login" className="underline hover:text-primary">Log In</Link>
                             </p>
                         </div>
