@@ -16,11 +16,18 @@ export default function WelcomePage() {
 
             {/* Content */}
             <div className="relative z-10 flex flex-col flex-1">
-                <header className="p-4 sm:p-6">
+                <header className="p-4 sm:p-6 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Flame className="w-7 h-7 text-primary" />
                         <h1 className="text-xl font-bold font-headline">NutriSnap</h1>
                     </div>
+                    <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+                        <Link href="#" className="hover:text-primary transition-colors">Home</Link>
+                        <Link href="#" className="hover:text-primary transition-colors">Features</Link>
+                        <Link href="#" className="hover:text-primary transition-colors">Pricing</Link>
+                        <Link href="#" className="hover:text-primary transition-colors">About</Link>
+                        <Link href="#" className="hover:text-primary transition-colors">Contact</Link>
+                    </nav>
                 </header>
 
                 <main className="flex-1 flex flex-col items-start justify-center p-4 sm:p-8 md:p-12">
