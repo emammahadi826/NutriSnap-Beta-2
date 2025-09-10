@@ -181,7 +181,7 @@ export default function Login() {
         <Flame className="w-8 h-8 text-primary" />
         <h1 className="text-2xl font-bold font-headline">NutriSnap</h1>
       </div>
-      <Card className="w-full max-w-sm border-border/50 bg-card">
+      <Card className="w-full max-w-sm border-border/50 bg-card/80 dark:bg-card/50 backdrop-blur-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-semibold">
             {isSignUp ? 'Create an account' : (scannedEmail ? `Welcome Back!` : 'Welcome back')}
@@ -195,7 +195,7 @@ export default function Login() {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {scannedEmail ? (
-                <div className="flex items-center gap-3 p-3 rounded-md bg-muted border">
+                <div className="flex items-center gap-3 p-3 rounded-md bg-muted/50 dark:bg-muted/30 border">
                     <User className="h-5 w-5 text-muted-foreground" />
                     <div className="flex-1 font-semibold truncate">{scannedEmail}</div>
                     <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setScannedEmail(null); setEmail(''); }}>
@@ -213,7 +213,7 @@ export default function Login() {
                             required 
                             value={email} 
                             onChange={(e) => setEmail(e.target.value)} 
-                            className="bg-background"
+                            className="bg-background/50 dark:bg-background/30"
                             disabled={!!scannedEmail}
                         />
                     </div>
@@ -237,7 +237,7 @@ export default function Login() {
                         required 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)}
-                        className="bg-background pr-10"
+                        className="bg-background/50 dark:bg-background/30 pr-10"
                         />
                         <Button 
                         type="button" 
@@ -262,7 +262,7 @@ export default function Login() {
                     required 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)} 
-                    className="bg-background"
+                    className="bg-background/50 dark:bg-background/30"
                   />
                 </div>
                 <div className="space-y-2">
@@ -274,7 +274,7 @@ export default function Login() {
                         required 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)}
-                        className="bg-background pr-10"
+                        className="bg-background/50 dark:bg-background/30 pr-10"
                         />
                         <Button 
                         type="button" 
@@ -296,7 +296,7 @@ export default function Login() {
                             required 
                             value={confirmPassword} 
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="bg-background pr-10"
+                            className="bg-background/50 dark:bg-background/30 pr-10"
                         />
                         <Button 
                             type="button" 
@@ -320,7 +320,7 @@ export default function Login() {
                 <span className="w-full border-t border-border/50" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">
+                <span className="bg-card/80 dark:bg-card/50 backdrop-blur-sm px-2 text-muted-foreground">
                   Or continue with
                 </span>
               </div>
@@ -419,3 +419,4 @@ export default function Login() {
     
 
     
+
