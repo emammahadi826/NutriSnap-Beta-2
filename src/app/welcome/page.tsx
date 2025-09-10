@@ -17,7 +17,7 @@ export default function WelcomePage() {
             </header>
 
             <main className="flex-1 flex flex-col items-center justify-center p-4">
-                 <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-8 text-center lg:text-left">
+                 <div className="container mx-auto grid grid-cols-1 items-center gap-8 text-center">
                     {/* Text Content */}
                     <div className="space-y-6 relative">
                         <Sparkles className="h-6 w-6 text-purple-400 absolute -top-12 left-1/4" />
@@ -25,10 +25,10 @@ export default function WelcomePage() {
                         <h2 className="text-4xl md:text-6xl font-bold !leading-tight">
                             Your Smart <br/> Nutrition Companion
                         </h2>
-                        <p className="max-w-md mx-auto lg:mx-0 text-lg text-muted-foreground">
+                        <p className="max-w-md mx-auto text-lg text-muted-foreground">
                             From quick snacks to full meals, NutriSnap is the only AI-powered assistant that helps you track your diet and achieve your health goals.
                         </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                            <Button asChild size="lg" className="h-12 px-8 text-lg font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-full shadow-lg transition-transform hover:scale-105">
                                 <Link href="/login">Get Started <ChevronRight className="h-5 w-5 ml-1" /></Link>
                             </Button>
@@ -36,21 +36,6 @@ export default function WelcomePage() {
                                 Already have an account? <Link href="/login" className="underline hover:text-primary">Log In</Link>
                             </p>
                         </div>
-                    </div>
-
-                    {/* Image Content */}
-                    <div className="relative w-full max-w-md mx-auto aspect-square hidden lg:flex items-center justify-center">
-                         <div className="absolute inset-0 bg-purple-300/30 dark:bg-purple-500/20 rounded-full blur-3xl"></div>
-                         <Sparkles className="h-8 w-8 text-purple-400 absolute top-8 right-8" />
-                         <Sparkles className="h-5 w-5 text-purple-400 absolute bottom-8 left-8" />
-                         <Image
-                            src="https://picsum.photos/seed/nutrisnap-hero/600/600"
-                            alt="A healthy and vibrant meal"
-                            width={500}
-                            height={500}
-                            className="object-cover rounded-full shadow-2xl z-10"
-                            data-ai-hint="healthy food"
-                        />
                     </div>
                 </div>
             </main>
