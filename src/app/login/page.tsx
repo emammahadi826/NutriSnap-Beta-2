@@ -42,8 +42,12 @@ export default function Login() {
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const passwordInputRef = useRef<HTMLInputElement>(null);
+  const scanProcessedRef = useRef(false);
   
   const handleScanSuccess = async (decodedText: string) => {
+      if (scanProcessedRef.current) return;
+      scanProcessedRef.current = true;
+
       stopScanning();
       try {
           const { email: qrEmail } = JSON.parse(decodedText);
@@ -67,6 +71,7 @@ export default function Login() {
   
   const startScanning = async () => {
     setScanError(null);
+    scanProcessedRef.current = false; // Reset scan processed flag
     const qrCodeSuccessCallback = (decodedText: string, result: Html5QrcodeResult) => {
         handleScanSuccess(decodedText);
     };
@@ -173,6 +178,7 @@ export default function Login() {
       if (open) {
         setScanError(null);
         setHasCameraPermission(null);
+        scanProcessedRef.current = false;
       }
   }
 
@@ -439,3 +445,5 @@ export default function Login() {
     </div>
   );
 }
+
+    
