@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Flame, Eye, EyeOff, Loader2, QrCode, Camera, Upload, User, Mail, X } from 'lucide-react';
+import { Flame, Eye, EyeOff, Loader2, QrCode, Camera, Upload, User, Mail, X, Sparkles, Circle, Square } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -176,247 +176,257 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-100/50 via-white to-blue-100/50 dark:from-gray-900 dark:via-black dark:to-purple-900/50 p-4 sm:p-6 md:p-8 text-foreground">
-      <div className="flex items-center gap-2 mb-6 sm:mb-8">
-        <Flame className="w-8 h-8 text-primary" />
-        <h1 className="text-2xl font-bold font-headline">NutriSnap</h1>
-      </div>
-      <Card className="w-full max-w-sm border-border/50 bg-card/80 dark:bg-card/50 backdrop-blur-sm">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-semibold">
-            {isSignUp ? 'Create an account' : (scannedEmail ? `Welcome Back!` : 'Welcome back')}
-          </CardTitle>
-          <CardDescription>
-            {isSignUp
-              ? 'Enter your details to get started'
-              : (scannedEmail ? 'Enter your password to log in.' : 'Log in to access your account')}
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            {scannedEmail ? (
-                <div className="flex items-center gap-3 p-3 rounded-md bg-muted/50 dark:bg-muted/30 border">
-                    <User className="h-5 w-5 text-muted-foreground" />
-                    <div className="flex-1 font-semibold truncate">{scannedEmail}</div>
-                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setScannedEmail(null); setEmail(''); }}>
-                        <X className="h-4 w-4" />
-                    </Button>
-                </div>
-            ) : (
-                 !isSignUp && (
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-100/50 via-white to-blue-100/50 dark:from-gray-900 dark:via-black dark:to-purple-900/50 p-4 sm:p-6 md:p-8 text-foreground overflow-hidden">
+       <div className="absolute inset-0 z-0 opacity-50">
+            <Sparkles className="h-4 w-4 text-purple-300 absolute top-[10%] left-[5%]" />
+            <Sparkles className="h-6 w-6 text-blue-300 absolute top-[20%] right-[10%]" />
+            <Sparkles className="h-5 w-5 text-purple-400 absolute bottom-[15%] left-[15%]" />
+            <Sparkles className="h-4 w-4 text-blue-200 absolute bottom-[10%] right-[5%]" />
+            <Sparkles className="h-8 w-8 text-purple-200 absolute top-[40%] left-[20%]" />
+            <Sparkles className="h-5 w-5 text-blue-400 absolute top-[50%] right-[30%]" />
+            <Sparkles className="h-6 w-6 text-blue-200 absolute bottom-[25%] right-[20%]" />
+            <Circle className="h-6 w-6 text-blue-200 absolute top-[5%] right-[30%]" />
+            <Square className="h-4 w-4 text-purple-300 absolute top-[15%] left-[45%]" />
+            <Circle className="h-8 w-8 text-purple-400 absolute bottom-[5%] left-[25%]" />
+            <Square className="h-5 w-5 text-blue-300 absolute bottom-[40%] right-[15%]" />
+        </div>
+      <div className="relative z-10 flex flex-col items-center w-full">
+        <div className="flex items-center gap-2 mb-6 sm:mb-8">
+            <Flame className="w-8 h-8 text-primary" />
+            <h1 className="text-2xl font-bold font-headline">NutriSnap</h1>
+        </div>
+        <Card className="w-full max-w-sm border-border/50 bg-card/80 dark:bg-card/50 backdrop-blur-sm">
+            <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-semibold">
+                {isSignUp ? 'Create an account' : (scannedEmail ? `Welcome Back!` : 'Welcome back')}
+            </CardTitle>
+            <CardDescription>
+                {isSignUp
+                ? 'Enter your details to get started'
+                : (scannedEmail ? 'Enter your password to log in.' : 'Log in to access your account')}
+            </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-4">
+                {scannedEmail ? (
+                    <div className="flex items-center gap-3 p-3 rounded-md bg-muted/50 dark:bg-muted/30 border">
+                        <User className="h-5 w-5 text-muted-foreground" />
+                        <div className="flex-1 font-semibold truncate">{scannedEmail}</div>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setScannedEmail(null); setEmail(''); }}>
+                            <X className="h-4 w-4" />
+                        </Button>
+                    </div>
+                ) : (
+                    !isSignUp && (
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input 
+                                id="email" 
+                                type="email" 
+                                placeholder="m@example.com" 
+                                required 
+                                value={email} 
+                                onChange={(e) => setEmail(e.target.value)} 
+                                className="bg-background/50 dark:bg-background/30"
+                                disabled={!!scannedEmail}
+                            />
+                        </div>
+                    )
+                )}
+                {!isSignUp && (
                     <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input 
-                            id="email" 
-                            type="email" 
-                            placeholder="m@example.com" 
+                        <div className="flex items-center justify-between">
+                            <Label htmlFor="password">Password</Label>
+                            {!isSignUp && (
+                                <Link href="#" className="text-xs text-primary/80 hover:text-primary hover:underline">
+                                    Forgot your password?
+                                </Link>
+                            )}
+                        </div>
+                        <div className="relative">
+                            <Input 
+                            id="password" 
+                            ref={passwordInputRef}
+                            type={showPassword ? "text" : "password"} 
                             required 
-                            value={email} 
-                            onChange={(e) => setEmail(e.target.value)} 
-                            className="bg-background/50 dark:bg-background/30"
-                            disabled={!!scannedEmail}
-                        />
-                    </div>
-                 )
-            )}
-            {!isSignUp && (
-                 <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                        <Label htmlFor="password">Password</Label>
-                        {!isSignUp && (
-                            <Link href="#" className="text-xs text-primary/80 hover:text-primary hover:underline">
-                                Forgot your password?
-                            </Link>
-                        )}
-                    </div>
-                    <div className="relative">
-                        <Input 
-                        id="password" 
-                        ref={passwordInputRef}
-                        type={showPassword ? "text" : "password"} 
-                        required 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="bg-background/50 dark:bg-background/30 pr-10"
-                        />
-                        <Button 
-                        type="button" 
-                        variant="ghost" 
-                        size="icon"
-                        className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
-                        onClick={() => setShowPassword(prev => !prev)}
-                        >
-                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                        </Button>
-                    </div>
-                </div>
-            )}
-            {isSignUp && (
-              <>
-               <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input 
-                    id="email" 
-                    type="email" 
-                    placeholder="m@example.com" 
-                    required 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                    className="bg-background/50 dark:bg-background/30"
-                  />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <div className="relative">
-                        <Input 
-                        id="password" 
-                        type={showPassword ? "text" : "password"} 
-                        required 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="bg-background/50 dark:bg-background/30 pr-10"
-                        />
-                        <Button 
-                        type="button" 
-                        variant="ghost" 
-                        size="icon"
-                        className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
-                        onClick={() => setShowPassword(prev => !prev)}
-                        >
-                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                        </Button>
-                    </div>
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="confirm-password">Confirm Password</Label>
-                    <div className="relative">
-                        <Input 
-                            id="confirm-password" 
-                            type={showConfirmPassword ? "text" : "password"} 
-                            required 
-                            value={confirmPassword} 
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)}
                             className="bg-background/50 dark:bg-background/30 pr-10"
-                        />
-                        <Button 
+                            />
+                            <Button 
                             type="button" 
                             variant="ghost" 
                             size="icon"
                             className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
-                            onClick={() => setShowConfirmPassword(prev => !prev)}
-                        >
-                            {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                        </Button>
-                    </div>
-                </div>
-              </>
-            )}
-            <Button type="submit" className="w-full h-10 font-semibold" disabled={isSubmitting}>
-              {isSubmitting ? <Loader2 className="animate-spin" /> : (isSignUp ? 'Sign Up' : 'Login')}
-            </Button>
-
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-border/50" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card/80 dark:bg-card/50 backdrop-blur-sm px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-2">
-                 <Button 
-                    variant="outline" 
-                    className="w-full" 
-                    type="button" 
-                    disabled={isSubmitting}
-                    onClick={async () => {
-                        setIsSubmitting(true);
-                        const success = await signInWithGoogle();
-                        if (!success) {
-                            setIsSubmitting(false);
-                        }
-                    }}
-                    >
-                    {isSubmitting ? <Loader2 className="animate-spin mr-2" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
-                    Google
-                </Button>
-                 <Dialog open={isScannerOpen} onOpenChange={handleScannerOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="outline" className="w-full" type="button" disabled={isSubmitting}>
-                            <QrCode className="mr-2 h-4 w-4" />
-                            Scan QR
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Scan to Login</DialogTitle>
-                            <DialogDescription>
-                                Point your camera at a NutriSnap QR code to log in instantly.
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4">
-                            <div id="qr-reader-login" className="w-full rounded-lg overflow-hidden aspect-square bg-muted"></div>
-                            
-                            {scanError && (
-                                    <Alert variant="destructive">
-                                    <AlertTitle>Scan Error</AlertTitle>
-                                    <AlertDescription>{scanError}</AlertDescription>
-                                </Alert>
-                            )}
-
-                            <div className="grid grid-cols-2 gap-2">
-                                    <Button onClick={startScanning} variant="outline" disabled={hasCameraPermission === false}>
-                                    <Camera className="mr-2 h-4 w-4" />
-                                    Scan
-                                    </Button>
-                                    <Button onClick={() => fileInputRef.current?.click()} variant="outline">
-                                    <Upload className="mr-2 h-4 w-4" />
-                                    Upload
-                                    </Button>
-                                    <input
-                                    type="file"
-                                    accept="image/png, image/jpeg, image/gif"
-                                    ref={fileInputRef}
-                                    onChange={handleFileUpload}
-                                    className="hidden"
-                                />
-                            </div>
+                            onClick={() => setShowPassword(prev => !prev)}
+                            >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </Button>
                         </div>
-                    </DialogContent>
-                </Dialog>
-            </div>
-          </CardContent>
-        </form>
-        {!scannedEmail && (
-            <CardFooter className="flex justify-center text-sm">
-                <p className="text-muted-foreground">
-                    {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-                    <Button variant="link" className="p-1" onClick={toggleForm}>
-                        {isSignUp ? 'Login' : 'Sign up'}
+                    </div>
+                )}
+                {isSignUp && (
+                <>
+                <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input 
+                        id="email" 
+                        type="email" 
+                        placeholder="m@example.com" 
+                        required 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                        className="bg-background/50 dark:bg-background/30"
+                    />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="password">Password</Label>
+                        <div className="relative">
+                            <Input 
+                            id="password" 
+                            type={showPassword ? "text" : "password"} 
+                            required 
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="bg-background/50 dark:bg-background/30 pr-10"
+                            />
+                            <Button 
+                            type="button" 
+                            variant="ghost" 
+                            size="icon"
+                            className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
+                            onClick={() => setShowPassword(prev => !prev)}
+                            >
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </Button>
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="confirm-password">Confirm Password</Label>
+                        <div className="relative">
+                            <Input 
+                                id="confirm-password" 
+                                type={showConfirmPassword ? "text" : "password"} 
+                                required 
+                                value={confirmPassword} 
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className="bg-background/50 dark:bg-background/30 pr-10"
+                            />
+                            <Button 
+                                type="button" 
+                                variant="ghost" 
+                                size="icon"
+                                className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
+                                onClick={() => setShowConfirmPassword(prev => !prev)}
+                            >
+                                {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </Button>
+                        </div>
+                    </div>
+                </>
+                )}
+                <Button type="submit" className="w-full h-10 font-semibold" disabled={isSubmitting}>
+                {isSubmitting ? <Loader2 className="animate-spin" /> : (isSignUp ? 'Sign Up' : 'Login')}
+                </Button>
+
+                <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-border/50" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card/80 dark:bg-card/50 backdrop-blur-sm px-2 text-muted-foreground">
+                    Or continue with
+                    </span>
+                </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2">
+                    <Button 
+                        variant="outline" 
+                        className="w-full" 
+                        type="button" 
+                        disabled={isSubmitting}
+                        onClick={async () => {
+                            setIsSubmitting(true);
+                            const success = await signInWithGoogle();
+                            if (!success) {
+                                setIsSubmitting(false);
+                            }
+                        }}
+                        >
+                        {isSubmitting ? <Loader2 className="animate-spin mr-2" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
+                        Google
                     </Button>
-                </p>
-            </CardFooter>
-        )}
-      </Card>
-      <p className="px-4 sm:px-8 text-center text-xs text-muted-foreground mt-8 max-w-sm">
-        By clicking continue, you agree to our{' '}
-        <Link href="#" className="underline underline-offset-4 hover:text-primary">
-          Terms of Service
-        </Link>{' '}
-        and{' '}
-        <Link href="#" className="underline underline-offset-4 hover:text-primary">
-          Privacy Policy
-        </Link>
-        .
-      </p>
+                    <Dialog open={isScannerOpen} onOpenChange={handleScannerOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="outline" className="w-full" type="button" disabled={isSubmitting}>
+                                <QrCode className="mr-2 h-4 w-4" />
+                                Scan QR
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Scan to Login</DialogTitle>
+                                <DialogDescription>
+                                    Point your camera at a NutriSnap QR code to log in instantly.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                                <div id="qr-reader-login" className="w-full rounded-lg overflow-hidden aspect-square bg-muted"></div>
+                                
+                                {scanError && (
+                                        <Alert variant="destructive">
+                                        <AlertTitle>Scan Error</AlertTitle>
+                                        <AlertDescription>{scanError}</AlertDescription>
+                                    </Alert>
+                                )}
+
+                                <div className="grid grid-cols-2 gap-2">
+                                        <Button onClick={startScanning} variant="outline" disabled={hasCameraPermission === false}>
+                                        <Camera className="mr-2 h-4 w-4" />
+                                        Scan
+                                        </Button>
+                                        <Button onClick={() => fileInputRef.current?.click()} variant="outline">
+                                        <Upload className="mr-2 h-4 w-4" />
+                                        Upload
+                                        </Button>
+                                        <input
+                                        type="file"
+                                        accept="image/png, image/jpeg, image/gif"
+                                        ref={fileInputRef}
+                                        onChange={handleFileUpload}
+                                        className="hidden"
+                                    />
+                                </div>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </CardContent>
+            </form>
+            {!scannedEmail && (
+                <CardFooter className="flex justify-center text-sm">
+                    <p className="text-muted-foreground">
+                        {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+                        <Button variant="link" className="p-1" onClick={toggleForm}>
+                            {isSignUp ? 'Login' : 'Sign up'}
+                        </Button>
+                    </p>
+                </CardFooter>
+            )}
+        </Card>
+        <p className="px-4 sm:px-8 text-center text-xs text-muted-foreground mt-8 max-w-sm">
+            By clicking continue, you agree to our{' '}
+            <Link href="#" className="underline underline-offset-4 hover:text-primary">
+            Terms of Service
+            </Link>{' '}
+            and{' '}
+            <Link href="#" className="underline underline-offset-4 hover:text-primary">
+            Privacy Policy
+            </Link>
+            .
+        </p>
+      </div>
     </div>
   );
 }
-
-    
-
-    
-
