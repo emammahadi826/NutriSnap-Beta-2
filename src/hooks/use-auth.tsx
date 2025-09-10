@@ -249,24 +249,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      // In a real app, this token would be generated on a secure server and sent to the client.
-      // We are creating a mock token here for demonstration purposes. This is insecure.
-      // A real token is a JWT signed by a service account.
-      
-      // The following will only work with the Firebase Auth Emulator configured to accept UIDs as tokens.
-      // It will FAIL with a real Firebase backend.
-      await firebaseSignInWithCustomToken(auth, uid);
+        // WARNING: This is an insecure method for demonstration purposes only.
+        // In a real application, a secure backend should generate a JWT token.
+        // This method now first checks if the user exists in Firestore before
+        // attempting the insecure sign-in, which only works with the emulator.
+        const userDocRef = doc(db, "users", uid);
+        const docSnap = await getDoc(userDocRef);
 
-      return true;
+        if (!docSnap.exists()) {
+            throw new Error("User for this QR code does not exist.");
+        }
+
+        await firebaseSignInWithCustomToken(auth, uid);
+
+        return true;
     } catch (error: any) {
         console.error("Custom token sign-in error:", error);
         setError(error.message);
-        toast({ variant: 'destructive', title: 'Linking Failed', description: "Could not sign in with custom token. This is an insecure demo feature." });
+        toast({ variant: 'destructive', title: 'Linking Failed', description: error.message || "Could not sign in with custom token. This is an insecure demo feature." });
         setLoading(false);
         return false;
     }
-    // setLoading(false) is handled by onAuthStateChanged
-  }
+};
 
 
   const value = {
