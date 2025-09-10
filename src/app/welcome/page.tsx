@@ -41,14 +41,14 @@ export default function WelcomePage() {
                     </div>
                 </header>
 
-                <main className="flex-1 flex flex-col items-center justify-center p-4">
+                <main className="flex-1 flex flex-col items-center justify-center">
                     <div className="w-full flex-1 flex items-center px-4 sm:px-6 lg:px-8">
                          <div className="space-y-6 relative">
                             <div className="relative">
                                 <Sparkles className="h-6 w-6 text-purple-400 absolute -top-12 left-1/4" />
                                 <Sparkles className="h-4 w-4 text-purple-300 absolute -bottom-12 right-1/4" />
                                 <h2 className="text-4xl md:text-6xl font-bold !leading-tight text-foreground text-left">
-                                    Snap, Track, <br/> & Thrive
+                                    Snap, Track, & Thrive
                                 </h2>
                             </div>
                             <p className="max-w-md text-lg text-muted-foreground text-left">
