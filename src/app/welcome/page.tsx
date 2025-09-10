@@ -23,6 +23,9 @@ export default function WelcomePage() {
                  <Square className="h-4 w-4 text-purple-300 absolute top-[15%] left-[45%]" />
                  <Circle className="h-8 w-8 text-purple-400 absolute bottom-[5%] left-[25%]" />
                  <Square className="h-5 w-5 text-blue-300 absolute bottom-[40%] right-[15%]" />
+                 <Sparkles className="h-4 w-4 text-purple-300 absolute top-[5%] right-[5%]" />
+                 <Sparkles className="h-6 w-6 text-blue-300 absolute bottom-[5%] left-[5%]" />
+                 <Sparkles className="h-5 w-5 text-purple-400 absolute top-[35%] right-[45%]" />
             </div>
 
             {/* Content */}
@@ -48,18 +51,18 @@ export default function WelcomePage() {
                     </div>
                 </header>
 
-                <main className="flex-1 flex flex-col items-center justify-center">
-                    <div className="w-full flex-1 flex items-center px-6 sm:px-12 lg:px-24">
-                         <div className="space-y-6 relative">
+                <main className="flex-1 flex flex-col items-center justify-center text-center md:text-left">
+                    <div className="w-full flex-1 flex items-center justify-center md:justify-start px-6 sm:px-12 lg:px-24">
+                         <div className="space-y-6 relative max-w-md md:max-w-none">
                             <div className="relative">
-                                <h2 className="text-4xl md:text-6xl font-bold !leading-tight text-foreground text-left">
+                                <h2 className="text-4xl md:text-6xl font-bold !leading-tight text-foreground">
                                     Snap, Track, & Thrive
                                 </h2>
                             </div>
-                            <p className="max-w-md text-lg text-muted-foreground text-left">
+                            <p className="text-lg text-muted-foreground">
                                Your AI-powered nutrition coach. Instantly identify food from a photo, track your macros, and get personalized health advice to reach your goals faster.
                             </p>
-                            <div className="flex flex-col sm:flex-row items-start justify-start gap-4 pt-8 text-left">
+                            <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-4 pt-8">
                                 <Button asChild size="lg" className="h-12 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-transform hover:scale-105">
                                     <Link href="/login">Get Started <ChevronRight className="h-5 w-5 ml-1" /></Link>
                                  </Button>
@@ -71,7 +74,7 @@ export default function WelcomePage() {
                     </div>
 
                     {/* Testimonial Section */}
-                    <section className="w-full max-w-2xl mx-auto py-8 text-center">
+                    <section className="w-full max-w-2xl mx-auto py-8 px-6 text-center">
                         <div className="flex flex-col items-center">
                             <Image 
                                 src="https://i.pravatar.cc/150?u=a042581f4e29026704d" 
