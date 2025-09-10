@@ -43,7 +43,7 @@ export default function WelcomePage() {
 
                 <main className="flex-1 flex flex-col items-center justify-center p-4">
                     <div className="w-full max-w-7xl mx-auto flex-1 flex items-center px-4 sm:px-6 lg:px-8">
-                         <div className="space-y-6 relative max-w-xl">
+                         <div className="space-y-6 relative">
                             <div className="relative">
                                 <Sparkles className="h-6 w-6 text-purple-400 absolute -top-12 left-1/4" />
                                 <Sparkles className="h-4 w-4 text-purple-300 absolute -bottom-12 right-1/4" />
