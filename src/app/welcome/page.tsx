@@ -24,7 +24,6 @@ export default function WelcomePage() {
                     <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
                         <Link href="#" className="hover:text-primary transition-colors">Home</Link>
                         <Link href="#" className="hover:text-primary transition-colors">Features</Link>
-                        <Link href="#" className="hover:text-primary transition-colors">Pricing</Link>
                         <Link href="#" className="hover:text-primary transition-colors">About</Link>
                         <Link href="#" className="hover:text-primary transition-colors">Contact</Link>
                     </nav>
