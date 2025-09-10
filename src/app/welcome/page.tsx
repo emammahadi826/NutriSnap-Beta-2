@@ -25,14 +25,16 @@ export default function WelcomePage() {
                 </header>
 
                 <main className="flex-1 flex flex-col items-center justify-center p-4 text-center">
-                    <div className="space-y-6 relative">
-                        <Sparkles className="h-6 w-6 text-purple-400 absolute -top-12 left-1/4" />
-                        <Sparkles className="h-4 w-4 text-purple-300 absolute -bottom-12 right-1/4" />
-                         <h2 className="text-4xl md:text-6xl font-bold !leading-tight text-foreground">
-                            Your Smart <br/> Nutrition Companion
-                        </h2>
+                    <div className="space-y-8 relative">
+                        <div className="relative">
+                            <Sparkles className="h-6 w-6 text-purple-400 absolute -top-12 left-1/4" />
+                            <Sparkles className="h-4 w-4 text-purple-300 absolute -bottom-12 right-1/4" />
+                             <h2 className="text-5xl md:text-7xl font-bold !leading-tight text-foreground">
+                                Snap, Track, <br/> & Thrive
+                            </h2>
+                        </div>
                         <p className="max-w-md mx-auto text-lg text-muted-foreground">
-                            From quick snacks to full meals, NutriSnap is the only AI-powered assistant that helps you track your diet and achieve your health goals.
+                           Your AI-powered nutrition coach. Instantly identify food from a photo, track your macros, and get personalized health advice to reach your goals faster.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                             <Button asChild size="lg" className="h-12 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-transform hover:scale-105">
