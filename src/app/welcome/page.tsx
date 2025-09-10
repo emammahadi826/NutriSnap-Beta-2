@@ -54,7 +54,7 @@ export default function WelcomePage() {
                             <p className="max-w-md text-lg text-muted-foreground text-left">
                                Your AI-powered nutrition coach. Instantly identify food from a photo, track your macros, and get personalized health advice to reach your goals faster.
                             </p>
-                            <div className="flex flex-col sm:flex-row items-start justify-start gap-4 pt-4 text-left">
+                            <div className="flex flex-col sm:flex-row items-start justify-start gap-4 pt-8 text-left">
                                 <Button asChild size="lg" className="h-12 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-transform hover:scale-105">
                                     <Link href="/login">Get Started <ChevronRight className="h-5 w-5 ml-1" /></Link>
                                  </Button>
