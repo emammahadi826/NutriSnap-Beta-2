@@ -129,7 +129,7 @@ export function ProfilePage() {
     return (
         <div className="space-y-8">
              <div className="flex items-center gap-4 w-full">
-                <Avatar className="h-20 w-20 shrink-0">
+                <Avatar className="h-20 w-20 shrink-0 rounded-full">
                     <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
                     <AvatarFallback className="text-3xl">
                         {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <User />}
