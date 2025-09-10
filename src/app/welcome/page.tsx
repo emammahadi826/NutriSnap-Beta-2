@@ -35,7 +35,7 @@ export default function WelcomePage() {
                         <Button variant="ghost" asChild>
                             <Link href="/login">Log In</Link>
                         </Button>
-                        <Button asChild>
+                        <Button variant="ghost" asChild>
                             <Link href="/login">Sign Up</Link>
                         </Button>
                     </div>
