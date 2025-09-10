@@ -176,7 +176,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4 sm:p-6 md:p-8 text-foreground">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-100/50 via-white to-blue-100/50 dark:from-gray-900 dark:via-black dark:to-purple-900/50 p-4 sm:p-6 md:p-8 text-foreground">
       <div className="flex items-center gap-2 mb-6 sm:mb-8">
         <Flame className="w-8 h-8 text-primary" />
         <h1 className="text-2xl font-bold font-headline">NutriSnap</h1>
