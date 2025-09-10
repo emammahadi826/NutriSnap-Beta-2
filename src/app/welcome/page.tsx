@@ -35,7 +35,7 @@ export default function WelcomePage() {
 
             <div className="flex flex-col items-center gap-4">
                 <Button asChild size="lg" className="h-12 px-8 text-lg font-bold">
-                    <Link href="/">Get Started</Link>
+                    <Link href="/login">Get Started</Link>
                 </Button>
                 <p className="text-sm text-muted-foreground">
                     Already have an account? <Link href="/login" className="underline hover:text-primary">Log In</Link>
