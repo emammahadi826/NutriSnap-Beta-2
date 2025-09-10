@@ -334,79 +334,83 @@ export default function Login() {
                 {isSubmitting ? <Loader2 className="animate-spin" /> : (isSignUp ? 'Sign Up' : 'Login')}
                 </Button>
 
-                <div className="relative my-4">
-                <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-border/50" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card/80 dark:bg-card/50 backdrop-blur-sm px-2 text-muted-foreground">
-                    Or continue with
-                    </span>
-                </div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-2">
-                    <Button 
-                        variant="outline" 
-                        className="w-full" 
-                        type="button" 
-                        disabled={isSubmitting}
-                        onClick={async () => {
-                            setIsSubmitting(true);
-                            const success = await signInWithGoogle();
-                            if (!success) {
-                                setIsSubmitting(false);
-                            }
-                        }}
-                        >
-                        {isSubmitting ? <Loader2 className="animate-spin mr-2" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
-                        Google
-                    </Button>
-                    <Dialog open={isScannerOpen} onOpenChange={handleScannerOpen}>
-                        <DialogTrigger asChild>
-                            <Button variant="outline" className="w-full" type="button" disabled={isSubmitting}>
-                                <QrCode className="mr-2 h-4 w-4" />
-                                Scan QR
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Scan to Login</DialogTitle>
-                                <DialogDescription>
-                                    Point your camera at a NutriSnap QR code to log in instantly.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className="space-y-4">
-                                <div id="qr-reader-login" className="w-full rounded-lg overflow-hidden aspect-square bg-muted"></div>
-                                
-                                {scanError && (
-                                        <Alert variant="destructive">
-                                        <AlertTitle>Scan Error</AlertTitle>
-                                        <AlertDescription>{scanError}</AlertDescription>
-                                    </Alert>
-                                )}
-
-                                <div className="grid grid-cols-2 gap-2">
-                                        <Button onClick={startScanning} variant="outline" disabled={hasCameraPermission === false}>
-                                        <Camera className="mr-2 h-4 w-4" />
-                                        Scan
-                                        </Button>
-                                        <Button onClick={() => fileInputRef.current?.click()} variant="outline">
-                                        <Upload className="mr-2 h-4 w-4" />
-                                        Upload
-                                        </Button>
-                                        <input
-                                        type="file"
-                                        accept="image/png, image/jpeg, image/gif"
-                                        ref={fileInputRef}
-                                        onChange={handleFileUpload}
-                                        className="hidden"
-                                    />
-                                </div>
+                {!scannedEmail && (
+                    <>
+                        <div className="relative my-4">
+                            <div className="absolute inset-0 flex items-center">
+                                <span className="w-full border-t border-border/50" />
                             </div>
-                        </DialogContent>
-                    </Dialog>
-                </div>
+                            <div className="relative flex justify-center text-xs uppercase">
+                                <span className="bg-card/80 dark:bg-card/50 backdrop-blur-sm px-2 text-muted-foreground">
+                                Or continue with
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-2">
+                            <Button 
+                                variant="outline" 
+                                className="w-full" 
+                                type="button" 
+                                disabled={isSubmitting}
+                                onClick={async () => {
+                                    setIsSubmitting(true);
+                                    const success = await signInWithGoogle();
+                                    if (!success) {
+                                        setIsSubmitting(false);
+                                    }
+                                }}
+                                >
+                                {isSubmitting ? <Loader2 className="animate-spin mr-2" /> : <GoogleIcon className="mr-2 h-4 w-4" />}
+                                Google
+                            </Button>
+                            <Dialog open={isScannerOpen} onOpenChange={handleScannerOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline" className="w-full" type="button" disabled={isSubmitting}>
+                                        <QrCode className="mr-2 h-4 w-4" />
+                                        Scan QR
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Scan to Login</DialogTitle>
+                                        <DialogDescription>
+                                            Point your camera at a NutriSnap QR code to log in instantly.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="space-y-4">
+                                        <div id="qr-reader-login" className="w-full rounded-lg overflow-hidden aspect-square bg-muted"></div>
+                                        
+                                        {scanError && (
+                                                <Alert variant="destructive">
+                                                <AlertTitle>Scan Error</AlertTitle>
+                                                <AlertDescription>{scanError}</AlertDescription>
+                                            </Alert>
+                                        )}
+
+                                        <div className="grid grid-cols-2 gap-2">
+                                                <Button onClick={startScanning} variant="outline" disabled={hasCameraPermission === false}>
+                                                <Camera className="mr-2 h-4 w-4" />
+                                                Scan
+                                                </Button>
+                                                <Button onClick={() => fileInputRef.current?.click()} variant="outline">
+                                                <Upload className="mr-2 h-4 w-4" />
+                                                Upload
+                                                </Button>
+                                                <input
+                                                type="file"
+                                                accept="image/png, image/jpeg, image/gif"
+                                                ref={fileInputRef}
+                                                onChange={handleFileUpload}
+                                                className="hidden"
+                                            />
+                                        </div>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+                    </>
+                )}
             </CardContent>
             </form>
             {!scannedEmail && (
@@ -435,5 +439,3 @@ export default function Login() {
     </div>
   );
 }
-
-    
