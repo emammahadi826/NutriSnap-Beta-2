@@ -252,26 +252,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // In a real app, this token would be generated on a secure server and sent to the client.
       // We are creating a mock token here for demonstration purposes. This is insecure.
       // A real token is a JWT signed by a service account.
-      // This is a placeholder for that logic.
-      const isDevelopment = process.env.NODE_ENV === 'development';
-      if (!isDevelopment) {
-          throw new Error("Custom token sign in is only available in development environment for this demo.");
-      }
-      
-      // This is a simplified, insecure method. A real app MUST use a secure backend to create tokens.
-      // To make this work with Firebase Auth Emulator, we can just use the UID as the token.
-      // For a real Firebase backend, you need the Admin SDK.
-      const mockToken = uid;
       
       // The following will only work with the Firebase Auth Emulator configured to accept UIDs as tokens.
       // It will FAIL with a real Firebase backend.
-      await firebaseSignInWithCustomToken(auth, mockToken);
+      await firebaseSignInWithCustomToken(auth, uid);
 
       return true;
     } catch (error: any) {
         console.error("Custom token sign-in error:", error);
         setError(error.message);
-        toast({ variant: 'destructive', title: 'Linking Failed', description: "Could not sign in. Ensure you're running in a development environment with the Auth emulator." });
+        toast({ variant: 'destructive', title: 'Linking Failed', description: "Could not sign in with custom token. This is an insecure demo feature." });
         setLoading(false);
         return false;
     }
