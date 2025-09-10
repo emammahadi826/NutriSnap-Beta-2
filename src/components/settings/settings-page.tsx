@@ -111,8 +111,6 @@ export function SettingsPage() {
         setIsScannerOpen(open);
         if (open) {
             setIsScannerInitializing(false);
-        } else {
-            setIsScannerInitializing(true);
         }
     }
 
@@ -156,12 +154,14 @@ export function SettingsPage() {
                             </p>
                         </div>
                     ) : (
-                        <div id="qr-reader-settings" className="w-full"></div>
+                        <div id="qr-reader-settings" className="w-full rounded-lg overflow-hidden"></div>
                     )}
                 </DialogContent>
             </Dialog>
         </div>
     );
 }
+
+    
 
     

@@ -34,7 +34,7 @@ export default function Login() {
 
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isLinking, setIsLinking] = useState(false);
-  const [isScannerInitializing, setIsScannerInitializing] = useState(false);
+  const [isScannerInitializing, setIsScannerInitializing] = useState(true);
 
   useEffect(() => {
     let scanner: any;
@@ -145,9 +145,7 @@ export default function Login() {
   const handleScannerOpen = (open: boolean) => {
       setIsScannerOpen(open);
       if (open) {
-          setIsScannerInitializing(false); // allow useEffect to run
-      } else {
-          setIsScannerInitializing(true);
+          setIsScannerInitializing(false);
       }
   }
 
@@ -289,7 +287,7 @@ export default function Login() {
                                 </p>
                             </div>
                         ) : (
-                            <div id="qr-reader-login" className="w-full"></div>
+                            <div id="qr-reader-login" className="w-full rounded-lg overflow-hidden"></div>
                         )}
                     </DialogContent>
                 </Dialog>
@@ -319,5 +317,7 @@ export default function Login() {
     </div>
   );
 }
+
+    
 
     
