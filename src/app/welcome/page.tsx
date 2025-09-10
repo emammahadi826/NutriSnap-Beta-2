@@ -24,7 +24,7 @@ export default function WelcomePage() {
                     </div>
                 </header>
 
-                <main className="flex-1 flex flex-col items-center justify-center p-4 text-center">
+                <main className="flex-1 flex flex-col items-center justify-center p-4">
                     <div className="space-y-8 relative">
                         <div className="relative">
                             <Sparkles className="h-6 w-6 text-purple-400 absolute -top-12 left-1/4" />
@@ -33,10 +33,10 @@ export default function WelcomePage() {
                                 Snap, Track, <br/> & Thrive
                             </h2>
                         </div>
-                        <p className="max-w-md mx-auto text-lg text-muted-foreground">
+                        <p className="max-w-md text-lg text-muted-foreground">
                            Your AI-powered nutrition coach. Instantly identify food from a photo, track your macros, and get personalized health advice to reach your goals faster.
                         </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                        <div className="flex flex-col sm:flex-row items-center justify-start gap-4 pt-4">
                             <Button asChild size="lg" className="h-12 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-transform hover:scale-105">
                                 <Link href="/login">Get Started <ChevronRight className="h-5 w-5 ml-1" /></Link>
                             </Button>
