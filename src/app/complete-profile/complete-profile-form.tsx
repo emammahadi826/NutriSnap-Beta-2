@@ -9,9 +9,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Sparkles, Circle, Square, Flame } from 'lucide-react';
 import type { UserProfile } from '@/lib/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 
 
 export default function CompleteProfileForm() {
@@ -126,89 +127,112 @@ export default function CompleteProfileForm() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4 text-foreground">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-3xl font-bold text-center">Complete Your Profile</CardTitle>
-          <CardDescription className="text-center text-muted-foreground">
-            Tell us a bit about yourself to personalize your experience.
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-6">
-            <div className="space-y-2">
-                <Label htmlFor="name">Full Name <span className="text-destructive">*</span></Label>
-                <Input
-                id="name"
-                type="text"
-                placeholder="e.g., John Doe"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                />
-            </div>
-
-            <div className="space-y-2">
-                <Label>Gender <span className="text-destructive">*</span></Label>
-                <Select onValueChange={(value) => setGender(value as 'male' | 'female' | 'other')} value={gender}>
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select your gender" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="age">Age <span className="text-destructive">*</span></Label>
-                <Input
-                    id="age"
-                    type="number"
-                    placeholder="e.g., 25"
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-100/50 via-white to-blue-100/50 dark:from-gray-900 dark:via-black dark:to-purple-900/50 p-4 sm:p-6 md:p-8 text-foreground overflow-hidden">
+       <div className="absolute inset-0 z-0 opacity-50">
+            <Sparkles className="h-4 w-4 text-purple-300 absolute top-[10%] left-[5%]" />
+            <Sparkles className="h-6 w-6 text-blue-300 absolute top-[20%] right-[10%]" />
+            <Sparkles className="h-5 w-5 text-purple-400 absolute bottom-[15%] left-[15%]" />
+            <Sparkles className="h-4 w-4 text-blue-200 absolute bottom-[10%] right-[5%]" />
+            <Sparkles className="h-8 w-8 text-purple-200 absolute top-[40%] left-[20%]" />
+            <Sparkles className="h-5 w-5 text-blue-400 absolute top-[50%] right-[30%]" />
+            <Sparkles className="h-6 w-6 text-blue-200 absolute bottom-[25%] right-[20%]" />
+            <Circle className="h-6 w-6 text-blue-200 absolute top-[5%] right-[30%]" />
+            <Square className="h-4 w-4 text-purple-300 absolute top-[15%] left-[45%]" />
+            <Circle className="h-8 w-8 text-purple-400 absolute bottom-[5%] left-[25%]" />
+            <Square className="h-5 w-5 text-blue-300 absolute bottom-[40%] right-[15%]" />
+        </div>
+      <div className="relative z-10 flex flex-col items-center w-full">
+         <div className="flex items-center gap-2 mb-6 sm:mb-8">
+            <Flame className="w-8 h-8 text-primary" />
+            <h1 className="text-2xl font-bold font-headline">NutriSnap</h1>
+        </div>
+        <Card className="w-full max-w-md border-border/50 bg-card/80 dark:bg-card/50 backdrop-blur-sm">
+            <CardHeader>
+            <CardTitle className="text-3xl font-bold text-center">Complete Your Profile</CardTitle>
+            <CardDescription className="text-center text-muted-foreground">
+                Tell us a bit about yourself to personalize your experience.
+            </CardDescription>
+            </CardHeader>
+            <form onSubmit={handleSubmit}>
+                <CardContent className="space-y-6">
+                <div className="space-y-2">
+                    <Label htmlFor="name">Full Name <span className="text-destructive">*</span></Label>
+                    <Input
+                    id="name"
+                    type="text"
+                    placeholder="e.g., John Doe"
                     required
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
-                    min="1"
-                    max="150"
-                />
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="weight">Weight (kg)</Label>
-                <Input
-                    id="weight"
-                    type="number"
-                    placeholder="e.g., 70"
-                    value={weight}
-                    onChange={(e) => setWeight(e.target.value)}
-                    inputMode="decimal"
-                    min="1"
-                    max="500"
-                />
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="height">Height (ft)</Label>
-                <Input
-                    id="height"
-                    type="number"
-                    placeholder="e.g., 5.9"
-                    value={height}
-                    onChange={(e) => setHeight(e.target.value)}
-                    inputMode="decimal"
-                    min="2"
-                    max="9"
-                    step="0.1"
-                />
-            </div>
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                     className="bg-background/50 dark:bg-background/30"
+                    />
+                </div>
 
-            <Button type="submit" className="w-full h-11 font-semibold text-base" disabled={isSubmitting}>
-              {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save and Continue'}
-            </Button>
-            </CardContent>
-        </form>
-      </Card>
+                <div className="space-y-2">
+                    <Label>Gender <span className="text-destructive">*</span></Label>
+                    <Select onValueChange={(value) => setGender(value as 'male' | 'female' | 'other')} value={gender}>
+                        <SelectTrigger className="bg-background/50 dark:bg-background/30">
+                            <SelectValue placeholder="Select your gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="male">Male</SelectItem>
+                            <SelectItem value="female">Female</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="age">Age <span className="text-destructive">*</span></Label>
+                    <Input
+                        id="age"
+                        type="number"
+                        placeholder="e.g., 25"
+                        required
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        min="1"
+                        max="150"
+                        className="bg-background/50 dark:bg-background/30"
+                    />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="weight">Weight (kg)</Label>
+                    <Input
+                        id="weight"
+                        type="number"
+                        placeholder="e.g., 70"
+                        value={weight}
+                        onChange={(e) => setWeight(e.target.value)}
+                        inputMode="decimal"
+                        min="1"
+                        max="500"
+                        className="bg-background/50 dark:bg-background/30"
+                    />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="height">Height (ft)</Label>
+                    <Input
+                        id="height"
+                        type="number"
+                        placeholder="e.g., 5.9"
+                        value={height}
+                        onChange={(e) => setHeight(e.target.value)}
+                        inputMode="decimal"
+                        min="2"
+                        max="9"
+                        step="0.1"
+                        className="bg-background/50 dark:bg-background/30"
+                    />
+                </div>
+
+                <Button type="submit" className="w-full h-11 font-semibold text-base" disabled={isSubmitting}>
+                {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save and Continue'}
+                </Button>
+                </CardContent>
+            </form>
+        </Card>
+      </div>
     </div>
   );
 }
