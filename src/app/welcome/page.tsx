@@ -31,6 +31,14 @@ export default function WelcomePage() {
                         <Link href="#" className="hover:text-primary transition-colors">About</Link>
                         <Link href="#" className="hover:text-primary transition-colors">Contact</Link>
                     </nav>
+                    <div className="hidden md:flex items-center gap-2">
+                        <Button variant="ghost" asChild>
+                            <Link href="/login">Log In</Link>
+                        </Button>
+                        <Button asChild>
+                            <Link href="/login">Sign Up</Link>
+                        </Button>
+                    </div>
                 </header>
 
                 <main className="flex-1 flex flex-col items-center justify-center p-4">
