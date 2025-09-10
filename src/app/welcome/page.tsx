@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Flame, ChevronRight, Sparkles } from "lucide-react";
+import { Flame, ChevronRight, Sparkles, Zap, BarChart, User } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -20,7 +20,7 @@ export default function WelcomePage() {
 
             {/* Content */}
             <div className="relative z-10 flex flex-col flex-1">
-                <header className="p-4 sm:p-6 flex items-center justify-between w-full max-w-7xl mx-auto">
+                <header className="p-4 sm:p-6 flex items-center justify-between w-full">
                     <div className="flex items-center gap-2">
                         <Flame className="w-7 h-7 text-primary" />
                         <h1 className="text-xl font-bold font-headline">NutriSnap</h1>
@@ -49,7 +49,7 @@ export default function WelcomePage() {
                             <div className="flex flex-col sm:flex-row items-start justify-start gap-4 pt-4 text-left">
                                 <Button asChild size="lg" className="h-12 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-lg transition-transform hover:scale-105">
                                     <Link href="/login">Get Started <ChevronRight className="h-5 w-5 ml-1" /></Link>
-                                </Button>
+                                 </Button>
                                 <p className="text-sm text-muted-foreground sm:self-center">
                                     Already have an account? <Link href="/login" className="underline hover:text-primary">Log In</Link>
                                 </p>
