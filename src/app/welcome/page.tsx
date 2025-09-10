@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Flame, ChevronRight, Sparkles, Target, TrendingUp } from "lucide-react";
+import { Flame, ChevronRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -31,6 +31,7 @@ export default function WelcomePage() {
                         <Link href="#" className="hover:text-primary transition-colors">About</Link>
                         <Link href="#" className="hover:text-primary transition-colors">Contact</Link>
                     </nav>
+                    <div className="w-24"/>
                 </header>
 
                 <main className="flex-1 flex flex-col items-start justify-center p-4 sm:p-8 md:p-12">
