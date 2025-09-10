@@ -21,7 +21,7 @@ export default function WelcomePage() {
                         <Flame className="w-7 h-7 text-primary" />
                         <h1 className="text-xl font-bold font-headline">NutriSnap</h1>
                     </div>
-                    <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+                    <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
                         <Link href="#" className="hover:text-primary transition-colors">Home</Link>
                         <Link href="#" className="hover:text-primary transition-colors">Features</Link>
                         <Link href="#" className="hover:text-primary transition-colors">Pricing</Link>
