@@ -121,9 +121,10 @@ export default function CompleteProfileForm() {
             className: 'bg-primary text-primary-foreground'
         });
         router.push('/');
+    } else {
+        // Error handling is now managed by the useEffect hook or redirects in useAuth
+        setIsSubmitting(false);
     }
-    // Error handling is now managed by the useEffect hook or redirects in useAuth
-    setIsSubmitting(false);
   };
 
   return (
