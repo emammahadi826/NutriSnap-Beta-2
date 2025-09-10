@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Flame, ChevronRight, Sparkles, Zap, BarChart, User } from "lucide-react";
+import { Flame, ChevronRight, Sparkles, Zap, BarChart, User, Circle, Square } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -20,6 +20,10 @@ export default function WelcomePage() {
                  <Sparkles className="h-5 w-5 text-blue-400 absolute top-[50%] right-[30%]" />
                  <Sparkles className="h-3 w-3 text-purple-300 absolute bottom-[30%] left-[40%]" />
                  <Sparkles className="h-6 w-6 text-blue-200 absolute bottom-[25%] right-[20%]" />
+                 <Circle className="h-6 w-6 text-blue-200 absolute top-[5%] right-[30%]" />
+                 <Square className="h-4 w-4 text-purple-300 absolute top-[15%] left-[45%]" />
+                 <Circle className="h-8 w-8 text-purple-400 absolute bottom-[5%] left-[25%]" />
+                 <Square className="h-5 w-5 text-blue-300 absolute bottom-[40%] right-[15%]" />
             </div>
 
             {/* Content */}
