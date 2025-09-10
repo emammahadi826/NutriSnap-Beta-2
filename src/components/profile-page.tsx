@@ -42,8 +42,8 @@ export function ProfilePage() {
     }, [userProfile]);
 
     useEffect(() => {
-        if (user) {
-            const qrData = JSON.stringify({ uid: user.uid });
+        if (user && user.email) {
+            const qrData = JSON.stringify({ email: user.email });
             QRCode.toDataURL(qrData)
                 .then(url => {
                     setQrCodeUrl(url);
@@ -149,13 +149,13 @@ export function ProfilePage() {
                     </DialogTrigger>
                     <DialogContent className="max-w-sm">
                         <DialogHeader>
-                            <DialogTitle>Link Your Device</DialogTitle>
+                            <DialogTitle>Your Login QR Code</DialogTitle>
                         </DialogHeader>
                         <div className="flex flex-col items-center justify-center p-4">
                             {qrCodeUrl ? (
                                 <>
                                     <Image src={qrCodeUrl} alt="Your personal QR code" width={256} height={256} />
-                                    <p className="mt-4 text-center text-muted-foreground">Scan this QR code from another device to log in instantly.</p>
+                                    <p className="mt-4 text-center text-muted-foreground">Scan this from another device to quickly enter your email on the login screen.</p>
                                 </>
                             ) : (
                                 <Loader2 className="h-8 w-8 animate-spin" />
@@ -295,3 +295,5 @@ function ProfilePageSkeleton() {
         </div>
     )
 }
+
+    

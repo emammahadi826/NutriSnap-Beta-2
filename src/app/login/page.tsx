@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Flame, Eye, EyeOff, Loader2, QrCode, Camera, Upload } from 'lucide-react';
+import { Flame, Eye, EyeOff, Loader2, QrCode, Camera, Upload, User, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -29,40 +29,36 @@ export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { logIn, signInWithGoogle, error, signInWithCustomToken } = useAuth();
+  const { logIn, signInWithGoogle, error } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [scannedEmail, setScannedEmail] = useState<string | null>(null);
   const { toast } = useToast();
   const router = useRouter();
 
   const [isScannerOpen, setIsScannerOpen] = useState(false);
-  const [isLinking, setIsLinking] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [scanError, setScanError] = useState<string | null>(null);
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
   
   const handleScanSuccess = async (decodedText: string) => {
       stopScanning();
-      setIsLinking(true);
       try {
-          const { uid } = JSON.parse(decodedText);
-          if (uid) {
-              toast({ title: "QR Code Scanned!", description: "Attempting to sign you in..." });
-              const success = await signInWithCustomToken(uid);
-              if(success) {
-                  toast({ title: "Logged In Successfully!", className: "bg-primary text-primary-foreground" });
-                  router.push('/');
-              } else {
-                   toast({ variant: 'destructive', title: "Login Failed", description: "Could not sign in with the scanned code." });
-                   setIsLinking(false);
-              }
-
+          const { email: qrEmail } = JSON.parse(decodedText);
+          if (qrEmail && typeof qrEmail === 'string') {
+              toast({ title: "QR Code Scanned!", description: "Please enter your password to continue." });
+              setEmail(qrEmail);
+              setScannedEmail(qrEmail); // Lock the email field
+              setIsSignUp(false);
+              // Focus the password input after a short delay
+              setTimeout(() => passwordInputRef.current?.focus(), 100);
           } else {
               throw new Error("Invalid QR code format.");
           }
       } catch (error) {
           toast({ variant: 'destructive', title: "Scan Error", description: "The QR code is not valid for NutriSnap." });
-          setIsLinking(false);
+          setScannedEmail(null);
       } finally {
           setIsScannerOpen(false);
       }
@@ -75,7 +71,6 @@ export default function Login() {
     };
     const qrCodeErrorCallback = (errorMessage: string, error: Html5QrcodeError) => {
         // We can ignore most errors as they fire continuously.
-        // console.warn(`QR Code scan error: ${errorMessage}`);
     };
 
     try {
@@ -120,15 +115,16 @@ export default function Login() {
   };
 
   useEffect(() => {
-    // Dynamically import and initialize the scanner when the dialog opens
     if (isScannerOpen) {
       import('html5-qrcode').then(module => {
-        html5QrCodeRef.current = new module.Html5Qrcode('qr-reader-login');
+        if (!html5QrCodeRef.current) {
+          html5QrCodeRef.current = new module.Html5Qrcode('qr-reader-login');
+        }
       });
     } else {
-        // Cleanup when dialog is closed
-        stopScanning();
-        html5QrCodeRef.current = null;
+        stopScanning().then(() => {
+            html5QrCodeRef.current = null;
+        });
     }
     
     return () => {
@@ -146,30 +142,23 @@ export default function Login() {
         setIsSubmitting(false);
         return;
       }
-      // Redirect to complete profile page with credentials
       const params = new URLSearchParams();
       params.set('email', email);
       params.set('password', password);
       router.push(`/complete-profile?${params.toString()}`);
-      // No need to set isSubmitting to false here as we are navigating away
-
     } else {
       const success = await logIn(email, password);
-      if (!success) {
-        // useAuth's `error` state might be more reliable
+      if (success) {
+        router.push('/');
+      } else {
         const currentError = error; 
         if (currentError === 'auth/user-not-found' || currentError === 'auth/invalid-credential') {
             toast({ variant: 'destructive', title: 'Login Failed', description: "Invalid email or password." });
         } else {
             toast({ variant: 'destructive', title: 'Login failed', description: currentError || "An unknown error occurred." });
         }
-      } else {
-        router.push('/');
-      }
-    }
-    // Only set submitting to false if we are not navigating away or if login fails
-    if (!isSignUp) {
         setIsSubmitting(false);
+      }
     }
   };
   
@@ -180,12 +169,15 @@ export default function Login() {
     setConfirmPassword('');
     setShowPassword(false);
     setShowConfirmPassword(false);
+    setScannedEmail(null); // Reset scanned email when toggling
   }
 
   const handleScannerOpen = (open: boolean) => {
       setIsScannerOpen(open);
-      setScanError(null);
-      setHasCameraPermission(null);
+      if (open) {
+        setScanError(null);
+        setHasCameraPermission(null);
+      }
   }
 
   return (
@@ -197,80 +189,130 @@ export default function Login() {
       <Card className="w-full max-w-sm border-border/50 bg-card">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-semibold">
-            {isSignUp ? 'Create an account' : 'Welcome back'}
+            {isSignUp ? 'Create an account' : (scannedEmail ? `Welcome Back!` : 'Welcome back')}
           </CardTitle>
           <CardDescription>
             {isSignUp
               ? 'Enter your details to get started'
-              : 'Log in to access your account'}
+              : (scannedEmail ? 'Enter your password to log in.' : 'Log in to access your account')}
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="m@example.com" 
-                required 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                className="bg-background"
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  {!isSignUp && (
-                       <Link href="#" className="text-xs text-primary/80 hover:text-primary hover:underline">
-                          Forgot your password?
-                      </Link>
-                  )}
-              </div>
-              <div className="relative">
-                <Input 
-                  id="password" 
-                  type={showPassword ? "text" : "password"} 
-                  required 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-background pr-10"
-                />
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  size="icon"
-                  className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
-                  onClick={() => setShowPassword(prev => !prev)}
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </Button>
-              </div>
-            </div>
-            {isSignUp && (
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm Password</Label>
-                <div className="relative">
+            {scannedEmail ? (
+                <div className="flex items-center gap-3 p-3 rounded-md bg-muted border">
+                    <User className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex-1 font-semibold truncate">{scannedEmail}</div>
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => { setScannedEmail(null); setEmail(''); }}>
+                        <X className="h-4 w-4" />
+                    </Button>
+                </div>
+            ) : (
+                <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
                     <Input 
-                        id="confirm-password" 
-                        type={showConfirmPassword ? "text" : "password"} 
+                        id="email" 
+                        type="email" 
+                        placeholder="m@example.com" 
                         required 
-                        value={confirmPassword} 
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="bg-background pr-10"
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                        className="bg-background"
+                        disabled={!!scannedEmail}
                     />
-                    <Button 
+                </div>
+            )}
+            {!isSignUp && (
+                 <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                        <Label htmlFor="password">Password</Label>
+                        {!isSignUp && (
+                            <Link href="#" className="text-xs text-primary/80 hover:text-primary hover:underline">
+                                Forgot your password?
+                            </Link>
+                        )}
+                    </div>
+                    <div className="relative">
+                        <Input 
+                        id="password" 
+                        ref={passwordInputRef}
+                        type={showPassword ? "text" : "password"} 
+                        required 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="bg-background pr-10"
+                        />
+                        <Button 
                         type="button" 
                         variant="ghost" 
                         size="icon"
                         className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
-                        onClick={() => setShowConfirmPassword(prev => !prev)}
-                    >
-                        {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </Button>
+                        onClick={() => setShowPassword(prev => !prev)}
+                        >
+                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </Button>
+                    </div>
                 </div>
-              </div>
+            )}
+            {isSignUp && (
+              <>
+               <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="m@example.com" 
+                    required 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    className="bg-background"
+                  />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <div className="relative">
+                        <Input 
+                        id="password" 
+                        type={showPassword ? "text" : "password"} 
+                        required 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="bg-background pr-10"
+                        />
+                        <Button 
+                        type="button" 
+                        variant="ghost" 
+                        size="icon"
+                        className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
+                        onClick={() => setShowPassword(prev => !prev)}
+                        >
+                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </Button>
+                    </div>
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="confirm-password">Confirm Password</Label>
+                    <div className="relative">
+                        <Input 
+                            id="confirm-password" 
+                            type={showConfirmPassword ? "text" : "password"} 
+                            required 
+                            value={confirmPassword} 
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="bg-background pr-10"
+                        />
+                        <Button 
+                            type="button" 
+                            variant="ghost" 
+                            size="icon"
+                            className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
+                            onClick={() => setShowConfirmPassword(prev => !prev)}
+                        >
+                            {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </Button>
+                    </div>
+                </div>
+              </>
             )}
             <Button type="submit" className="w-full h-10 font-semibold" disabled={isSubmitting}>
               {isSubmitting ? <Loader2 className="animate-spin" /> : (isSignUp ? 'Sign Up' : 'Login')}
@@ -318,56 +360,49 @@ export default function Login() {
                                 Point your camera at a NutriSnap QR code to log in instantly.
                             </DialogDescription>
                         </DialogHeader>
-                        {isLinking ? (
-                            <div className="flex flex-col items-center justify-center h-64">
-                                <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                                <p className="mt-4 text-muted-foreground">
-                                    Signing you in...
-                                </p>
-                            </div>
-                        ) : (
-                            <div className="space-y-4">
-                                <div id="qr-reader-login" className="w-full rounded-lg overflow-hidden aspect-square bg-muted"></div>
-                                
-                                {scanError && (
-                                     <Alert variant="destructive">
-                                      <AlertTitle>Scan Error</AlertTitle>
-                                      <AlertDescription>{scanError}</AlertDescription>
-                                    </Alert>
-                                )}
+                        <div className="space-y-4">
+                            <div id="qr-reader-login" className="w-full rounded-lg overflow-hidden aspect-square bg-muted"></div>
+                            
+                            {scanError && (
+                                    <Alert variant="destructive">
+                                    <AlertTitle>Scan Error</AlertTitle>
+                                    <AlertDescription>{scanError}</AlertDescription>
+                                </Alert>
+                            )}
 
-                                <div className="grid grid-cols-2 gap-2">
-                                     <Button onClick={startScanning} variant="outline">
-                                        <Camera className="mr-2 h-4 w-4" />
-                                        Scan
-                                     </Button>
-                                     <Button onClick={() => fileInputRef.current?.click()} variant="outline">
-                                        <Upload className="mr-2 h-4 w-4" />
-                                        Upload
-                                     </Button>
-                                     <input
-                                        type="file"
-                                        accept="image/png, image/jpeg, image/gif"
-                                        ref={fileInputRef}
-                                        onChange={handleFileUpload}
-                                        className="hidden"
-                                    />
-                                </div>
+                            <div className="grid grid-cols-2 gap-2">
+                                    <Button onClick={startScanning} variant="outline" disabled={hasCameraPermission === false}>
+                                    <Camera className="mr-2 h-4 w-4" />
+                                    Scan
+                                    </Button>
+                                    <Button onClick={() => fileInputRef.current?.click()} variant="outline">
+                                    <Upload className="mr-2 h-4 w-4" />
+                                    Upload
+                                    </Button>
+                                    <input
+                                    type="file"
+                                    accept="image/png, image/jpeg, image/gif"
+                                    ref={fileInputRef}
+                                    onChange={handleFileUpload}
+                                    className="hidden"
+                                />
                             </div>
-                        )}
+                        </div>
                     </DialogContent>
                 </Dialog>
             </div>
           </CardContent>
         </form>
-        <CardFooter className="flex justify-center text-sm">
-            <p className="text-muted-foreground">
-                {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-                <Button variant="link" className="p-1" onClick={toggleForm}>
-                    {isSignUp ? 'Login' : 'Sign up'}
-                </Button>
-            </p>
-        </CardFooter>
+        {!scannedEmail && (
+            <CardFooter className="flex justify-center text-sm">
+                <p className="text-muted-foreground">
+                    {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+                    <Button variant="link" className="p-1" onClick={toggleForm}>
+                        {isSignUp ? 'Login' : 'Sign up'}
+                    </Button>
+                </p>
+            </CardFooter>
+        )}
       </Card>
       <p className="px-4 sm:px-8 text-center text-xs text-muted-foreground mt-8 max-w-sm">
         By clicking continue, you agree to our{' '}
