@@ -39,7 +39,7 @@ export default function WelcomePage() {
                         <div className="relative">
                             <Sparkles className="h-6 w-6 text-purple-400 absolute -top-12 left-1/4" />
                             <Sparkles className="h-4 w-4 text-purple-300 absolute -bottom-12 right-1/4" />
-                             <h2 className="text-5xl md:text-7xl font-bold !leading-tight text-foreground text-left">
+                             <h2 className="text-4xl md:text-6xl font-bold !leading-tight text-foreground text-left">
                                 Snap, Track, <br/> & Thrive
                             </h2>
                         </div>
