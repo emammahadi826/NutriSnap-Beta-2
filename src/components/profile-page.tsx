@@ -128,41 +128,41 @@ export function ProfilePage() {
 
     return (
         <div className="space-y-8">
-            <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-6">
-                    <Avatar className="h-20 w-20 rounded-full">
-                        <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
-                        <AvatarFallback className="text-3xl">
-                            {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <User />}
-                        </AvatarFallback>
-                    </Avatar>
-                    <div className="text-left">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full">
+                <Avatar className="h-20 w-20 rounded-full shrink-0">
+                    <AvatarImage src={user.photoURL ?? undefined} alt={userProfile?.displayName || 'User'} />
+                    <AvatarFallback className="text-3xl">
+                        {userProfile?.displayName ? userProfile.displayName.charAt(0).toUpperCase() : <User />}
+                    </AvatarFallback>
+                </Avatar>
+                <div className="flex items-center justify-between w-full">
+                    <div className="text-center sm:text-left">
                         <h2 className="text-2xl font-bold">{userProfile?.displayName || 'User'}</h2>
-                        <p className="text-muted-foreground">{user.email}</p>
+                        <p className="text-muted-foreground break-all">{user.email}</p>
                     </div>
+                    <Dialog open={isQrDialogOpen} onOpenChange={setIsQrDialogOpen}>
+                        <DialogTrigger asChild>
+                             <Button variant="ghost" size="icon" className="h-10 w-10 shrink-0 ml-4">
+                                <QrCode className="h-6 w-6 text-muted-foreground" />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-sm">
+                            <DialogHeader>
+                                <DialogTitle>Your Login QR Code</DialogTitle>
+                            </DialogHeader>
+                            <div className="flex flex-col items-center justify-center p-4">
+                                {qrCodeUrl ? (
+                                    <>
+                                        <Image src={qrCodeUrl} alt="Your personal QR code" width={256} height={256} />
+                                        <p className="mt-4 text-center text-muted-foreground">Scan this from another device to quickly enter your email on the login screen.</p>
+                                    </>
+                                ) : (
+                                    <Loader2 className="h-8 w-8 animate-spin" />
+                                )}
+                            </div>
+                        </DialogContent>
+                    </Dialog>
                 </div>
-                <Dialog open={isQrDialogOpen} onOpenChange={setIsQrDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <QrCode className="h-8 w-8 text-muted-foreground" />
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-sm">
-                        <DialogHeader>
-                            <DialogTitle>Your Login QR Code</DialogTitle>
-                        </DialogHeader>
-                        <div className="flex flex-col items-center justify-center p-4">
-                            {qrCodeUrl ? (
-                                <>
-                                    <Image src={qrCodeUrl} alt="Your personal QR code" width={256} height={256} />
-                                    <p className="mt-4 text-center text-muted-foreground">Scan this from another device to quickly enter your email on the login screen.</p>
-                                </>
-                            ) : (
-                                <Loader2 className="h-8 w-8 animate-spin" />
-                            )}
-                        </div>
-                    </DialogContent>
-                </Dialog>
             </div>
 
             <Separator />
