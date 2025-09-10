@@ -1,17 +1,19 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Flame, Eye, EyeOff, Loader2, QrCode } from 'lucide-react';
+import { Flame, Eye, EyeOff, Loader2, QrCode, Camera, Upload } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import type { Html5Qrcode, Html5QrcodeError, Html5QrcodeResult } from 'html5-qrcode';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -34,67 +36,105 @@ export default function Login() {
 
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isLinking, setIsLinking] = useState(false);
-  const [isScannerInitializing, setIsScannerInitializing] = useState(true);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [scanError, setScanError] = useState<string | null>(null);
+  const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const handleScanSuccess = async (decodedText: string) => {
+      stopScanning();
+      setIsLinking(true);
+      try {
+          const { uid } = JSON.parse(decodedText);
+          if (uid) {
+              toast({ title: "QR Code Scanned!", description: "Attempting to sign you in..." });
+              const success = await signInWithCustomToken(uid);
+              if(success) {
+                  toast({ title: "Logged In Successfully!", className: "bg-primary text-primary-foreground" });
+                  router.push('/');
+              } else {
+                   toast({ variant: 'destructive', title: "Login Failed", description: "Could not sign in with the scanned code." });
+                   setIsLinking(false);
+              }
+
+          } else {
+              throw new Error("Invalid QR code format.");
+          }
+      } catch (error) {
+          toast({ variant: 'destructive', title: "Scan Error", description: "The QR code is not valid for NutriSnap." });
+          setIsLinking(false);
+      } finally {
+          setIsScannerOpen(false);
+      }
+  };
+  
+  const startScanning = async () => {
+    setScanError(null);
+    const qrCodeSuccessCallback = (decodedText: string, result: Html5QrcodeResult) => {
+        handleScanSuccess(decodedText);
+    };
+    const qrCodeErrorCallback = (errorMessage: string, error: Html5QrcodeError) => {
+        // We can ignore most errors as they fire continuously.
+        // console.warn(`QR Code scan error: ${errorMessage}`);
+    };
+
+    try {
+        if (!html5QrCodeRef.current) return;
+        
+        await html5QrCodeRef.current.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            qrCodeSuccessCallback,
+            qrCodeErrorCallback
+        );
+        setHasCameraPermission(true);
+    } catch (err: any) {
+        console.error("Failed to start camera.", err);
+        setHasCameraPermission(false);
+        setScanError("Could not start camera. Please grant permission and try again.");
+    }
+  };
+  
+  const stopScanning = async () => {
+      try {
+        if (html5QrCodeRef.current && html5QrCodeRef.current.isScanning) {
+            await html5QrCodeRef.current.stop();
+        }
+      } catch (err) {
+          console.error("Failed to stop scanning.", err);
+      }
+  };
+  
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+        const file = event.target.files[0];
+        try {
+            if (!html5QrCodeRef.current) return;
+            const decodedText = await html5QrCodeRef.current.scanFile(file, false);
+            handleScanSuccess(decodedText);
+        } catch (err: any) {
+            console.error(`Error scanning file. ${err}`);
+            setScanError("Could not read a QR code from the uploaded image.");
+        }
+    }
+  };
 
   useEffect(() => {
-    let scanner: any;
-    if (isScannerOpen && !isScannerInitializing) {
-        // Dynamically import the library only on the client-side
-        import("html5-qrcode").then(({ Html5QrcodeScanner }) => {
-            scanner = new Html5QrcodeScanner(
-                "qr-reader-login",
-                { fps: 10, qrbox: { width: 250, height: 250 } },
-                false // verbose
-            );
-
-            const onScanSuccess = async (decodedText: string) => {
-                scanner.clear();
-                setIsLinking(true);
-                try {
-                    const { uid } = JSON.parse(decodedText);
-                    if (uid) {
-                        toast({ title: "QR Code Scanned!", description: "Attempting to sign you in..." });
-                        const success = await signInWithCustomToken(uid);
-                        if(success) {
-                            toast({ title: "Logged In Successfully!", className: "bg-primary text-primary-foreground" });
-                            router.push('/');
-                        } else {
-                             toast({ variant: 'destructive', title: "Login Failed", description: "Could not sign in with the scanned code." });
-                             setIsLinking(false);
-                        }
-
-                    } else {
-                        throw new Error("Invalid QR code format.");
-                    }
-                } catch (error) {
-                    toast({ variant: 'destructive', title: "Scan Error", description: "The QR code is not valid for NutriSnap." });
-                    setIsLinking(false);
-                } finally {
-                    setIsScannerOpen(false);
-                }
-            };
-            
-            const onScanFailure = (error: string) => {
-                // Ignore frequent "no QR code found" errors
-            };
-
-            scanner.render(onScanSuccess, onScanFailure);
-
-        }).catch(err => {
-            console.error("Failed to load Html5QrcodeScanner", err);
-            toast({ variant: 'destructive', title: "Scanner Error", description: "Could not initialize the QR code scanner." });
-            setIsScannerInitializing(true); // Reset on error
-        });
+    // Dynamically import and initialize the scanner when the dialog opens
+    if (isScannerOpen) {
+      import('html5-qrcode').then(module => {
+        html5QrCodeRef.current = new module.Html5Qrcode('qr-reader-login');
+      });
+    } else {
+        // Cleanup when dialog is closed
+        stopScanning();
+        html5QrCodeRef.current = null;
     }
-
+    
     return () => {
-        if (scanner && scanner.getState() !== 3 /* SCANNING_STATE.NOT_STARTED */) {
-            scanner.clear().catch((error: any) => {
-                console.error("Failed to clear scanner on unmount", error);
-            });
-        }
-    };
-}, [isScannerOpen, isScannerInitializing, toast, signInWithCustomToken, router]);
+        stopScanning();
+    }
+  }, [isScannerOpen]);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -144,9 +184,8 @@ export default function Login() {
 
   const handleScannerOpen = (open: boolean) => {
       setIsScannerOpen(open);
-      if (open) {
-          setIsScannerInitializing(false);
-      }
+      setScanError(null);
+      setHasCameraPermission(null);
   }
 
   return (
@@ -279,15 +318,42 @@ export default function Login() {
                                 Point your camera at a NutriSnap QR code to log in instantly.
                             </DialogDescription>
                         </DialogHeader>
-                        {isLinking || isScannerInitializing ? (
+                        {isLinking ? (
                             <div className="flex flex-col items-center justify-center h-64">
                                 <Loader2 className="h-12 w-12 animate-spin text-primary" />
                                 <p className="mt-4 text-muted-foreground">
-                                    {isLinking ? "Signing you in..." : "Initializing scanner..."}
+                                    Signing you in...
                                 </p>
                             </div>
                         ) : (
-                            <div id="qr-reader-login" className="w-full rounded-lg overflow-hidden"></div>
+                            <div className="space-y-4">
+                                <div id="qr-reader-login" className="w-full rounded-lg overflow-hidden aspect-square bg-muted"></div>
+                                
+                                {scanError && (
+                                     <Alert variant="destructive">
+                                      <AlertTitle>Scan Error</AlertTitle>
+                                      <AlertDescription>{scanError}</AlertDescription>
+                                    </Alert>
+                                )}
+
+                                <div className="grid grid-cols-2 gap-2">
+                                     <Button onClick={startScanning} variant="outline">
+                                        <Camera className="mr-2 h-4 w-4" />
+                                        Scan
+                                     </Button>
+                                     <Button onClick={() => fileInputRef.current?.click()} variant="outline">
+                                        <Upload className="mr-2 h-4 w-4" />
+                                        Upload
+                                     </Button>
+                                     <input
+                                        type="file"
+                                        accept="image/png, image/jpeg, image/gif"
+                                        ref={fileInputRef}
+                                        onChange={handleFileUpload}
+                                        className="hidden"
+                                    />
+                                </div>
+                            </div>
                         )}
                     </DialogContent>
                 </Dialog>
@@ -317,7 +383,5 @@ export default function Login() {
     </div>
   );
 }
-
-    
 
     
