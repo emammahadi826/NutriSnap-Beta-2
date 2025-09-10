@@ -387,7 +387,7 @@ export default function Login() {
                                         Scan QR
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent>
+                                <DialogContent className="max-w-[95vw] sm:max-w-sm">
                                     <DialogHeader>
                                         <DialogTitle>Scan to Login</DialogTitle>
                                         <DialogDescription>
