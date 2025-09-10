@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Flame, Eye, EyeOff, Loader2, QrCode, Camera, Upload, User, Mail } from 'lucide-react';
+import { Flame, Eye, EyeOff, Loader2, QrCode, Camera, Upload, User, Mail, X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -74,7 +74,9 @@ export default function Login() {
     };
 
     try {
-        if (!html5QrCodeRef.current) return;
+        if (!html5QrCodeRef.current) {
+            html5QrCodeRef.current = new (await import('html5-qrcode')).Html5Qrcode('qr-reader-login');
+        }
         
         await html5QrCodeRef.current.start(
             { facingMode: "environment" },
@@ -104,7 +106,9 @@ export default function Login() {
     if (event.target.files && event.target.files.length > 0) {
         const file = event.target.files[0];
         try {
-            if (!html5QrCodeRef.current) return;
+            if (!html5QrCodeRef.current) {
+                html5QrCodeRef.current = new (await import('html5-qrcode')).Html5Qrcode('qr-reader-login');
+            }
             const decodedText = await html5QrCodeRef.current.scanFile(file, false);
             handleScanSuccess(decodedText);
         } catch (err: any) {
@@ -115,18 +119,9 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (isScannerOpen) {
-      import('html5-qrcode').then(module => {
-        if (!html5QrCodeRef.current) {
-          html5QrCodeRef.current = new module.Html5Qrcode('qr-reader-login');
-        }
-      });
-    } else {
-        stopScanning().then(() => {
-            html5QrCodeRef.current = null;
-        });
+    if (!isScannerOpen) {
+        stopScanning();
     }
-    
     return () => {
         stopScanning();
     }
@@ -208,19 +203,21 @@ export default function Login() {
                     </Button>
                 </div>
             ) : (
-                <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input 
-                        id="email" 
-                        type="email" 
-                        placeholder="m@example.com" 
-                        required 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)} 
-                        className="bg-background"
-                        disabled={!!scannedEmail}
-                    />
-                </div>
+                 !isSignUp && (
+                    <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input 
+                            id="email" 
+                            type="email" 
+                            placeholder="m@example.com" 
+                            required 
+                            value={email} 
+                            onChange={(e) => setEmail(e.target.value)} 
+                            className="bg-background"
+                            disabled={!!scannedEmail}
+                        />
+                    </div>
+                 )
             )}
             {!isSignUp && (
                  <div className="space-y-2">
@@ -418,5 +415,7 @@ export default function Login() {
     </div>
   );
 }
+
+    
 
     
